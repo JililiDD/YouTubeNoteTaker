@@ -8,7 +8,7 @@
 
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/btnGuestLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Sign in as guest"
@@ -16,7 +16,7 @@
         tools:layout_editor_absoluteY="186dp" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/btnLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Sign in"
