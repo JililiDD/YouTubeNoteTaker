@@ -36,7 +36,7 @@ public class GuestActivity extends YouTubeBaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_guest2);
 
         btnPlay = (Button) findViewById(R.id.btnplay);
         btnTakeNote = (Button) findViewById(R.id.btnTakeNote);
@@ -117,7 +117,7 @@ public class GuestActivity extends YouTubeBaseActivity {
 
                 // Opens up a EditText for taking notes
                 // Codes are referenced from: https://www.youtube.com/watch?v=BXTanDpOTVU
-                View view = (LayoutInflater.from(GuestActivity.this)).inflate(R.layout.usr_note_input,null);
+                View view = (LayoutInflater.from(GuestActivity.this)).inflate(R.layout.usr_note_input1,null);
 
 
                 AlertDialog.Builder alertBuilder = new AlertDialog.Builder(GuestActivity.this);
