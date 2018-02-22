@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--Following layout is referenced from https://www.youtube.com/watch?v=W4hTJybfU7s -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.dingdang.youtubenotetaker.MainActivity">
+
+    <view
+        class="com.google.android.youtube.player.YouTubePlayerView"
+        android:id="@+id/youtubeplayer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:layout_alignParentTop="true"
+        tools:layout_alignParentStart="true" />
+
+    <LinearLayout
+        android:id="@+id/controlButtons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/youtubeplayer"
+        android:gravity="center_horizontal">
+        <Button
+            android:id="@+id/btnInitialize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Initialize"
+            android:layout_centerHorizontal="true" />
+
+        <Button
+            android:id="@+id/btnplay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Play"
+            android:layout_centerHorizontal="true" />
+
+        <Button
+            android:id="@+id/btnTakeNote"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Take Notes"
+            android:layout_centerHorizontal="true" />
+    </LinearLayout>
+    <ListView
+        android:id="@+id/lvNotes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/controlButtons"/>
+
+</RelativeLayout>
