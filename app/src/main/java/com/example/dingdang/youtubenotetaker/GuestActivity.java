@@ -2,6 +2,8 @@ package com.example.dingdang.youtubenotetaker;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -26,13 +29,30 @@ import com.google.android.youtube.player.YouTubePlayerView;
 public class GuestActivity extends YouTubeBaseActivity {
 
     private YouTubePlayerView mYouTubePlayerView;
+    private LinearLayout tabView;
+    private TabLayout tabs;
+    private ViewPager pager;
     private Button btnPlay, btnTakeNote, btnInitialize;
     private YouTubePlayer.OnInitializedListener mOnInitializedListener;
     private YouTubePlayer player;
     private ListView lvNotes;
     private ArrayAdapter<String> lvNotesItemAdapter;
 
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_guest2);
 
+        mYouTubePlayerView = (YouTubePlayerView) findViewById(R.id.youtubeplayer);
+        tabView = (LinearLayout) findViewById(R.id.tabView);
+        tabs = (TabLayout) findViewById(R.id.guestTabLayout);
+        pager = (ViewPager) findViewById(R.id.guestTabViewPager);
+
+
+    }
+
+
+
+    /**
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -146,4 +166,5 @@ public class GuestActivity extends YouTubeBaseActivity {
         });
 
     }
+    */
 }
