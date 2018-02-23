@@ -1,8 +1,12 @@
 package com.example.dingdang.youtubenotetaker;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.net.Uri;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -21,17 +25,20 @@ import android.widget.TextView;
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 import com.google.android.youtube.player.YouTubePlayerView;
 
 
 // Following code for embeding youtube player is referenced from https://www.youtube.com/watch?v=W4hTJybfU7s
 // Need to extends YouTubeBaseActivity to use youtube API
-public class GuestActivity extends YouTubeBaseActivity {
-
-    private YouTubePlayerView mYouTubePlayerView;
+public class GuestActivity extends AppCompatActivity implements NoteModeFragment.OnFragmentInteractionListener, VideoSearchFragment.OnFragmentInteractionListener{
+    private YouTubePlayerSupportFragment youTubePlayerFragment;
     private LinearLayout tabView;
     private TabLayout tabs;
     private ViewPager pager;
+    private PagerAdapter pagerAdapter;
+
+
     private Button btnPlay, btnTakeNote, btnInitialize;
     private YouTubePlayer.OnInitializedListener mOnInitializedListener;
     private YouTubePlayer player;
@@ -41,14 +48,81 @@ public class GuestActivity extends YouTubeBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guest2);
+        initializeYoutubePlayer();
 
-        mYouTubePlayerView = (YouTubePlayerView) findViewById(R.id.youtubeplayer);
         tabView = (LinearLayout) findViewById(R.id.tabView);
-        tabs = (TabLayout) findViewById(R.id.guestTabLayout);
-        pager = (ViewPager) findViewById(R.id.guestTabViewPager);
 
+        // Initiate a tab layout and add tabs
+        tabs = (TabLayout) findViewById(R.id.guestTabLayout);
+        tabs.addTab(tabs.newTab().setText("Search"));
+        tabs.addTab(tabs.newTab().setText("Note"));
+        tabs.setTabGravity(TabLayout.GRAVITY_FILL);
+
+        pager = (ViewPager) findViewById(R.id.guestTabViewPager);
+        //pagerAdapter = new PagerAdapter(getSupportFragmentManager(), tabs.getTabCount());
+        pager.setAdapter(pagerAdapter);
+        pager.setOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
+
+        tabs.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                pager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
 
     }
+
+    /**
+     * initialize youtube player via Fragment and get instance of YoutubePlayer
+     */
+    private void initializeYoutubePlayer() {
+
+        youTubePlayerFragment = (YouTubePlayerSupportFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.youtubeplayerFragment);
+
+        if (youTubePlayerFragment == null)
+            return;
+
+        youTubePlayerFragment.initialize(YouTubeConfig.getApiKey(), new YouTubePlayer.OnInitializedListener() {
+
+            @Override
+            public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer,
+                                                boolean wasRestored) {
+                if (!wasRestored) {
+                    //youTubePlayer.loadVideo("W4hTJybfU7s"); //load and autoplay the video
+
+                    // When youtube is initialized successfully, set player to youTubePlayer
+                    // Then, player can be used for playing, pausing videos, etc.
+                    player = youTubePlayer;
+                    player.cueVideo("W4hTJybfU7s"); //load but doesn't autoplay the video
+                }
+            }
+
+            @Override
+            public void onInitializationFailure(YouTubePlayer.Provider arg0, YouTubeInitializationResult arg1) {
+
+            }
+        });
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
+
+
+
+
 
 
 

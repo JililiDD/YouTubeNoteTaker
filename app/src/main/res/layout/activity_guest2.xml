@@ -8,9 +8,9 @@
     android:layout_height="match_parent"
     tools:context="com.example.dingdang.youtubenotetaker.MainActivity">
 
-    <view
-        class="com.google.android.youtube.player.YouTubePlayerView"
-        android:id="@+id/youtubeplayer"
+    <fragment
+        android:id="@+id/youtubeplayerFragment"
+        android:name="com.google.android.youtube.player.YouTubePlayerSupportFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:layout_alignParentTop="true"
@@ -21,7 +21,7 @@
         android:id="@+id/tabView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/youtubeplayer"
+        android:layout_below="@id/youtubeplayerFragment"
         android:orientation="vertical">
 
         <android.support.design.widget.TabLayout
