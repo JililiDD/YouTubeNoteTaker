@@ -1,12 +1,22 @@
 package com.example.dingdang.youtubenotetaker;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.google.android.youtube.player.YouTubePlayer;
 
 
 /**
@@ -28,6 +38,15 @@ public class NoteModeFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    // Components
+    private Button btnEmail, btnTakeNote, btnSave, btnReplay, btnCancel;
+    private ListView lvNotes;
+    private ArrayAdapter<String> lvNotesItemAdapter;
+    private LinearLayout llNoteList;
+    private RelativeLayout rlNotepad;
+    private EditText etUserNoteInput, etUserSubjectInput;
+    private TextView tvTimeAtPause;
 
     public NoteModeFragment() {
         // Required empty public constructor
@@ -63,8 +82,63 @@ public class NoteModeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_note_mode, container, false);
+        btnEmail = (Button) view.findViewById(R.id.btnEmailNote);
+        btnTakeNote = (Button) view.findViewById(R.id.btnTakeNote);
+        btnSave = (Button) view.findViewById(R.id.btnSave);
+        btnReplay = (Button) view.findViewById(R.id.btnReplay);
+        btnCancel = (Button) view.findViewById(R.id.btnCancel);
+        lvNotes = (ListView) view.findViewById(R.id.lvNotes);
+        lvNotesItemAdapter = new ArrayAdapter<String>(getActivity().getApplicationContext(), android.R.layout.simple_list_item_1);;
+        llNoteList = (LinearLayout) view.findViewById(R.id.ll_noteList);
+        rlNotepad = (RelativeLayout) view.findViewById(R.id.RL_notepad);
+        etUserNoteInput = (EditText) view.findViewById(R.id.usrNoteInput);
+        etUserSubjectInput = (EditText) view.findViewById(R.id.subject);
+        tvTimeAtPause = (TextView) view.findViewById(R.id.elapsedTime);
+
+        rlNotepad.setVisibility(View.GONE);
+
+        btnTakeNote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                // Referred from: http://blog.csdn.net/fengge34/article/details/46391453
+                mListener.onFragmentInteraction(Uri.parse("pause")); // Pass to GuestActivity to pause the video
+                // Take elapsed time (milliseconds) when pause and convert it to hh:mm:ss format
+                //long elapsedTime = player.getCurrentTimeMillis();
+                long elapsedTime = 1234506;
+                int hour = (int) (elapsedTime/(1000*3600));
+                int min = (int) (elapsedTime/60000) % 60;
+                int second = (int) (elapsedTime/1000) % 60;
+                final String elapsedTimeString = String.format("%02d:%02d:%02d", hour, min, second);
+
+                tvTimeAtPause.setText(elapsedTimeString);
+                llNoteList.setVisibility(View.GONE);
+                rlNotepad.setVisibility(View.VISIBLE);
+
+
+                /**
+                alertBuilder.setCancelable(true).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        //TODO: need a note class to store every note's info. A note class object is
+                        //TODO: needed to store the user input notes.
+
+                        String noteItemString = String.format("%s   %s", elapsedTimeString, userSubjectInput.getText().toString());
+                        lvNotesItemAdapter.add(noteItemString);
+                    }
+                });
+
+                Dialog dialog = alertBuilder.create();
+                dialog.show();
+                 */
+            }
+        });
+
+
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_note_mode, container, false);
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

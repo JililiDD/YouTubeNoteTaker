@@ -3,6 +3,7 @@ package com.example.dingdang.youtubenotetaker;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentActivity;
@@ -21,6 +22,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
@@ -124,7 +126,11 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
 
     @Override
     public void onFragmentInteraction(Uri uri) {
-
+        if(uri != null){
+            // Pause the video if TakeNote button is pressed in NoteModeFragment.
+            // Referred from: http://blog.csdn.net/fengge34/article/details/46391453
+            player.pause();
+        }
     }
 
 
