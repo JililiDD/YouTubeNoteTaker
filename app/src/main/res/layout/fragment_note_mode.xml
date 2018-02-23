@@ -1,15 +1,38 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.example.dingdang.youtubenotetaker.NoteModeFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Note"
-        android:layout_centerVertical="true"
-        android:textSize="30dp"/>
 
-</RelativeLayout>
+    <ListView
+        android:id="@+id/lvNotes"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/controlButtons"
+        android:layout_weight="5"/>
+
+    <RelativeLayout
+        android:id="@+id/controlButtons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_weight="1">
+        <Button
+            android:id="@+id/btnEmailNote"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Email Note"
+            />
+
+        <Button
+            android:id="@+id/btnTakeNote"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Take Note"
+            android:layout_toRightOf="@id/btnEmailNote"
+            />
+    </RelativeLayout>
+
+</LinearLayout>
