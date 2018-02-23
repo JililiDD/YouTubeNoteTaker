@@ -25,6 +25,7 @@ import java.util.List;
 public class YoutubeConnector {
     private YouTube youtube;
     private YouTube.Search.List query;
+    private final long MAX_RESULT = 50;
 
     public static final String KEY
             = YouTubeConfig.getApiKey();
@@ -40,6 +41,7 @@ public class YoutubeConnector {
             query = youtube.search().list("id,snippet");
             query.setKey(KEY);
             query.setType("video");
+            query.setMaxResults(MAX_RESULT);
             query.setFields("items(id/videoId,snippet/title,snippet/description,snippet/thumbnails/default/url)");
         }catch(IOException e){
             Log.d("YC", "Could not initialize: "+e);
