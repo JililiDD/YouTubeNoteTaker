@@ -59,7 +59,7 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
         tabs.setTabGravity(TabLayout.GRAVITY_FILL);
 
         pager = (ViewPager) findViewById(R.id.guestTabViewPager);
-        //pagerAdapter = new PagerAdapter(getSupportFragmentManager(), tabs.getTabCount());
+        pagerAdapter = new PagerAdapter(getSupportFragmentManager(), tabs.getTabCount());
         pager.setAdapter(pagerAdapter);
         pager.setOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
 
@@ -84,6 +84,7 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
 
     /**
      * initialize youtube player via Fragment and get instance of YoutubePlayer
+     * Referred from http://www.androhub.com/implement-youtube-player-fragment-android-app/
      */
     private void initializeYoutubePlayer() {
 
@@ -104,7 +105,13 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
                     // When youtube is initialized successfully, set player to youTubePlayer
                     // Then, player can be used for playing, pausing videos, etc.
                     player = youTubePlayer;
-                    player.cueVideo("W4hTJybfU7s"); //load but doesn't autoplay the video
+
+                    if(getIntent() == null){
+                        player.cueVideo("W4hTJybfU7s"); //load but doesn't autoplay the video
+                    }
+                    else{
+                        player.loadVideo(getIntent().getStringExtra("VIDEO_ID"));
+                    }
                 }
             }
 

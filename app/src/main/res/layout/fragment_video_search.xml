@@ -1,15 +1,24 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.dingdang.youtubenotetaker.VideoSearchFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="wrap_content"
+    <EditText
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Search"
-        android:layout_centerInParent="true"
-        android:textSize="30dp"/>
+        android:hint="Search videos here"
+        android:focusable="true"
+        android:id="@+id/search_input"
+        android:singleLine="true"
+        />
 
-</FrameLayout>
+    <ListView
+        android:id="@+id/videos_found"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:dividerHeight="5dp"
+        android:layout_below="@id/search_input"
+        />
+
+</RelativeLayout>

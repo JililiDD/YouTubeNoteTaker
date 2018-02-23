@@ -1,13 +1,27 @@
 package com.example.dingdang.youtubenotetaker;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-//import android.app.Fragment;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 
 /**
@@ -23,10 +37,18 @@ public class VideoSearchFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final String TAG = "VideoSearchFragment";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    // Components needed for youtube search
+    // Refered from https://code.tutsplus.com/tutorials/create-a-youtube-client-on-android--cms-22858
+    private EditText searchInput;
+    private ListView videosFound;
+    private Handler handler;
+    private List<VideoItem> searchResults;
 
     private OnFragmentInteractionListener mListener;
 
@@ -65,7 +87,79 @@ public class VideoSearchFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_video_search, container, false);
+        //return inflater.inflate(R.layout.fragment_video_search, container, false);
+        View view = inflater.inflate(R.layout.fragment_video_search, container, false);
+
+        // For youtube search
+        // Refered from https://code.tutsplus.com/tutorials/create-a-youtube-client-on-android--cms-22858
+        searchInput = (EditText)view.findViewById(R.id.search_input);
+        videosFound = (ListView)view.findViewById(R.id.videos_found);
+
+        handler = new Handler();
+
+        searchInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if(actionId == EditorInfo.IME_ACTION_DONE){
+                    searchOnYoutube(v.getText().toString());
+                    return false;
+                }
+                return true;
+            }
+        });
+        addClickListener();
+        return view;
+    }
+
+    private void searchOnYoutube(final String keywords){
+        new Thread(){
+            public void run(){
+                YoutubeConnector yc = new YoutubeConnector(getContext());
+                searchResults = yc.search(keywords);
+                handler.post(new Runnable(){
+                    public void run(){
+                        updateVideosFound();
+                    }
+                });
+            }
+        }.start();
+    }
+
+    private void updateVideosFound(){
+        ArrayAdapter<VideoItem> adapter = new ArrayAdapter<VideoItem>(getActivity().getApplicationContext(), R.layout.video_item, searchResults){
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                if(convertView == null){
+                    convertView = getLayoutInflater().inflate(R.layout.video_item, parent, false);
+                }
+                ImageView thumbnail = (ImageView)convertView.findViewById(R.id.video_thumbnail);
+                TextView title = (TextView)convertView.findViewById(R.id.video_title);
+                TextView description = (TextView)convertView.findViewById(R.id.video_description);
+
+                VideoItem searchResult = searchResults.get(position);
+
+                Picasso.with(getActivity().getApplicationContext()).load(searchResult.getThumbnailURL()).into(thumbnail);
+                title.setText(searchResult.getTitle());
+                description.setText(searchResult.getDescription());
+                return convertView;
+            }
+        };
+
+        videosFound.setAdapter(adapter);
+    }
+
+    private void addClickListener(){
+        videosFound.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> av, View v, int pos,
+                                    long id) {
+                Intent intent = new Intent(getActivity().getApplicationContext(), GuestActivity.class);
+                intent.putExtra("VIDEO_ID", searchResults.get(pos).getId());
+                startActivity(intent);
+            }
+
+        });
     }
 
     // TODO: Rename method, update argument and hook method into UI event

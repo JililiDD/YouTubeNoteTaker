@@ -8,6 +8,7 @@
     android:layout_height="match_parent"
     tools:context="com.example.dingdang.youtubenotetaker.MainActivity">
 
+    <!--Following youtube fragment is referenced from http://www.androhub.com/implement-youtube-player-fragment-android-app/ -->
     <fragment
         android:id="@+id/youtubeplayerFragment"
         android:name="com.google.android.youtube.player.YouTubePlayerSupportFragment"
