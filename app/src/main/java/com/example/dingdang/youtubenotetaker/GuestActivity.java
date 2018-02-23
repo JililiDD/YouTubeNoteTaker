@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -39,6 +40,7 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
     private TabLayout tabs;
     private ViewPager pager;
     private PagerAdapter pagerAdapter;
+    private long elapsedTime = 0;
 
 
     private Button btnPlay, btnTakeNote, btnInitialize;
@@ -46,6 +48,7 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
     private YouTubePlayer player;
     private ListView lvNotes;
     private ArrayAdapter<String> lvNotesItemAdapter;
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -130,10 +133,15 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
             // Pause the video if TakeNote button is pressed in NoteModeFragment.
             // Referred from: http://blog.csdn.net/fengge34/article/details/46391453
             player.pause();
+
+            // Take the elapsedTime
+            elapsedTime = player.getCurrentTimeMillis();
         }
     }
 
-
+    public long getElapsedTime(){
+        return this.elapsedTime;
+    }
 
 
 

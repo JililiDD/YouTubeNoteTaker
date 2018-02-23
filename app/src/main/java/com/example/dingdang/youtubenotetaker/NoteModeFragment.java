@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.youtube.player.YouTubePlayer;
 
@@ -47,6 +48,7 @@ public class NoteModeFragment extends Fragment {
     private RelativeLayout rlNotepad;
     private EditText etUserNoteInput, etUserSubjectInput;
     private TextView tvTimeAtPause;
+    private long elapsedTime = 0;
 
     public NoteModeFragment() {
         // Required empty public constructor
@@ -98,15 +100,22 @@ public class NoteModeFragment extends Fragment {
 
         rlNotepad.setVisibility(View.GONE);
 
+
+
         btnTakeNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 // Referred from: http://blog.csdn.net/fengge34/article/details/46391453
                 mListener.onFragmentInteraction(Uri.parse("pause")); // Pass to GuestActivity to pause the video
-                // Take elapsed time (milliseconds) when pause and convert it to hh:mm:ss format
-                //long elapsedTime = player.getCurrentTimeMillis();
-                long elapsedTime = 1234506;
+
+                // Take elapsed time (milliseconds) when pause from GuestActivity using a getter method in GuestActivity
+                // Using Bundle to pass data from GuestActivity to NoteModeFragment doesn't work in this case
+                // Referenced from: https://stackoverflow.com/a/22065903
+                GuestActivity guestActivity = (GuestActivity) getActivity();
+                elapsedTime = guestActivity.getElapsedTime();
+
+                // Convert elapsedTime to hh:mm:ss format
                 int hour = (int) (elapsedTime/(1000*3600));
                 int min = (int) (elapsedTime/60000) % 60;
                 int second = (int) (elapsedTime/1000) % 60;
