@@ -1,38 +1,148 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context="com.example.dingdang.youtubenotetaker.NoteModeFragment">
 
-
-    <ListView
-        android:id="@+id/lvNotes"
+    <LinearLayout
+        android:id="@+id/ll_noteList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/controlButtons"
-        android:layout_weight="5"/>
+        android:orientation="vertical">
+        <ListView
+            android:id="@+id/lvNotes"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/controlButtons"
+            android:layout_weight="5"/>
+
+        <RelativeLayout
+            android:id="@+id/controlButtons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_weight="1">
+            <Button
+                android:id="@+id/btnEmailNote"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Email Note"
+                />
+
+            <Button
+                android:id="@+id/btnTakeNote"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Take Note"
+                android:layout_toRightOf="@id/btnEmailNote"
+                />
+        </RelativeLayout>
+
+    </LinearLayout>
 
     <RelativeLayout
-        android:id="@+id/controlButtons"
+        android:id="@+id/RL_notepad"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:layout_weight="1">
-        <Button
-            android:id="@+id/btnEmailNote"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Email Note"
-            />
+        android:layout_height="match_parent">
 
-        <Button
-            android:id="@+id/btnTakeNote"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/llElapsedTime"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Take Note"
-            android:layout_toRightOf="@id/btnEmailNote"
-            />
+            android:layout_marginTop="15dp">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1.2"
+                android:textSize="20dp"
+                android:textAlignment="textStart"
+                android:text="Time"
+                android:textColor="#000000"
+                android:layout_marginStart="10dp"/>
+
+            <TextView
+                android:id="@+id/elapsedTime"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.4"
+                android:textSize="20dp"
+                android:layout_marginStart="10dp"
+                android:textColor="#000000"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llSubject"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_below="@id/llElapsedTime">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1.2"
+                android:textAlignment="textStart"
+                android:textSize="20dp"
+                android:text="Subject"
+                android:textColor="#000000"
+                android:layout_marginStart="10dp"/>
+
+            <EditText
+                android:id="@+id/subject"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.4"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"/>
+
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/usrNoteInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/llSubject"
+            android:hint="Note here"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"/>
+
+        <RelativeLayout
+            android:id="@+id/notepadButtons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_below="@id/usrNoteInput">
+            <Button
+                android:id="@+id/btnSave"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Save"
+                android:layout_toLeftOf="@id/btnReplay"
+                />
+
+            <Button
+                android:id="@+id/btnReplay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Replay"
+                android:layout_centerHorizontal="true"
+                />
+
+            <Button
+                android:id="@+id/btnCancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cancel"
+                android:layout_toRightOf="@id/btnReplay"
+                />
+        </RelativeLayout>
+
     </RelativeLayout>
 
-</LinearLayout>
+
+
+</RelativeLayout>
