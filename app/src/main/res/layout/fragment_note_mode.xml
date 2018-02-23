@@ -40,6 +40,10 @@
 
     </LinearLayout>
 
+
+
+
+
     <RelativeLayout
         android:id="@+id/RL_notepad"
         android:layout_width="match_parent"
@@ -121,14 +125,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Save"
-                android:layout_toLeftOf="@id/btnReplay"
-                />
-
-            <Button
-                android:id="@+id/btnReplay"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Replay"
                 android:layout_centerHorizontal="true"
                 />
 
@@ -137,7 +133,107 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Cancel"
-                android:layout_toRightOf="@id/btnReplay"
+                android:layout_toRightOf="@id/btnSave"
+                />
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+
+
+
+
+    <RelativeLayout
+        android:id="@+id/RL_editNote"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/llEditNoteElapsedTime"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1.2"
+                android:textSize="20dp"
+                android:textAlignment="textStart"
+                android:text="Time"
+                android:textColor="#000000"
+                android:layout_marginStart="10dp"/>
+
+            <TextView
+                android:id="@+id/EditNoteElapsedTime"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.4"
+                android:textSize="20dp"
+                android:layout_marginStart="10dp"
+                android:textColor="#000000"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llEditNoteSubject"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_below="@id/llEditNoteElapsedTime">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1.2"
+                android:textAlignment="textStart"
+                android:textSize="20dp"
+                android:text="Subject"
+                android:textColor="#000000"
+                android:layout_marginStart="10dp"/>
+
+            <EditText
+                android:id="@+id/EditNoteSubject"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.4"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"/>
+
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/EditNoteUsrNoteInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/llEditNoteSubject"
+            android:hint="Note here"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"/>
+
+        <RelativeLayout
+            android:id="@+id/EditNoteNotepadButtons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_below="@id/EditNoteUsrNoteInput">
+
+            <Button
+                android:id="@+id/btnEditNoteReplay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Replay"
+                android:layout_centerHorizontal="true"
+                />
+
+            <Button
+                android:id="@+id/btnEditNoteCancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cancel"
+                android:layout_toRightOf="@id/btnEditNoteReplay"
                 />
         </RelativeLayout>
 

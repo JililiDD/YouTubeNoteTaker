@@ -41,6 +41,7 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
     private ViewPager pager;
     private PagerAdapter pagerAdapter;
     private long elapsedTime = 0;
+    private static final String TAG = "Uri parse: ";
 
 
     private Button btnPlay, btnTakeNote, btnInitialize;
@@ -129,13 +130,17 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
 
     @Override
     public void onFragmentInteraction(Uri uri) {
-        if(uri != null){
+        String uriStr = uri.toString();
+        if(uri != null && uriStr.equals("pause")){
             // Pause the video if TakeNote button is pressed in NoteModeFragment.
             // Referred from: http://blog.csdn.net/fengge34/article/details/46391453
             player.pause();
 
             // Take the elapsedTime
             elapsedTime = player.getCurrentTimeMillis();
+        }
+        else if(uri != null && uriStr.equals("replay")){
+            player.seekToMillis((int)elapsedTime);
         }
     }
 
