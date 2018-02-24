@@ -31,6 +31,8 @@ import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 import com.google.android.youtube.player.YouTubePlayerView;
 
+import java.util.ArrayList;
+
 
 // Following code for embeding youtube player is referenced from https://www.youtube.com/watch?v=W4hTJybfU7s
 // Need to extends YouTubeBaseActivity to use youtube API
@@ -131,7 +133,8 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
     @Override
     public void onFragmentInteraction(Uri uri) {
         String uriStr = uri.toString();
-        if(uri != null && uriStr.equals("pause")){
+        String[] uriStrList = uriStr.split(" ");
+        if(uri != null && uriStrList[0].equals("pause")){
             // Pause the video if TakeNote button is pressed in NoteModeFragment.
             // Referred from: http://blog.csdn.net/fengge34/article/details/46391453
             player.pause();
@@ -139,8 +142,16 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
             // Take the elapsedTime
             elapsedTime = player.getCurrentTimeMillis();
         }
-        else if(uri != null && uriStr.equals("replay")){
-            player.seekToMillis((int)elapsedTime);
+        else if(uri != null && uriStrList[0].equals("replay")){
+            // Convert the passed time (in uriStrList[1]) from string to int
+            String noteItem = uriStrList[1];
+            int hr = Integer.parseInt(noteItem.substring(0, 2));
+            int min = Integer.parseInt(noteItem.substring(3, 5));
+            int sec = Integer.parseInt(noteItem.substring(6, 8));
+            int msNoteTime = (hr*3600 + min*60 + sec) * 1000;
+
+            //play the video back to the note time
+            player.seekToMillis(msNoteTime);
         }
     }
 

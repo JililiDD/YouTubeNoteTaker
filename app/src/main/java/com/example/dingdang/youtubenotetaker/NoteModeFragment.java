@@ -19,7 +19,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.youtube.player.YouTubePlayer;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -45,12 +47,13 @@ public class NoteModeFragment extends Fragment {
     // Components
     private Button btnEmail, btnTakeNote, btnSave, btnReplay, btnCancel, btnEditNoteCancel;
     private ListView lvNotes;
-    private ArrayAdapter<String> lvNotesItemAdapter;
+    private ArrayAdapter<NoteItem> lvNotesItemAdapter;
     private LinearLayout llNoteList;
     private RelativeLayout rlNotepad, rlEditNote;
-    private EditText etUserNoteInput, etUserSubjectInput;
-    private TextView tvTimeAtPause;
+    private EditText etUserNoteInput, etUserSubjectInput, etEditSubject, etEditNote;
+    private TextView tvTimeAtPause, tvEditNoteTime;
     private long elapsedTime = 0;
+    private List<NoteItem> noteList;
 
     public NoteModeFragment() {
         // Required empty public constructor
@@ -94,18 +97,21 @@ public class NoteModeFragment extends Fragment {
         btnReplay = (Button) view.findViewById(R.id.btnEditNoteReplay);
         btnEditNoteCancel = (Button) view.findViewById(R.id.btnEditNoteCancel);
         lvNotes = (ListView) view.findViewById(R.id.lvNotes);
-        lvNotesItemAdapter = new ArrayAdapter<String>(getActivity().getApplicationContext(), android.R.layout.simple_list_item_1);;
         llNoteList = (LinearLayout) view.findViewById(R.id.ll_noteList);
         rlNotepad = (RelativeLayout) view.findViewById(R.id.RL_notepad);
         rlEditNote = (RelativeLayout) view.findViewById(R.id.RL_editNote);
         etUserNoteInput = (EditText) view.findViewById(R.id.usrNoteInput);
         etUserSubjectInput = (EditText) view.findViewById(R.id.subject);
         tvTimeAtPause = (TextView) view.findViewById(R.id.elapsedTime);
+        tvEditNoteTime = (TextView) view.findViewById(R.id.EditNoteElapsedTime);
+        etEditSubject = (EditText) view.findViewById(R.id.EditNoteSubject);
+        etEditNote = (EditText) view.findViewById(R.id.EditNoteUsrNoteInput);;
 
+        noteList = new ArrayList<>();
+
+        // Hide rlNotepad and rlEditNote UIs by default
         rlNotepad.setVisibility(View.GONE);
         rlEditNote.setVisibility(View.GONE);
-
-        lvNotes.setAdapter(lvNotesItemAdapter);
 
         btnTakeNote.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,8 +142,11 @@ public class NoteModeFragment extends Fragment {
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String noteItemString = String.format("%s   %s", tvTimeAtPause.getText().toString(), etUserSubjectInput.getText().toString());
-                lvNotesItemAdapter.add(noteItemString);
+                // Create an ArrayAdapter<NoteItem> for storing NoteItem objects
+                ArrayAdapter<NoteItem> lvNotesItemAdapter = new ArrayAdapter<>(getActivity().getApplicationContext(), android.R.layout.simple_list_item_1, noteList);
+                NoteItem noteItem = new NoteItem(tvTimeAtPause.getText().toString(), etUserSubjectInput.getText().toString(), etUserNoteInput.getText().toString());
+                lvNotesItemAdapter.add(noteItem);
+                lvNotes.setAdapter(lvNotesItemAdapter);
 
                 llNoteList.setVisibility(View.VISIBLE);  // Display llNoteList UI
                 rlNotepad.setVisibility(View.GONE); // Hide rlNotepad UI
@@ -174,33 +183,29 @@ public class NoteModeFragment extends Fragment {
         btnReplay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String parseString = "replay " + tvEditNoteTime.getText().toString().trim(); // Pass the note time to GuestActivity as well
                 // Referred from: http://blog.csdn.net/fengge34/article/details/46391453
-                mListener.onFragmentInteraction(Uri.parse("replay")); // Pass to GuestActivity to replay the video at the note time
+                mListener.onFragmentInteraction(Uri.parse(parseString)); // Pass to GuestActivity to replay the video at the note time
 
-                llNoteList.setVisibility(View.VISIBLE);  // Display llNoteList UI
-                rlNotepad.setVisibility(View.GONE); // Hide rlNotepad UI
-                rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UI
             }
         });
 
         lvNotes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
                 rlEditNote.setVisibility(View.VISIBLE);
                 llNoteList.setVisibility(View.GONE);
-                rlNotepad.setVisibility(View.GONE); // Hide rlNotepad UI
+                rlNotepad.setVisibility(View.GONE);
 
+                // Get selected NoteItem object
+                NoteItem selectedNote = noteList.get(pos);
 
+                // Set the text fields to the NoteItem object's corresponding values in edit UI
+                tvEditNoteTime.setText(selectedNote.getTime());
+                etEditSubject.setText(selectedNote.getSubject());
+                etEditNote.setText(selectedNote.getNote());
             }
         });
-
-
-
-
-
-
-
-
         // Inflate the layout for this fragment
         return view;
     }
