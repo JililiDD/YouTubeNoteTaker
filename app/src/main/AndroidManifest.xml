@@ -20,9 +20,8 @@
         </activity>
         <activity
             android:name=".GuestActivity"
-            android:parentActivityName=".MainActivity">
-
-        </activity>
+            android:parentActivityName=".MainActivity"></activity>
+        <activity android:name=".EmailActivity"></activity>
     </application>
 
 </manifest>

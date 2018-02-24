@@ -45,7 +45,7 @@ public class NoteModeFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     // Components
-    private Button btnEmail, btnTakeNote, btnSave, btnReplay, btnCancel, btnEditNoteCancel;
+    private Button btnEmail, btnTakeNote, btnSave, btnReplay, btnCancel, btnEditNoteCancel, btnEditNoteSave, btnEditDelete;
     private ListView lvNotes;
     private ArrayAdapter<NoteItem> lvNotesItemAdapter;
     private LinearLayout llNoteList;
@@ -54,6 +54,7 @@ public class NoteModeFragment extends Fragment {
     private TextView tvTimeAtPause, tvEditNoteTime;
     private long elapsedTime = 0;
     private List<NoteItem> noteList;
+    private NoteItem selectedNote;
 
     public NoteModeFragment() {
         // Required empty public constructor
@@ -95,7 +96,9 @@ public class NoteModeFragment extends Fragment {
         btnSave = (Button) view.findViewById(R.id.btnSave);
         btnCancel = (Button) view.findViewById(R.id.btnCancel);
         btnReplay = (Button) view.findViewById(R.id.btnEditNoteReplay);
+        btnEditNoteSave = (Button) view.findViewById(R.id.btnEditNoteSave);
         btnEditNoteCancel = (Button) view.findViewById(R.id.btnEditNoteCancel);
+        btnEditDelete = (Button) view.findViewById(R.id.btnEditDelete);
         lvNotes = (ListView) view.findViewById(R.id.lvNotes);
         llNoteList = (LinearLayout) view.findViewById(R.id.ll_noteList);
         rlNotepad = (RelativeLayout) view.findViewById(R.id.RL_notepad);
@@ -112,6 +115,29 @@ public class NoteModeFragment extends Fragment {
         // Hide rlNotepad and rlEditNote UIs by default
         rlNotepad.setVisibility(View.GONE);
         rlEditNote.setVisibility(View.GONE);
+
+        /** ListView UI buttons*/
+        btnEmail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(noteList.isEmpty()){
+                    Toast.makeText(getContext(),"No notes taken",Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    // Create email message content from notes taken
+                    StringBuilder emailContent = new StringBuilder();
+                    for(NoteItem notes : noteList){
+                        emailContent.append(notes.toEmailFormat());
+                    }
+
+                    // Create intent to evoke EmailActivity and pass the message in an Extra
+                    Intent intent = new Intent(getActivity().getApplicationContext(), EmailActivity.class);
+                    intent.putExtra("MESSAGE", emailContent.toString());
+                    startActivity(intent);
+                }
+
+            }
+        });
 
         btnTakeNote.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,6 +165,7 @@ public class NoteModeFragment extends Fragment {
             }
         });
 
+        /** Note taking UI buttons*/
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -171,6 +198,23 @@ public class NoteModeFragment extends Fragment {
             }
         });
 
+        /** Note editing UI buttons*/
+        btnEditNoteSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getSelectedNote().setSubject(etEditSubject.getText().toString());
+                getSelectedNote().setNote(etEditNote.getText().toString());
+
+                // Update the ListView
+                ArrayAdapter<NoteItem> lvNotesItemAdapter = new ArrayAdapter<>(getActivity().getApplicationContext(), android.R.layout.simple_list_item_1, noteList);
+                lvNotes.setAdapter(lvNotesItemAdapter);
+
+                llNoteList.setVisibility(View.VISIBLE);  // Display llNoteList UI
+                rlNotepad.setVisibility(View.GONE); // Hide rlNotepad UI
+                rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UI
+            }
+        });
+
         btnEditNoteCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -190,27 +234,24 @@ public class NoteModeFragment extends Fragment {
             }
         });
 
-        btnEmail.setOnClickListener(new View.OnClickListener() {
+        btnEditDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(noteList.isEmpty()){
-                    Toast.makeText(getContext(),"No notes taken",Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    // Create email message content from notes taken
-                    StringBuilder emailContent = new StringBuilder();
-                    for(NoteItem notes : noteList){
-                        emailContent.append(notes.toEmailFormat());
-                    }
+                // Delete the selected note item
+                NoteItem selectedNoteItem = getSelectedNote();
+                noteList.remove(selectedNoteItem);
 
-                    // Create intent to evoke EmailActivity and pass the message in an Extra
-                    Intent intent = new Intent(getActivity().getApplicationContext(), EmailActivity.class);
-                    intent.putExtra("MESSAGE", emailContent.toString());
-                    startActivity(intent);
-                }
+                // Update the ListView
+                ArrayAdapter<NoteItem> lvNotesItemAdapter = new ArrayAdapter<>(getActivity().getApplicationContext(), android.R.layout.simple_list_item_1, noteList);
+                lvNotes.setAdapter(lvNotesItemAdapter);
 
+                llNoteList.setVisibility(View.VISIBLE);  // Display llNoteList UI
+                rlNotepad.setVisibility(View.GONE); // Hide rlNotepad UI
+                rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UI
             }
         });
+
+
 
         lvNotes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -220,7 +261,7 @@ public class NoteModeFragment extends Fragment {
                 rlNotepad.setVisibility(View.GONE);
 
                 // Get selected NoteItem object
-                NoteItem selectedNote = noteList.get(pos);
+                setSelectedNote(noteList.get(pos));
 
                 // Set the text fields to the NoteItem object's corresponding values in edit UI
                 tvEditNoteTime.setText(selectedNote.getTime());
@@ -235,7 +276,13 @@ public class NoteModeFragment extends Fragment {
         return view;
     }
 
+    public NoteItem getSelectedNote() {
+        return selectedNote;
+    }
 
+    public void setSelectedNote(NoteItem selectedNote) {
+        this.selectedNote = selectedNote;
+    }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
