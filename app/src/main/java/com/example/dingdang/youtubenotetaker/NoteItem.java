@@ -37,6 +37,10 @@ public class NoteItem {
         this.note = note;
     }
 
+    public String toEmailFormat(){
+        return "Time: " + getTime() + "\nSubject: " + getSubject() + "\nNote content: \n" + getNote() + "\n\n";
+    }
+
     @Override
     public String toString() {
         String noteItemString = String.format("%s   %s", this.time, this.subject);

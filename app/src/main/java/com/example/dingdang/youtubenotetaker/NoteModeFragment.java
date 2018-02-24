@@ -190,6 +190,28 @@ public class NoteModeFragment extends Fragment {
             }
         });
 
+        btnEmail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(noteList.isEmpty()){
+                    Toast.makeText(getContext(),"No notes taken",Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    // Create email message content from notes taken
+                    StringBuilder emailContent = new StringBuilder();
+                    for(NoteItem notes : noteList){
+                        emailContent.append(notes.toEmailFormat());
+                    }
+
+                    // Create intent to evoke EmailActivity and pass the message in an Extra
+                    Intent intent = new Intent(getActivity().getApplicationContext(), EmailActivity.class);
+                    intent.putExtra("MESSAGE", emailContent.toString());
+                    startActivity(intent);
+                }
+
+            }
+        });
+
         lvNotes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
@@ -206,6 +228,9 @@ public class NoteModeFragment extends Fragment {
                 etEditNote.setText(selectedNote.getNote());
             }
         });
+
+
+
         // Inflate the layout for this fragment
         return view;
     }
