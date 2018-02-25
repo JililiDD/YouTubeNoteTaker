@@ -171,7 +171,7 @@ public class NoteModeFragment extends Fragment {
             public void onClick(View view) {
                 // Create an ArrayAdapter<NoteItem> for storing NoteItem objects
                 ArrayAdapter<NoteItem> lvNotesItemAdapter = new ArrayAdapter<>(getActivity().getApplicationContext(), android.R.layout.simple_list_item_1, noteList);
-                NoteItem noteItem = new NoteItem(tvTimeAtPause.getText().toString(), etUserSubjectInput.getText().toString(), etUserNoteInput.getText().toString());
+                NoteItem noteItem = new NoteItem(elapsedTime, tvTimeAtPause.getText().toString(), etUserSubjectInput.getText().toString(), etUserNoteInput.getText().toString());
                 lvNotesItemAdapter.add(noteItem);
                 lvNotes.setAdapter(lvNotesItemAdapter);
 
@@ -227,7 +227,7 @@ public class NoteModeFragment extends Fragment {
         btnReplay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String parseString = "replay " + tvEditNoteTime.getText().toString().trim(); // Pass the note time to GuestActivity as well
+                String parseString = "replay " + Long.toString(getSelectedNote().getCurrentTime()); // Pass the note time to GuestActivity as well
                 // Referred from: http://blog.csdn.net/fengge34/article/details/46391453
                 mListener.onFragmentInteraction(Uri.parse(parseString)); // Pass to GuestActivity to replay the video at the note time
 

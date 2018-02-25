@@ -41,29 +41,4 @@
 
         </android.support.v4.view.ViewPager>
     </LinearLayout>
-
-
-
-    <!--
-        <LinearLayout
-            android:id="@+id/controlButtons"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/youtubeplayer"
-            android:gravity="center_horizontal">
-
-
-            <Button
-                android:id="@+id/btnTakeNote"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Take Notes"
-                android:layout_centerHorizontal="true" />
-        </LinearLayout>
-        <ListView
-            android:id="@+id/lvNotes"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/controlButtons"/>
-     -->
 </RelativeLayout>

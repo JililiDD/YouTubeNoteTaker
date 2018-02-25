@@ -6,11 +6,21 @@ package com.example.dingdang.youtubenotetaker;
 
 public class NoteItem {
     private String time, subject, note;
+    private long currentTime;
 
-    public NoteItem(String time, String subject, String note){
+    public NoteItem(long currentTime, String time, String subject, String note){
+        this.currentTime = currentTime;
         this.time = time;
         this.subject = subject;
         this.note = note;
+    }
+
+    public long getCurrentTime() {
+        return currentTime;
+    }
+
+    public void setCurrentTime(long currentTime) {
+        this.currentTime = currentTime;
     }
 
     public String getTime() {
