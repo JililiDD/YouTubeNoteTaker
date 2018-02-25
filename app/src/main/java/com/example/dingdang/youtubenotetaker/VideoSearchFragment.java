@@ -49,6 +49,7 @@ public class VideoSearchFragment extends Fragment {
     private ListView videosFound;
     private Handler handler;
     private List<VideoItem> searchResults;
+    private String userType;
 
     private OnFragmentInteractionListener mListener;
 
@@ -154,8 +155,13 @@ public class VideoSearchFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> av, View v, int pos,
                                     long id) {
+                // Get userType from guestActivity
+                GuestActivity guestActivity = (GuestActivity) getActivity();
+                userType = guestActivity.getUserType();
+
                 Intent intent = new Intent(getActivity().getApplicationContext(), GuestActivity.class);
                 intent.putExtra("VIDEO_ID", searchResults.get(pos).getId());
+                intent.putExtra("USER_TYPE", userType);
                 startActivity(intent);
             }
 

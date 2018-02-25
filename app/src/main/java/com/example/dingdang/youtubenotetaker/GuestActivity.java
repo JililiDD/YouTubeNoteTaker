@@ -44,6 +44,7 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
     private PagerAdapter pagerAdapter;
     private long elapsedTime = 0;
     private static final String TAG = "Uri parse: ";
+    private String userType;
 
 
     private Button btnPlay, btnTakeNote, btnInitialize;
@@ -56,6 +57,9 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guest2);
+
+        userType = getIntent().getStringExtra("USER_TYPE"); // Get user type to provide different functions to guest and member users
+
         initializeYoutubePlayer();
 
         tabView = (LinearLayout) findViewById(R.id.tabView);
@@ -154,5 +158,9 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
 
     public long getElapsedTime(){
         return this.elapsedTime;
+    }
+
+    public String getUserType(){
+        return this.userType;
     }
 }

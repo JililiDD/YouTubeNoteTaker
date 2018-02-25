@@ -55,6 +55,7 @@ public class NoteModeFragment extends Fragment {
     private long elapsedTime = 0;
     private List<NoteItem> noteList;
     private NoteItem selectedNote;
+    private String userType;
 
     public NoteModeFragment() {
         // Required empty public constructor
@@ -112,9 +113,24 @@ public class NoteModeFragment extends Fragment {
 
         noteList = new ArrayList<>();
 
+        // Get userType from current GuestActivity
+        GuestActivity guestActivity = (GuestActivity) getActivity();
+        userType = guestActivity.getUserType();
+
         // Hide rlNotepad and rlEditNote UIs by default
         rlNotepad.setVisibility(View.GONE);
         rlEditNote.setVisibility(View.GONE);
+
+        /** TEST:
+        if(isRegisteredUser()){
+            Toast.makeText(getContext(),"REGISTERED USER",Toast.LENGTH_SHORT).show();
+        }
+        else{
+            Toast.makeText(getContext(),"GUEST",Toast.LENGTH_SHORT).show();
+        }
+         */
+
+
 
         /** ListView UI buttons*/
         btnEmail.setOnClickListener(new View.OnClickListener() {
@@ -282,6 +298,10 @@ public class NoteModeFragment extends Fragment {
 
     public void setSelectedNote(NoteItem selectedNote) {
         this.selectedNote = selectedNote;
+    }
+
+    public boolean isRegisteredUser(){
+        return userType.equals("REGISTERED");
     }
 
     // TODO: Rename method, update argument and hook method into UI event
