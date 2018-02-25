@@ -23,8 +23,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, GuestActivity.class);
+                intent.putExtra("USER_TYPE", "GUEST");
                 startActivity(intent);
             }
         });
+
+        login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, AfterLoginActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
 }
