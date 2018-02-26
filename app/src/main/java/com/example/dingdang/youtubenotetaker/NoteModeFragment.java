@@ -223,7 +223,7 @@ public class NoteModeFragment extends Fragment {
                 getSelectedNote().setNote(etEditNote.getText().toString());
 
                 // Update the ListView
-                ArrayAdapter<NoteItem> lvNotesItemAdapter = new ArrayAdapter<>(getActivity().getApplicationContext(), android.R.layout.simple_list_item_1, noteList);
+                ArrayAdapter<NoteItem> lvNotesItemAdapter = new ArrayAdapter<>(getActivity().getApplicationContext(), R.layout.item_black, noteList);
                 lvNotes.setAdapter(lvNotesItemAdapter);
 
                 llNoteList.setVisibility(View.VISIBLE);  // Display llNoteList UI
