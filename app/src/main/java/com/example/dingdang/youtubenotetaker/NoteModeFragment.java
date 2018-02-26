@@ -186,7 +186,8 @@ public class NoteModeFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 // Create an ArrayAdapter<NoteItem> for storing NoteItem objects
-                ArrayAdapter<NoteItem> lvNotesItemAdapter = new ArrayAdapter<>(getActivity().getApplicationContext(), android.R.layout.simple_list_item_1, noteList);
+                ArrayAdapter<NoteItem> lvNotesItemAdapter = new ArrayAdapter<>(getActivity().getApplicationContext(),
+                        R.layout.item_black, noteList);
                 NoteItem noteItem = new NoteItem(elapsedTime, tvTimeAtPause.getText().toString(), etUserSubjectInput.getText().toString(), etUserNoteInput.getText().toString());
                 lvNotesItemAdapter.add(noteItem);
                 lvNotes.setAdapter(lvNotesItemAdapter);
