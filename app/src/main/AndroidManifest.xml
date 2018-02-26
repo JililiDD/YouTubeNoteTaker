@@ -20,8 +20,11 @@
         </activity>
         <activity
             android:name=".GuestActivity"
-            android:parentActivityName=".MainActivity"></activity>
-        <activity android:name=".EmailActivity"></activity>
+            android:windowSoftInputMode="stateHidden|adjustPan|adjustResize"
+
+            android:parentActivityName=".MainActivity" />
+        <activity android:name=".EmailActivity" />
+        <activity android:name=".AfterLoginActivity"></activity>
     </application>
 
 </manifest>
