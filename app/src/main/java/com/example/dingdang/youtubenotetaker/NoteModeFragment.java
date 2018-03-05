@@ -121,14 +121,14 @@ public class NoteModeFragment extends Fragment {
         rlNotepad.setVisibility(View.GONE);
         rlEditNote.setVisibility(View.GONE);
 
-        /** TEST:
+
         if(isRegisteredUser()){
             Toast.makeText(getContext(),"REGISTERED USER",Toast.LENGTH_SHORT).show();
         }
         else{
             Toast.makeText(getContext(),"GUEST",Toast.LENGTH_SHORT).show();
         }
-         */
+
 
 
 
