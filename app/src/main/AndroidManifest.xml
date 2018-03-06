@@ -20,7 +20,7 @@
         </activity>
         <activity
             android:name=".GuestActivity"
-            android:windowSoftInputMode="stateHidden|adjustPan|adjustResize"
+            android:windowSoftInputMode="stateHidden"
 
             android:parentActivityName=".MainActivity" />
         <activity android:name=".EmailActivity" />
