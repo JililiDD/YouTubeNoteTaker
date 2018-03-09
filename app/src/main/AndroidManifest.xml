@@ -11,7 +11,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".GoogleLoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,7 +24,7 @@
             android:windowSoftInputMode="stateHidden" />
         <activity android:name=".EmailActivity" />
         <activity android:name=".AfterLoginActivity" />
-        <activity android:name=".GoogleLoginActivity"></activity>
+
     </application>
 
 </manifest>
