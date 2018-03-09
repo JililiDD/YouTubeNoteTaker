@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "746354959211",
+    "firebase_url": "https://notetaker-yiz540.firebaseio.com",
+    "project_id": "notetaker-yiz540",
+    "storage_bucket": "notetaker-yiz540.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:746354959211:android:c257e4303726a8b1",
+        "android_client_info": {
+          "package_name": "com.example.dingdang.youtubenotetaker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "746354959211-u43b3llasapukclom17nbdt7cuu05p8m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBWl0uxwhHolVxg5PslDTetgaMEdrVDLzM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

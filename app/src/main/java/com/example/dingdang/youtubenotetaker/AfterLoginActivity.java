@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 public class AfterLoginActivity extends AppCompatActivity {
 
     Button btnOpenNotebook, btnMyNotebooks;
@@ -33,6 +36,9 @@ public class AfterLoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //TODO: Fetch users notebooks from Firebase and display them in UserNotebooksActivity
+
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference myRef = database.getReference();
             }
         });
 
