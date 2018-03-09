@@ -23,7 +23,7 @@ public class GoogleLoginActivity extends AppCompatActivity implements View.OnCli
     private FirebaseAuth signInAuth;
     private EditText userEmailSignIn, thePassword,detail,status;
     private TextView messageSign;
-    private Button signInBtn,verifyemail,signout,createaccount;
+    private Button signInBtn,signout,createaccount;
     private ImageView userImage;
     private FirebaseAuth mAuth;
     private static final String TAG = "EmailPassword";
@@ -44,7 +44,6 @@ public class GoogleLoginActivity extends AppCompatActivity implements View.OnCli
 
 
         signInBtn = findViewById(R.id.signInBtn);
-        verifyemail = findViewById(R.id.verifyemail);
         signout = findViewById(R.id.signout);
         createaccount = findViewById(R.id.createaccount);
 
@@ -53,7 +52,6 @@ public class GoogleLoginActivity extends AppCompatActivity implements View.OnCli
         messageSign = findViewById(R.id.messageSign);
 
         signInBtn.setOnClickListener(this);
-        verifyemail.setOnClickListener(this);
         signout.setOnClickListener(this);
         createaccount.setOnClickListener(this);
 
@@ -80,13 +78,11 @@ public class GoogleLoginActivity extends AppCompatActivity implements View.OnCli
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.createaccount) {
-            //createAccount(mEmailField.getText().toString(), mPasswordField.getText().toString());
+            createAccount(userEmailSignIn.getText().toString(), thePassword.getText().toString());
         } else if (i == R.id.signInBtn) {
             signIn(userEmailSignIn.getText().toString(), thePassword.getText().toString());
         } else if (i == R.id.signout) {
            // signOut();
-        } else if (i == R.id.verifyemail) {
-          //  sendEmailVerification();
         }
 
     }
@@ -153,6 +149,38 @@ public class GoogleLoginActivity extends AppCompatActivity implements View.OnCli
 
         return valid;
     }
+
+    private void createAccount(String email, String password) {
+        Log.d(TAG, "createAccount:" + email);
+        if (!validateForm()) {
+            return;
+        }
+
+        // [START create_user_with_email]
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "createUserWithEmail:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+                           // updateUI(user);
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                            Toast.makeText(GoogleLoginActivity.this, "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                           // updateUI(null);
+                        }
+
+                        // [START_EXCLUDE]
+                        // [END_EXCLUDE]
+                    }
+                });
+        // [END create_user_with_email]
+    }
+
 
 
 
