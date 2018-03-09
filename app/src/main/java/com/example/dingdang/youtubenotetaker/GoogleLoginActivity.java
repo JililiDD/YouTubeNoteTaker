@@ -1,5 +1,6 @@
 package com.example.dingdang.youtubenotetaker;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -79,8 +80,13 @@ public class GoogleLoginActivity extends AppCompatActivity implements View.OnCli
         int i = v.getId();
         if (i == R.id.createaccount) {
             createAccount(userEmailSignIn.getText().toString(), thePassword.getText().toString());
+
+
         } else if (i == R.id.signInBtn) {
             signIn(userEmailSignIn.getText().toString(), thePassword.getText().toString());
+            Intent intent = new Intent(GoogleLoginActivity.this, AfterLoginActivity.class);
+            intent.putExtra("USER_TYPE", "GUEST");
+            startActivity(intent);
         } else if (i == R.id.signout) {
            // signOut();
         }
