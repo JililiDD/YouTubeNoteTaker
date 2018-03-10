@@ -35,6 +35,9 @@ public class RegisteredUserActivity extends AppCompatActivity implements NoteMod
     private ArrayAdapter<String> lvNotesItemAdapter;
 
 
+
+
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registered_user);

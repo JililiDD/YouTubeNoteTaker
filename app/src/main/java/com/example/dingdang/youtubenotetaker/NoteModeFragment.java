@@ -61,6 +61,10 @@ public class NoteModeFragment extends Fragment {
     private List<NoteItem> noteList;
     private NoteItem selectedNote;
     private String userType;
+    //firebase user get
+    private FirebaseUser user;
+    String useruid;
+
 
     public NoteModeFragment() {
         // Required empty public constructor
@@ -137,6 +141,15 @@ public class NoteModeFragment extends Fragment {
 
 
 
+
+        //get the user id of current user
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        //get the current userId
+        useruid=user.getUid();
+
+
+
+
         /** ListView UI buttons*/
         btnEmail.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -196,15 +209,12 @@ public class NoteModeFragment extends Fragment {
                 NoteItem noteItem = new NoteItem(elapsedTime, tvTimeAtPause.getText().toString(), etUserSubjectInput.getText().toString(), etUserNoteInput.getText().toString());
 
 
-                //get firebase user
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                //get the current userId
-                String useruid=user.getUid();
 
                 //add the saved note into firebase
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 DatabaseReference myRef = database.getReference("user").child(useruid).child("notebook1");
                 String theNoteId =myRef.push().getKey();
+                noteItem.setNoteId(theNoteId);
                 Map<String,NoteItem> theData=noteItem.putInToFireBase();
 
                 //Map<String, String> userData=tempItem.putInToFireBase();
@@ -284,7 +294,26 @@ public class NoteModeFragment extends Fragment {
             public void onClick(View view) {
                 // Delete the selected note item
                 NoteItem selectedNoteItem = getSelectedNote();
+                String removeItemNoteId=selectedNoteItem.getNoteId();
                 noteList.remove(selectedNoteItem);
+
+
+
+                //remove the noteItem from the database
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference myRef = database.getReference("user").child(useruid).child("notebook1");
+                myRef.child(removeItemNoteId).removeValue();
+
+
+
+
+
+
+
+
+
+
+
 
                 // Update the ListView
                 ArrayAdapter<NoteItem> lvNotesItemAdapter = new ArrayAdapter<>(getActivity().getApplicationContext(), R.layout.item_black, noteList);
