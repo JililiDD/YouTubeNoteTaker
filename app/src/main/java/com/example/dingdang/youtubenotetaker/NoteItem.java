@@ -1,5 +1,8 @@
 package com.example.dingdang.youtubenotetaker;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by Dingdang on 2/23/2018.
  */
@@ -7,6 +10,9 @@ package com.example.dingdang.youtubenotetaker;
 public class NoteItem {
     private String time, subject, note;
     private long currentTime;
+
+    public NoteItem(){
+    }
 
     public NoteItem(long currentTime, String time, String subject, String note){
         this.currentTime = currentTime;
@@ -55,5 +61,17 @@ public class NoteItem {
     public String toString() {
         String noteItemString = String.format("%s   %s", this.time, this.subject);
         return noteItemString;
+    }
+
+
+
+    //the method that put the note into the firebase
+    public Map putInToFireBase(){
+        Map<String, String> noteItem = new HashMap<String, String>();
+        noteItem.put("Note",this.getNote());
+        noteItem.put("Subject",this.getSubject());
+        noteItem.put("Time",this.getTime());
+        return noteItem;
+
     }
 }

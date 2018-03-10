@@ -1,6 +1,5 @@
 package com.example.dingdang.youtubenotetaker;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,10 +18,10 @@ public class MainActivity extends AppCompatActivity {
         guestLogin = (Button) findViewById(R.id.btnGuestLogin);
         login = (Button) findViewById(R.id.btnLogin);
 
-        guestLogin.setOnClickListener(new View.OnClickListener() { // Navigate to GuestActivity
+        guestLogin.setOnClickListener(new View.OnClickListener() { // Navigate to RegisteredUserActivity
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, GuestActivity.class);
+                Intent intent = new Intent(MainActivity.this, RegisteredUserActivity.class);
                 intent.putExtra("USER_TYPE", "GUEST");
                 startActivity(intent);
             }

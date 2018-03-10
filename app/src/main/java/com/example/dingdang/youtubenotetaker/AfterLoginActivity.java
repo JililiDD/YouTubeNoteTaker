@@ -25,7 +25,7 @@ public class AfterLoginActivity extends AppCompatActivity {
         btnOpenNotebook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), GuestActivity.class);
+                Intent intent = new Intent(getApplicationContext(), RegisteredUserActivity.class);
                 intent.putExtra("USER_TYPE", "REGISTERED");
                 startActivity(intent);
             }
@@ -36,9 +36,6 @@ public class AfterLoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //TODO: Fetch users notebooks from Firebase and display them in UserNotebooksActivity
-
-                FirebaseDatabase database = FirebaseDatabase.getInstance();
-                DatabaseReference myRef = database.getReference();
             }
         });
 

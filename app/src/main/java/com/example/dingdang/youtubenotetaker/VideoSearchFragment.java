@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +20,6 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -155,11 +153,11 @@ public class VideoSearchFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> av, View v, int pos,
                                     long id) {
-                // Get userType from guestActivity
-                GuestActivity guestActivity = (GuestActivity) getActivity();
-                userType = guestActivity.getUserType();
+                // Get userType from registeredUserActivity
+                RegisteredUserActivity registeredUserActivity = (RegisteredUserActivity) getActivity();
+                userType = registeredUserActivity.getUserType();
 
-                Intent intent = new Intent(getActivity().getApplicationContext(), GuestActivity.class);
+                Intent intent = new Intent(getActivity().getApplicationContext(), RegisteredUserActivity.class);
                 intent.putExtra("VIDEO_ID", searchResults.get(pos).getId());
                 intent.putExtra("USER_TYPE", userType);
                 startActivity(intent);
