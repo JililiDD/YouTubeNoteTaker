@@ -109,6 +109,7 @@ public class RegisteredUserActivity extends AppCompatActivity implements NoteMod
                         player.cueVideo("W4hTJybfU7s"); //load but doesn't autoplay the video
                     }
                     else{
+                        //youtube ID
                         player.loadVideo(getIntent().getStringExtra("VIDEO_ID"));
                     }
                 }

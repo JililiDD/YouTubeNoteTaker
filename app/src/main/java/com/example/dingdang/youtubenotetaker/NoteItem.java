@@ -8,7 +8,7 @@ import java.util.Map;
  */
 
 public class NoteItem {
-    private String time, subject, note,noteId;
+    private String time, subject, note,noteId,notebookName;
     private long currentTime;
 
     public NoteItem(){
@@ -20,6 +20,7 @@ public class NoteItem {
         this.subject = subject;
         this.note = note;
         this.noteId=null;
+        this.notebookName=null;
     }
 
     public long getCurrentTime() {
@@ -62,6 +63,14 @@ public class NoteItem {
         this.noteId = noteId;
     }
 
+    public String getNotebookName() {
+        return this.notebookName;
+    }
+
+    public void setNotebookName(String notebookName) {
+        this.notebookName = notebookName;
+    }
+
     public String toEmailFormat(){
         return "Time: " + getTime() + "\nSubject: " + getSubject() + "\nNote content: \n" + getNote() + "\n\n";
     }
@@ -81,6 +90,7 @@ public class NoteItem {
         noteItem.put("Subject",this.getSubject());
         noteItem.put("Time",this.getTime());
         noteItem.put("NoteId",this.getNoteId());
+        noteItem.put("NotebookName",this.getNotebookName());
         return noteItem;
 
     }
