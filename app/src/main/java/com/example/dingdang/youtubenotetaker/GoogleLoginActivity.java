@@ -26,7 +26,6 @@ public class GoogleLoginActivity extends AppCompatActivity implements View.OnCli
     private TextView messageSign;
     private Button signInBtn,signout,createaccount;
     private ImageView userImage;
-    private FirebaseAuth mAuth;
     private static final String TAG = "EmailPassword";
 
 
@@ -57,16 +56,7 @@ public class GoogleLoginActivity extends AppCompatActivity implements View.OnCli
         createaccount.setOnClickListener(this);
 
 
-        mAuth = FirebaseAuth.getInstance();
-
-
-
-
-
-
-
-
-
+        //mAuth = FirebaseAuth.getInstance();
 
 
 
@@ -99,18 +89,15 @@ public class GoogleLoginActivity extends AppCompatActivity implements View.OnCli
         if (!validateForm()) {
             return;
         }
-
-
-
         // [START sign_in_with_email]
-        mAuth.signInWithEmailAndPassword(email, password)
+        signInAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
+                            FirebaseUser user = signInAuth.getCurrentUser();
 
                         } else {
                             // If sign in fails, display a message to the user.
@@ -163,14 +150,14 @@ public class GoogleLoginActivity extends AppCompatActivity implements View.OnCli
         }
 
         // [START create_user_with_email]
-        mAuth.createUserWithEmailAndPassword(email, password)
+        signInAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
+                            FirebaseUser user = signInAuth.getCurrentUser();
                            // updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
