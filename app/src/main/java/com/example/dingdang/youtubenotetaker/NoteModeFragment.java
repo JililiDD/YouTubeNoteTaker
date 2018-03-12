@@ -60,7 +60,7 @@ public class NoteModeFragment extends Fragment {
     private long elapsedTime = 0;
     private List<NoteItem> noteList;
     private NoteItem selectedNote;
-    private String userType;
+    private String userType, youtubeId;
     //firebase user get
     private FirebaseUser user;
     String useruid;
@@ -122,9 +122,11 @@ public class NoteModeFragment extends Fragment {
 
         noteList = new ArrayList<>();
 
-        // Get userType from current RegisteredUserActivity
+        // Get userType and youtube video ID from current RegisteredUserActivity
         RegisteredUserActivity registeredUserActivity = (RegisteredUserActivity) getActivity();
         userType = registeredUserActivity.getUserType();
+        youtubeId = registeredUserActivity.getYoutubeId(); //YIWEI
+        Toast.makeText(getContext(),youtubeId,Toast.LENGTH_SHORT).show(); // YIWEI
 
         // Hide rlNotepad and rlEditNote UIs by default
         rlNotepad.setVisibility(View.GONE);

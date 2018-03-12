@@ -26,6 +26,7 @@ public class RegisteredUserActivity extends AppCompatActivity implements NoteMod
     private long elapsedTime = 0;
     private static final String TAG = "Uri parse: ";
     private String userType;
+    private String youtubeId;
 
 
     private Button btnPlay, btnTakeNote, btnInitialize;
@@ -43,6 +44,8 @@ public class RegisteredUserActivity extends AppCompatActivity implements NoteMod
         setContentView(R.layout.activity_registered_user);
 
         userType = getIntent().getStringExtra("USER_TYPE"); // Get user type to provide different functions to guest and member users
+        youtubeId = getIntent().getStringExtra("VIDEO_ID"); // Get youtube video id (YIWEI)
+
 
         initializeYoutubePlayer();
 
@@ -147,4 +150,8 @@ public class RegisteredUserActivity extends AppCompatActivity implements NoteMod
     public String getUserType(){
         return this.userType;
     }
+
+    public String getYoutubeId() {
+        return youtubeId;
+    } // YIWEI
 }
