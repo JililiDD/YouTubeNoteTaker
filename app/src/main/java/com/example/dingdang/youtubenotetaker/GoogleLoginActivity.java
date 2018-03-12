@@ -75,7 +75,7 @@ public class GoogleLoginActivity extends AppCompatActivity implements View.OnCli
         } else if (i == R.id.signInBtn) {
             signIn(userEmailSignIn.getText().toString(), thePassword.getText().toString());
             Intent intent = new Intent(GoogleLoginActivity.this, AfterLoginActivity.class);
-            intent.putExtra("USER_TYPE", "GUEST");
+            intent.putExtra("USER_TYPE", "REGISTERED");
             startActivity(intent);
         } else if (i == R.id.signout) {
            // signOut();
