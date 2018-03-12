@@ -125,6 +125,9 @@ public class NoteModeFragment extends Fragment {
         // Get userType and youtube video ID from current RegisteredUserActivity
         RegisteredUserActivity registeredUserActivity = (RegisteredUserActivity) getActivity();
         userType = registeredUserActivity.getUserType();
+
+
+        //the youtubeID
         youtubeId = registeredUserActivity.getYoutubeId(); //YIWEI
         Toast.makeText(getContext(),youtubeId,Toast.LENGTH_SHORT).show(); // YIWEI
 
@@ -214,7 +217,7 @@ public class NoteModeFragment extends Fragment {
 
                 //add the saved note into firebase
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
-                DatabaseReference myRef = database.getReference("user").child(useruid).child("notebook1");
+                DatabaseReference myRef = database.getReference("user").child(useruid).child("youtubeId");
                 String theNoteId =myRef.push().getKey();
                 noteItem.setNoteId(theNoteId);
                 Map<String,NoteItem> theData=noteItem.putInToFireBase();
