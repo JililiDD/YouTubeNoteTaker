@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +19,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -55,7 +60,11 @@ public class NoteModeFragment extends Fragment {
     private long elapsedTime = 0;
     private List<NoteItem> noteList;
     private NoteItem selectedNote;
-    private String userType;
+    private String userType, youtubeId;
+    //firebase user get
+    private FirebaseUser user;
+    String useruid;
+
 
     public NoteModeFragment() {
         // Required empty public constructor
@@ -113,9 +122,14 @@ public class NoteModeFragment extends Fragment {
 
         noteList = new ArrayList<>();
 
-        // Get userType from current GuestActivity
+        // Get userType and youtube video ID from current GuestActivity
         GuestActivity guestActivity = (GuestActivity) getActivity();
         userType = guestActivity.getUserType();
+
+
+        //the youtubeID
+        youtubeId = guestActivity.getYoutubeId(); //YIWEI
+        Toast.makeText(getContext(),youtubeId,Toast.LENGTH_SHORT).show(); // YIWEI
 
         // Hide rlNotepad and rlEditNote UIs by default
         rlNotepad.setVisibility(View.GONE);
@@ -128,6 +142,21 @@ public class NoteModeFragment extends Fragment {
         else{
             Toast.makeText(getContext(),"GUEST",Toast.LENGTH_SHORT).show();
         }
+
+
+
+
+
+        if(isRegisteredUser()){
+            user = FirebaseAuth.getInstance().getCurrentUser();
+            //get the current userId
+            useruid=user.getUid();
+
+        }
+        //get the user id of current user
+        /**user = FirebaseAuth.getInstance().getCurrentUser();
+        //get the current userId
+        useruid=user.getUid();*/
 
 
 
@@ -189,6 +218,38 @@ public class NoteModeFragment extends Fragment {
                 ArrayAdapter<NoteItem> lvNotesItemAdapter = new ArrayAdapter<>(getActivity().getApplicationContext(),
                         R.layout.item_black, noteList);
                 NoteItem noteItem = new NoteItem(elapsedTime, tvTimeAtPause.getText().toString(), etUserSubjectInput.getText().toString(), etUserNoteInput.getText().toString());
+
+                if(isRegisteredUser()){
+                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    DatabaseReference myRef = database.getReference("user").child(useruid).child(youtubeId);
+                    String theNoteId =myRef.push().getKey();
+                    noteItem.setNoteId(theNoteId);
+                    Map<String,NoteItem> theData=noteItem.putInToFireBase();
+
+                    //Map<String, String> userData=tempItem.putInToFireBase();
+                    myRef.child(theNoteId).setValue(theData);
+
+                }
+
+
+
+                //add the saved note into firebase
+               /** FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference myRef = database.getReference("user").child(useruid).child(youtubeId);
+                String theNoteId =myRef.push().getKey();
+                noteItem.setNoteId(theNoteId);
+                Map<String,NoteItem> theData=noteItem.putInToFireBase();
+
+                //Map<String, String> userData=tempItem.putInToFireBase();
+                myRef.child(theNoteId).setValue(theData);*/
+
+
+
+
+
+
+
+
                 lvNotesItemAdapter.add(noteItem);
                 lvNotes.setAdapter(lvNotesItemAdapter);
 
@@ -256,7 +317,26 @@ public class NoteModeFragment extends Fragment {
             public void onClick(View view) {
                 // Delete the selected note item
                 NoteItem selectedNoteItem = getSelectedNote();
+                String removeItemNoteId=selectedNoteItem.getNoteId();
                 noteList.remove(selectedNoteItem);
+
+
+
+                //remove the noteItem from the database
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference myRef = database.getReference("user").child(useruid).child(youtubeId);
+                myRef.child(removeItemNoteId).removeValue();
+
+
+
+
+
+
+
+
+
+
+
 
                 // Update the ListView
                 ArrayAdapter<NoteItem> lvNotesItemAdapter = new ArrayAdapter<>(getActivity().getApplicationContext(), R.layout.item_black, noteList);
