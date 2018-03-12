@@ -18,10 +18,10 @@ public class MainActivity extends AppCompatActivity {
         guestLogin = (Button) findViewById(R.id.btnGuestLogin);
         login = (Button) findViewById(R.id.btnLogin);
 
-        guestLogin.setOnClickListener(new View.OnClickListener() { // Navigate to RegisteredUserActivity
+        guestLogin.setOnClickListener(new View.OnClickListener() { // Navigate to GuestActivity
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, RegisteredUserActivity.class);
+                Intent intent = new Intent(MainActivity.this, GuestActivity.class);
                 intent.putExtra("USER_TYPE", "GUEST");
                 startActivity(intent);
             }
@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, AfterLoginActivity.class);
+                Intent intent = new Intent(MainActivity.this, GoogleLoginActivity.class);
                 startActivity(intent);
             }
         });

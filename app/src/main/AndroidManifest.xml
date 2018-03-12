@@ -11,7 +11,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".GoogleLoginActivity">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -19,10 +19,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".RegisteredUserActivity"
+            android:name=".GuestActivity"
             android:parentActivityName=".MainActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity android:name=".EmailActivity" />
+        <activity android:name=".GoogleLoginActivity"
+            android:parentActivityName=".MainActivity"/>
         <activity android:name=".AfterLoginActivity"
             android:parentActivityName=".GoogleLoginActivity"/>
 

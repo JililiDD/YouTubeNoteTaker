@@ -122,13 +122,13 @@ public class NoteModeFragment extends Fragment {
 
         noteList = new ArrayList<>();
 
-        // Get userType and youtube video ID from current RegisteredUserActivity
-        RegisteredUserActivity registeredUserActivity = (RegisteredUserActivity) getActivity();
-        userType = registeredUserActivity.getUserType();
+        // Get userType and youtube video ID from current GuestActivity
+        GuestActivity guestActivity = (GuestActivity) getActivity();
+        userType = guestActivity.getUserType();
 
 
         //the youtubeID
-        youtubeId = registeredUserActivity.getYoutubeId(); //YIWEI
+        youtubeId = guestActivity.getYoutubeId(); //YIWEI
         Toast.makeText(getContext(),youtubeId,Toast.LENGTH_SHORT).show(); // YIWEI
 
         // Hide rlNotepad and rlEditNote UIs by default
@@ -147,10 +147,16 @@ public class NoteModeFragment extends Fragment {
 
 
 
+        if(isRegisteredUser()){
+            user = FirebaseAuth.getInstance().getCurrentUser();
+            //get the current userId
+            useruid=user.getUid();
+
+        }
         //get the user id of current user
-        user = FirebaseAuth.getInstance().getCurrentUser();
+        /**user = FirebaseAuth.getInstance().getCurrentUser();
         //get the current userId
-        useruid=user.getUid();
+        useruid=user.getUid();*/
 
 
 
@@ -186,13 +192,13 @@ public class NoteModeFragment extends Fragment {
                 rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UI
 
                 // Referred from: http://blog.csdn.net/fengge34/article/details/46391453
-                mListener.onFragmentInteraction(Uri.parse("pause")); // Pass to RegisteredUserActivity to pause the video
+                mListener.onFragmentInteraction(Uri.parse("pause")); // Pass to GuestActivity to pause the video
 
-                // Take elapsed time (milliseconds) when pause from RegisteredUserActivity using a getter method in RegisteredUserActivity
-                // Using Bundle to pass data from RegisteredUserActivity to NoteModeFragment doesn't work in this case
+                // Take elapsed time (milliseconds) when pause from GuestActivity using a getter method in GuestActivity
+                // Using Bundle to pass data from GuestActivity to NoteModeFragment doesn't work in this case
                 // Referenced from: https://stackoverflow.com/a/22065903
-                RegisteredUserActivity registeredUserActivity = (RegisteredUserActivity) getActivity();
-                elapsedTime = registeredUserActivity.getElapsedTime();
+                GuestActivity guestActivity = (GuestActivity) getActivity();
+                elapsedTime = guestActivity.getElapsedTime();
 
                 // Convert elapsedTime to hh:mm:ss format
                 int hour = (int) (elapsedTime/(1000*3600));
@@ -213,17 +219,29 @@ public class NoteModeFragment extends Fragment {
                         R.layout.item_black, noteList);
                 NoteItem noteItem = new NoteItem(elapsedTime, tvTimeAtPause.getText().toString(), etUserSubjectInput.getText().toString(), etUserNoteInput.getText().toString());
 
+                if(isRegisteredUser()){
+                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    DatabaseReference myRef = database.getReference("user").child(useruid).child(youtubeId);
+                    String theNoteId =myRef.push().getKey();
+                    noteItem.setNoteId(theNoteId);
+                    Map<String,NoteItem> theData=noteItem.putInToFireBase();
+
+                    //Map<String, String> userData=tempItem.putInToFireBase();
+                    myRef.child(theNoteId).setValue(theData);
+
+                }
+
 
 
                 //add the saved note into firebase
-                FirebaseDatabase database = FirebaseDatabase.getInstance();
-                DatabaseReference myRef = database.getReference("user").child(useruid).child("youtubeId");
+               /** FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference myRef = database.getReference("user").child(useruid).child(youtubeId);
                 String theNoteId =myRef.push().getKey();
                 noteItem.setNoteId(theNoteId);
                 Map<String,NoteItem> theData=noteItem.putInToFireBase();
 
                 //Map<String, String> userData=tempItem.putInToFireBase();
-                myRef.child(theNoteId).setValue(theData);
+                myRef.child(theNoteId).setValue(theData);*/
 
 
 
@@ -287,9 +305,9 @@ public class NoteModeFragment extends Fragment {
         btnReplay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String parseString = "replay " + Long.toString(getSelectedNote().getCurrentTime()); // Pass the note time to RegisteredUserActivity as well
+                String parseString = "replay " + Long.toString(getSelectedNote().getCurrentTime()); // Pass the note time to GuestActivity as well
                 // Referred from: http://blog.csdn.net/fengge34/article/details/46391453
-                mListener.onFragmentInteraction(Uri.parse(parseString)); // Pass to RegisteredUserActivity to replay the video at the note time
+                mListener.onFragmentInteraction(Uri.parse(parseString)); // Pass to GuestActivity to replay the video at the note time
 
             }
         });
@@ -306,7 +324,7 @@ public class NoteModeFragment extends Fragment {
 
                 //remove the noteItem from the database
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
-                DatabaseReference myRef = database.getReference("user").child(useruid).child("notebook1");
+                DatabaseReference myRef = database.getReference("user").child(useruid).child(youtubeId);
                 myRef.child(removeItemNoteId).removeValue();
 
 

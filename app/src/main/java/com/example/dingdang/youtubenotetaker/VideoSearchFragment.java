@@ -153,11 +153,11 @@ public class VideoSearchFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> av, View v, int pos,
                                     long id) {
-                // Get userType from registeredUserActivity
-                RegisteredUserActivity registeredUserActivity = (RegisteredUserActivity) getActivity();
-                userType = registeredUserActivity.getUserType();
+                // Get userType from guestActivity
+                GuestActivity guestActivity = (GuestActivity) getActivity();
+                userType = guestActivity.getUserType();
 
-                Intent intent = new Intent(getActivity().getApplicationContext(), RegisteredUserActivity.class);
+                Intent intent = new Intent(getActivity().getApplicationContext(), GuestActivity.class);
                 intent.putExtra("VIDEO_ID", searchResults.get(pos).getId());
                 intent.putExtra("USER_TYPE", userType);
                 startActivity(intent);

@@ -17,7 +17,7 @@ import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 
 // Following code for embeding youtube player is referenced from https://www.youtube.com/watch?v=W4hTJybfU7s
 // Need to extends YouTubeBaseActivity to use youtube API
-public class RegisteredUserActivity extends AppCompatActivity implements NoteModeFragment.OnFragmentInteractionListener, VideoSearchFragment.OnFragmentInteractionListener{
+public class GuestActivity extends AppCompatActivity implements NoteModeFragment.OnFragmentInteractionListener, VideoSearchFragment.OnFragmentInteractionListener{
     private YouTubePlayerSupportFragment youTubePlayerFragment;
     private LinearLayout tabView;
     private TabLayout tabs;
@@ -41,7 +41,7 @@ public class RegisteredUserActivity extends AppCompatActivity implements NoteMod
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_registered_user);
+        setContentView(R.layout.activity_guest2);
 
         userType = getIntent().getStringExtra("USER_TYPE"); // Get user type to provide different functions to guest and member users
         youtubeId = getIntent().getStringExtra("VIDEO_ID"); // Get youtube video id (YIWEI)
