@@ -580,14 +580,11 @@ public class NoteModeFragment extends Fragment {
 
                                             DatabaseReference myChildrenRef1 = database2.getReference("user").child(useruid).child(youtubeId).child(selectedNote.getNoteId());
                                             myChildrenRef1.child("Selected").setValue("true");
-                                            //Log.i("selectItemID",""+ myChildrenRef1.child("Selected")); //displays the key for the node
+
 
                                             rlEditNote.setVisibility(View.VISIBLE);
                                             llNoteList.setVisibility(View.GONE);
                                             rlNotepad.setVisibility(View.GONE);
-
-
-
                                             tvEditNoteTime.setText(selectedNote.getTime());
                                             etEditSubject.setText(selectedNote.getSubject());
                                             etEditNote.setText(selectedNote.getNote());
