@@ -458,19 +458,21 @@ public class NoteModeFragment extends Fragment {
                                             noteList.clear();
                                             ArrayAdapter<NoteItem> lvNotesItemAdapter1 = new ArrayAdapter<>(getActivity().getApplicationContext(),
                                                     R.layout.item_black, noteList);
-                                            NoteItem selectedNoteItem = getSelectedNote();
-                                            String removeItemNoteId=selectedNoteItem.getNoteId();
-                                            //Log.i("selectItemID",""+ removeItemNoteId); //displays the key for the node
-                                            // Log.i("notebook",""+ newItem.get("NotebookName")); //displays the key for the node
+                                               for(DataSnapshot childDataSnapshot : dataSnapshot.getChildren()){
 
+                                                   HashMap<String,String> newItem= (HashMap<String, String>) childDataSnapshot.getValue();
+                                                   if(newItem.get("Selected").equals("false")){
+                                                      // Log.i("selectedinfo",""+ newItem.get("Selected")); //displays the key for the node
+                                                       NoteItem newNoteItem=new NoteItem(0,newItem.get("Time"),newItem.get("Subject"),newItem.get("Note"));
+                                                       newNoteItem.setNoteId(newItem.get("NoteId"));
+                                                       newNoteItem.setNotebookName(newItem.get("NotebookName"));
+                                                       lvNotesItemAdapter1.add(newNoteItem);
 
+                                                   }else{
+                                                       FirebaseDatabase databaser = FirebaseDatabase.getInstance();
+                                                       DatabaseReference myRefr = databaser.getReference("user").child(useruid).child(youtubeId);
+                                                   }
 
-                                            for(DataSnapshot childDataSnapshot : dataSnapshot.getChildren()){
-                                                HashMap<String,String> newItem= (HashMap<String, String>) childDataSnapshot.getValue();
-                                                NoteItem newNoteItem=new NoteItem(0,newItem.get("Time"),newItem.get("Subject"),newItem.get("Note"));
-                                                newNoteItem.setNoteId(newItem.get("NoteId"));
-                                                newNoteItem.setNotebookName(newItem.get("NotebookName"));
-                                                lvNotesItemAdapter1.add(newNoteItem);
                                             }
 
 
@@ -487,8 +489,6 @@ public class NoteModeFragment extends Fragment {
 
                                         }
                                     });
-                                    i++;
-                                    Log.i("Key",""+ i); //displays the key for the node
                                     break;
 
                                 }
