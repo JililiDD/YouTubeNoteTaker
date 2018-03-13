@@ -25,6 +25,7 @@ public class GoogleLoginActivity extends AppCompatActivity implements View.OnCli
     private EditText userEmailSignIn, thePassword,detail,status;
     private TextView messageSign;
     private Button signInBtn,signout,createaccount;
+    private Boolean signIncheck;
     private ImageView userImage;
     private static final String TAG = "EmailPassword";
 
@@ -46,6 +47,7 @@ public class GoogleLoginActivity extends AppCompatActivity implements View.OnCli
         signInBtn = findViewById(R.id.signInBtn);
         signout = findViewById(R.id.signout);
         createaccount = findViewById(R.id.createaccount);
+        signIncheck=false;
 
 
 
@@ -74,9 +76,11 @@ public class GoogleLoginActivity extends AppCompatActivity implements View.OnCli
 
         } else if (i == R.id.signInBtn) {
             signIn(userEmailSignIn.getText().toString(), thePassword.getText().toString());
-            Intent intent = new Intent(GoogleLoginActivity.this, AfterLoginActivity.class);
-            intent.putExtra("USER_TYPE", "REGISTERED");
-            startActivity(intent);
+            if(signIncheck){
+                Intent intent = new Intent(GoogleLoginActivity.this, AfterLoginActivity.class);
+                intent.putExtra("USER_TYPE", "REGISTERED");
+                startActivity(intent);
+            }
         } else if (i == R.id.signout) {
            // signOut();
         }
@@ -95,11 +99,13 @@ public class GoogleLoginActivity extends AppCompatActivity implements View.OnCli
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            signIncheck=true;
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = signInAuth.getCurrentUser();
 
                         } else {
+                            signIncheck=false;
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
                             Toast.makeText(GoogleLoginActivity.this, "Authentication failed.",

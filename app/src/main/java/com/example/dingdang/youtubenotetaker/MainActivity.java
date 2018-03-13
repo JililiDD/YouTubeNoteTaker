@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, GoogleLoginActivity.class);
+                Intent intent = new Intent(MainActivity.this, FirebaseLoginActivity.class);
                 intent.putExtra("USER_TYPE", "REGISTERED");
                 startActivity(intent);
             }
