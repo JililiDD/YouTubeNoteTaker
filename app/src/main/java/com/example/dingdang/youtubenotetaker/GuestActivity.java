@@ -5,14 +5,23 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 
 // Following code for embeding youtube player is referenced from https://www.youtube.com/watch?v=W4hTJybfU7s
@@ -28,6 +37,10 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
     private String userType;
     private String youtubeId;
 
+    private String linkExist;
+    private FirebaseUser user;
+    private String useruid;
+
 
     private Button btnPlay, btnTakeNote, btnInitialize;
     private YouTubePlayer.OnInitializedListener mOnInitializedListener;
@@ -39,12 +52,20 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
 
 
 
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guest2);
 
         userType = getIntent().getStringExtra("USER_TYPE"); // Get user type to provide different functions to guest and member users
         youtubeId = getIntent().getStringExtra("VIDEO_ID"); // Get youtube video id (YIWEI)
+        linkExist=getIntent().getStringExtra("LINK_EXIST");
+
+
+
+
+
+
 
 
         initializeYoutubePlayer();
@@ -96,7 +117,7 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
         youTubePlayerFragment.initialize(YouTubeConfig.getApiKey(), new YouTubePlayer.OnInitializedListener() {
 
             @Override
-            public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer,
+            public void onInitializationSuccess(YouTubePlayer.Provider provider, final YouTubePlayer youTubePlayer,
                                                 boolean wasRestored) {
                 if (!wasRestored) {
                     //youTubePlayer.loadVideo("W4hTJybfU7s"); //load and autoplay the video
@@ -111,6 +132,7 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
                     else{
                         //youtube ID
                         player.loadVideo(getIntent().getStringExtra("VIDEO_ID"));
+
                     }
                 }
             }
@@ -143,6 +165,9 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
             player.seekToMillis(msNoteTime);
         }
     }
+    public boolean isRegisteredUser(){
+        return userType.equals("REGISTERED");
+    }
 
     public long getElapsedTime(){
         return this.elapsedTime;
@@ -150,6 +175,14 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
 
     public String getUserType(){
         return this.userType;
+    }
+
+    public String getLinkExistType(){
+        return this.linkExist;
+    }
+
+    public void SetLinkExistType(String s){
+        this.linkExist=s;
     }
 
     public String getYoutubeId() {
