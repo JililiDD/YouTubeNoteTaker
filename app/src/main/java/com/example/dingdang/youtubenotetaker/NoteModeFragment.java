@@ -451,6 +451,23 @@ public class NoteModeFragment extends Fragment {
                                             int k=0;
                                             for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
                                                 HashMap<String, String> newItem = (HashMap<String, String>) childDataSnapshot.getValue();
+                                                if (newItem.get("Selected").equals("true")){
+                                                    k++;
+                                                    Log.i("count true","  "+k);
+                                                    theselectid=newItem.get("NoteId");
+                                                    FirebaseDatabase databaser = FirebaseDatabase.getInstance();
+                                                    DatabaseReference myRefr = databaser.getReference("user").child(useruid).child(youtubeId).child(theselectid);
+                                                    Log.i("selectedinfo inside",""+myRefr.toString()); //displays the key for the node
+                                                    myRefr.removeValue();
+                                                    break;
+
+
+                                                }
+
+                                            }
+
+                                            for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
+                                                HashMap<String, String> newItem = (HashMap<String, String>) childDataSnapshot.getValue();
                                                 if (newItem.get("Selected").equals("false")) {
                                                     NoteItem newNoteItem = new NoteItem(0, newItem.get("Time"), newItem.get("Subject"), newItem.get("Note"));
                                                     newNoteItem.setNoteId(newItem.get("NoteId"));
@@ -459,19 +476,11 @@ public class NoteModeFragment extends Fragment {
                                                     i++;
                                                     Log.i("count false","  "+i);
 
-                                                }else if (newItem.get("Selected").equals("true")){
-                                                    k++;
-                                                    Log.i("count true","  "+k);
-                                                    theselectid=newItem.get("NoteId");
-                                                    FirebaseDatabase databaser = FirebaseDatabase.getInstance();
-                                                    DatabaseReference myRefr = databaser.getReference("user").child(useruid).child(youtubeId).child(theselectid);
-                                                    //Log.i("selectedinfo",""+myRefr.toString()); //displays the key for the node
-                                                    //myRefr.removeValue();
-
-
                                                 }
 
                                             }
+
+
                                             lvNotes.setAdapter(lvNotesItemAdapter1);
                                             llNoteList.setVisibility(View.VISIBLE);  // Display llNoteList UI
                                             rlNotepad.setVisibility(View.GONE); // Hide rlNotepad UI
@@ -483,16 +492,11 @@ public class NoteModeFragment extends Fragment {
 
                                         }
                                     });
-                                    //break;
+                                    break;
 
                                 }
-                                break;
 
                             }
-                            FirebaseDatabase databaser = FirebaseDatabase.getInstance();
-                            DatabaseReference myRefr = databaser.getReference("user").child(useruid).child(youtubeId).child(theselectid);
-                            Log.i("selectedinfo",""+myRefr.toString()); //displays the key for the node
-                            //myRefr.removeValue();
                         }
 
 
@@ -501,6 +505,8 @@ public class NoteModeFragment extends Fragment {
 
                         }
                     });
+
+
 
                 } else {
                     // Delete the selected note item
