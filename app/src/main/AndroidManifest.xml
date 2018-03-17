@@ -20,11 +20,12 @@
         </activity>
         <activity
             android:name=".GuestActivity"
-            android:windowSoftInputMode="stateHidden|adjustPan|adjustResize"
-
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".MainActivity"
+            android:windowSoftInputMode="stateHidden|adjustPan|adjustResize" />
         <activity android:name=".EmailActivity" />
-        <activity android:name=".AfterLoginActivity"></activity>
+        <activity android:name=".AfterLoginActivity" />
+        <activity android:name=".FirebaseLoginActivity"
+            android:parentActivityName=".MainActivity"></activity>
     </application>
 
 </manifest>

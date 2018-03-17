@@ -221,7 +221,7 @@ public class NoteModeFragment extends Fragment {
 
                 if(isRegisteredUser()){
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
-                    DatabaseReference myRef = database.getReference("user").child(useruid).child(youtubeId);
+                    DatabaseReference myRef = database.getReference("testuser").child(useruid).child(youtubeId);
                     String theNoteId =myRef.push().getKey();
                     noteItem.setNoteId(theNoteId);
                     Map<String,NoteItem> theData=noteItem.putInToFireBase();
