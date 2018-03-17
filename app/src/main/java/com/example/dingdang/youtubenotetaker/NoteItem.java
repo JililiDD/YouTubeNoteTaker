@@ -3,12 +3,13 @@ package com.example.dingdang.youtubenotetaker;
 import java.util.HashMap;
 import java.util.Map;
 
+
 /**
  * Created by Dingdang on 2/23/2018.
  */
 
 public class NoteItem {
-    private String time, subject, note,noteId,notebookName;
+    private String time, subject, note,noteId,notebookName,selected;
     private long currentTime;
 
     public NoteItem(){
@@ -21,6 +22,7 @@ public class NoteItem {
         this.note = note;
         this.noteId=null;
         this.notebookName=null;
+        this.selected="false";
     }
 
     public long getCurrentTime() {
@@ -71,6 +73,14 @@ public class NoteItem {
         this.notebookName = notebookName;
     }
 
+    public String getSelected() {
+        return this.selected;
+    }
+
+    public void setSelected(String selected) {
+        this.selected = selected;
+    }
+
     public String toEmailFormat(){
         return "Time: " + getTime() + "\nSubject: " + getSubject() + "\nNote content: \n" + getNote() + "\n\n";
     }
@@ -91,6 +101,7 @@ public class NoteItem {
         noteItem.put("Time",this.getTime());
         noteItem.put("NoteId",this.getNoteId());
         noteItem.put("NotebookName",this.getNotebookName());
+        noteItem.put("Selected",this.getSelected());
         return noteItem;
 
     }
