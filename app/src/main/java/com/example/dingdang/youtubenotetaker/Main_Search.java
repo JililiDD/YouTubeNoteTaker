@@ -167,6 +167,10 @@ public class Main_Search extends AppCompatActivity {
                 TextView description = (TextView)convertView.findViewById(R.id.video_description);
 
                 VideoItem searchResult = searchResults.get(position);
+                Picasso.with(getApplicationContext()).load(searchResult.getThumbnailURL()).into(thumbnail);
+                title.setText(searchResult.getTitle());
+                description.setText(searchResult.getDescription());
+                return convertView;
 
 
             }
