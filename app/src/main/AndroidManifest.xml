@@ -24,8 +24,11 @@
             android:windowSoftInputMode="stateHidden|adjustPan|adjustResize" />
         <activity android:name=".EmailActivity" />
         <activity android:name=".AfterLoginActivity" />
-        <activity android:name=".FirebaseLoginActivity"
-            android:parentActivityName=".MainActivity"></activity>
+
+        <activity
+            android:name=".FirebaseLoginActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity android:name=".Main_Search"></activity>
     </application>
 
 </manifest>

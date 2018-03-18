@@ -42,18 +42,8 @@ public class LoginPageActivity extends AppCompatActivity {
             public void onClick(View v) {
                 signInEmail();
 
-
             }
         });
-
-
-
-
-
-
-
-
-
 
     }
 
