@@ -192,6 +192,7 @@ public class Main_Search extends AppCompatActivity {
                 intent.putExtra("VIDEO_ID", searchResults.get(pos).getId());
 //                intent.putExtra("USER_TYPE", userType);
                 intent.putExtra("USER_TYPE", "GUEST");
+                startActivity(intent);
 
             }
 
