@@ -145,6 +145,7 @@ public class Main_Search extends AppCompatActivity {
 //            public void run(){
                 YoutubeConnector yc = new YoutubeConnector(getContext());
                 searchResults = yc.search(keywords);
+                 updateVideosFound();
 
 //                handler.post(new Runnable(){
 //                    public void run(){
