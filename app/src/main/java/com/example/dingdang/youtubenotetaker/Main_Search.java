@@ -51,6 +51,9 @@ public class Main_Search extends AppCompatActivity {
     private Button searchBtn;
     private ListView videosFound;
     private Handler handler;
+    private List<VideoItem> searchResults;
+    private String userType;
+
 
 
 //    private OnFragmentInteractionListener mListener;
