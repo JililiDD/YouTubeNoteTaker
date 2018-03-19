@@ -9,6 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
@@ -23,6 +24,8 @@ public class AfterLoginActivity extends AppCompatActivity {
 
     // Firebase variable
     private FirebaseAuth.AuthStateListener mAuthStateListener;
+    private FirebaseAuth mFirebaseAuth;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +34,9 @@ public class AfterLoginActivity extends AppCompatActivity {
 
         btnMyNotebooks = (Button) findViewById(R.id.btnMyNotebooks);
         btnOpenNotebook = (Button) findViewById(R.id.btnOpenNotebook);
+
+        // Firebase auth variable initialization
+        mFirebaseAuth = FirebaseAuth.getInstance();
 
         // Lead the user to the activity for taking notes.
         btnOpenNotebook.setOnClickListener(new View.OnClickListener() {
@@ -53,6 +59,58 @@ public class AfterLoginActivity extends AppCompatActivity {
             }
         });
 
+        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                // firebaseAuth variable is guaranteed to contain user sign-in or not information
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if(user != null) {
+                    // User logged in
+                    //onSignedInInitialize(user.getDisplayName());
+
+                }
+                else {
+                    // User signed out, so put in sign in flow
+                    startActivityForResult(
+                            AuthUI.getInstance()
+                                    .createSignInIntentBuilder()
+                                    .setIsSmartLockEnabled(false)
+                                    .setAvailableProviders(Arrays.asList(
+                                            new AuthUI.IdpConfig.EmailBuilder().build(),
+                                            new AuthUI.IdpConfig.GoogleBuilder().build()))
+                                    .build(),
+                            RC_SIGN_IN);
+                }
+            }
+        };
+
+    }
+
+    @Override
+    public void onActivityResult( int requestCode, int resultCode, Intent data) {
+        if(requestCode == RC_SIGN_IN) {
+            if(resultCode == RESULT_OK) {
+                Toast.makeText(AfterLoginActivity.this, "Signed In !!",Toast.LENGTH_SHORT).show();
+            }
+            else if (resultCode == RESULT_CANCELED) {
+                Toast.makeText(AfterLoginActivity.this, "Sign In Cancel !!",Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        }
+    }
+
+    @Override
+    protected void onPause () {
+        super.onPause();
+        // remove AuthStateListener when activity goes out of picture
+        mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // add AuthStateListener when activity comes into the picture
+        mFirebaseAuth.addAuthStateListener(mAuthStateListener);
     }
 
     @Override
