@@ -2,13 +2,18 @@ package com.example.dingdang.youtubenotetaker;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -19,6 +24,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -35,12 +41,14 @@ public class UserNoteBooks extends AppCompatActivity {
     private String videoId;
     //private ArrayList<String> myVideoList = new ArrayList<String>();
     String[] myVideoList = new String[10];
+    public static final int RC_SIGN_IN = 1;
 
     // Firebase related varaibles
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mMessagesDatabaseReference;
     private FirebaseAuth mFirebaseAuth;
     private ChildEventListener mChildEventListener;
+    private FirebaseAuth.AuthStateListener mAuthStateListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +77,32 @@ public class UserNoteBooks extends AppCompatActivity {
 
 
         }
+
+        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                // firebaseAuth variable is guaranteed to contain user sign-in or not information
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if(user != null) {
+                    // User logged in
+                    //onSignedInInitialize(user.getDisplayName());
+
+                }
+                else {
+                    // User signed out, so put in sign in flow
+                    onSignedOutCleanup();
+                    startActivityForResult(
+                            AuthUI.getInstance()
+                                    .createSignInIntentBuilder()
+                                    .setIsSmartLockEnabled(false)
+                                    .setAvailableProviders(Arrays.asList(
+                                            new AuthUI.IdpConfig.EmailBuilder().build(),
+                                            new AuthUI.IdpConfig.GoogleBuilder().build()))
+                                    .build(),
+                            RC_SIGN_IN);
+                }
+            }
+        };
 
         notesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -105,6 +139,27 @@ public class UserNoteBooks extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    protected void onPause () {
+        super.onPause();
+        // remove AuthStateListener when activity goes out of picture
+        mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
+        //detachDatabaseReadListener();
+        itemsAdapter.clear();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // add AuthStateListener when activity comes into the picture
+        mFirebaseAuth.addAuthStateListener(mAuthStateListener);
+    }
+
+    private void onSignedOutCleanup() {
+        // clear all entries of notes displayed
+        itemsAdapter.clear();
     }
 
     private void onSignedInInitialize(String username1, String username2) {
@@ -164,41 +219,6 @@ public class UserNoteBooks extends AppCompatActivity {
                     }
                 });
 
-
-
-        /**if(mChildEventListener == null) {
-            mChildEventListener = new ChildEventListener() {
-                @Override
-                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                    Log.i(TAG, "DIN Inside attachDatabaseReadListener ");
-                    long count = dataSnapshot.getChildrenCount();
-                    Log.i(TAG, "DIN Total Children count =  " + count);
-                    //FriendlyMessage friendlyMessage = dataSnapshot.getValue(FriendlyMessage.class);
-                    //mMessageAdapter.add(friendlyMessage);
-                }
-
-                @Override
-                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                }
-
-                @Override
-                public void onChildRemoved(DataSnapshot dataSnapshot) {
-                }
-
-                @Override
-                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                }
-            };
-            mMessagesDatabaseReference.addChildEventListener(mChildEventListener);
-        } else {
-            Log.i(TAG, "DIN Inside attachDatabaseReadListener else part ");
-            //long count = dataSnapshot.getChildrenCount();
-            //Log.i(TAG, "DIN Total Children count =  " + count);
-        }*/
     }
 
     private void detachDatabaseReadListener() {
@@ -211,5 +231,24 @@ public class UserNoteBooks extends AppCompatActivity {
         //itemsAdapter.clear();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.logout_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.sign_out_menu :
+                //sign out
+                AuthUI.getInstance().signOut(this);
+                return true;
+            default :
+
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
 }
