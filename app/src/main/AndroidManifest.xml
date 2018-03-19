@@ -31,8 +31,6 @@
             android:parentActivityName=".FirebaseLoginActivity" />
         <activity android:name=".FirebaseLoginActivity"
             android:parentActivityName=".MainActivity"/>
-        <activity android:name=".UserNoteBooks"
-            android:parentActivityName=".AfterLoginActivity"/>
 
     </application>
 

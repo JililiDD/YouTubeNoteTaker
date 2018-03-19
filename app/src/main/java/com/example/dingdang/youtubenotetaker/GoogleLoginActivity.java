@@ -25,8 +25,8 @@ public class GoogleLoginActivity extends AppCompatActivity implements View.OnCli
     private EditText userEmailSignIn, thePassword,detail,status;
     private TextView messageSign;
     private Button signInBtn,signout,createaccount;
+    private Boolean signIncheck;
     private ImageView userImage;
-    private FirebaseAuth mAuth;
     private static final String TAG = "EmailPassword";
 
 
@@ -47,6 +47,7 @@ public class GoogleLoginActivity extends AppCompatActivity implements View.OnCli
         signInBtn = findViewById(R.id.signInBtn);
         signout = findViewById(R.id.signout);
         createaccount = findViewById(R.id.createaccount);
+        signIncheck=false;
 
 
 
@@ -57,16 +58,7 @@ public class GoogleLoginActivity extends AppCompatActivity implements View.OnCli
         createaccount.setOnClickListener(this);
 
 
-        mAuth = FirebaseAuth.getInstance();
-
-
-
-
-
-
-
-
-
+        //mAuth = FirebaseAuth.getInstance();
 
 
 
@@ -84,9 +76,11 @@ public class GoogleLoginActivity extends AppCompatActivity implements View.OnCli
 
         } else if (i == R.id.signInBtn) {
             signIn(userEmailSignIn.getText().toString(), thePassword.getText().toString());
-            Intent intent = new Intent(GoogleLoginActivity.this, AfterLoginActivity.class);
-            intent.putExtra("USER_TYPE", "GUEST");
-            startActivity(intent);
+            if(signIncheck){
+                Intent intent = new Intent(GoogleLoginActivity.this, AfterLoginActivity.class);
+                intent.putExtra("USER_TYPE", "REGISTERED");
+                startActivity(intent);
+            }
         } else if (i == R.id.signout) {
            // signOut();
         }
@@ -99,20 +93,19 @@ public class GoogleLoginActivity extends AppCompatActivity implements View.OnCli
         if (!validateForm()) {
             return;
         }
-
-
-
         // [START sign_in_with_email]
-        mAuth.signInWithEmailAndPassword(email, password)
+        signInAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            signIncheck=true;
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
+                            FirebaseUser user = signInAuth.getCurrentUser();
 
                         } else {
+                            signIncheck=false;
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
                             Toast.makeText(GoogleLoginActivity.this, "Authentication failed.",
@@ -163,14 +156,14 @@ public class GoogleLoginActivity extends AppCompatActivity implements View.OnCli
         }
 
         // [START create_user_with_email]
-        mAuth.createUserWithEmailAndPassword(email, password)
+        signInAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
+                            FirebaseUser user = signInAuth.getCurrentUser();
                            // updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
