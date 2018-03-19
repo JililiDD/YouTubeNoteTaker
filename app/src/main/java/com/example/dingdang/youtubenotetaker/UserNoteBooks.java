@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
@@ -139,6 +140,22 @@ public class UserNoteBooks extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public void onActivityResult( int requestCode, int resultCode, Intent data) {
+        if(requestCode == RC_SIGN_IN) {
+            if(resultCode == RESULT_OK) {
+                Toast.makeText(UserNoteBooks.this, "Signed In !!",Toast.LENGTH_SHORT).show();
+            }
+            else if (resultCode == RESULT_CANCELED) {
+                Toast.makeText(UserNoteBooks.this, "Sign In Cancel !!",Toast.LENGTH_SHORT).show();
+                finish();
+                Intent intent = new Intent(UserNoteBooks.this, MainActivity.class);
+                intent.putExtra("USER_TYPE", "GUEST");
+                startActivity(intent);
+            }
+        }
     }
 
     @Override

@@ -93,9 +93,18 @@ public class AfterLoginActivity extends AppCompatActivity {
                 Toast.makeText(AfterLoginActivity.this, "Signed In !!",Toast.LENGTH_SHORT).show();
             }
             else if (resultCode == RESULT_CANCELED) {
-                Toast.makeText(AfterLoginActivity.this, "Sign In Cancel !!",Toast.LENGTH_SHORT).show();
+                Toast.makeText(AfterLoginActivity.this, "DS Sign In Cancel !!",Toast.LENGTH_LONG).show();
                 finish();
+                Intent intent = new Intent(AfterLoginActivity.this, MainActivity.class);
+                intent.putExtra("USER_TYPE", "GUEST");
+                startActivity(intent);
             }
+        }
+        else {
+            Toast.makeText(AfterLoginActivity.this, "Else part !!",Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(AfterLoginActivity.this, MainActivity.class);
+            //intent.putExtra("USER_TYPE", "GUEST");
+            startActivity(intent);
         }
     }
 
