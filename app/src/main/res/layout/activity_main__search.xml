@@ -5,7 +5,7 @@
     tools:context="com.example.dingdang.youtubenotetaker.Main_Search">
 
     <EditText
-        android:layout_width="wrap_content"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:hint="Search videos here"
         android:focusable="true"
@@ -15,7 +15,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Search"
+        android:background="@mipmap/search_icon"
         android:layout_toRightOf="@id/search_input"
         android:id="@+id/search_btn"
         />

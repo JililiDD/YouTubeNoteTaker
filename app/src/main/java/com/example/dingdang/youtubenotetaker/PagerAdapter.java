@@ -21,10 +21,10 @@ public class PagerAdapter extends FragmentStatePagerAdapter{
     @Override
     public Fragment getItem(int position){
         switch (position){
+//            case 0:
+//                VideoSearchFragment searchMode = new VideoSearchFragment();
+//                return searchMode;
             case 0:
-                VideoSearchFragment searchMode = new VideoSearchFragment();
-                return searchMode;
-            case 1:
                 NoteModeFragment noteMode = new NoteModeFragment();
                 return noteMode;
             default:

@@ -1,12 +1,15 @@
 package com.example.dingdang.youtubenotetaker;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
@@ -27,7 +30,7 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
     private static final String TAG = "Uri parse: ";
     private String userType;
     private String youtubeId;
-
+    private EditText searchText;
 
     private Button btnPlay, btnTakeNote, btnInitialize;
     private YouTubePlayer.OnInitializedListener mOnInitializedListener;
@@ -47,13 +50,14 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
         youtubeId = getIntent().getStringExtra("VIDEO_ID"); // Get youtube video id (YIWEI)
 
 
+
         initializeYoutubePlayer();
 
         tabView = (LinearLayout) findViewById(R.id.tabView);
 
         // Initiate a tab layout and add tabs
         tabs = (TabLayout) findViewById(R.id.guestTabLayout);
-        tabs.addTab(tabs.newTab().setText("Search"));
+//        tabs.addTab(tabs.newTab().setText("Search"));
         tabs.addTab(tabs.newTab().setText("Note"));
         tabs.setTabGravity(TabLayout.GRAVITY_FILL);
 
@@ -61,7 +65,15 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
         pagerAdapter = new PagerAdapter(getSupportFragmentManager(), tabs.getTabCount());
         pager.setAdapter(pagerAdapter);
         pager.setOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
-
+        searchText = (EditText)findViewById(R.id.search_input);
+        searchText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), Main_Search.class);
+                intent.putExtra("USER_TYPE", userType);
+                startActivity(intent);
+            }
+        });
         tabs.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -78,9 +90,7 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
 
             }
         });
-
     }
-
     /**
      * initialize youtube player via Fragment and get instance of YoutubePlayer
      * Referred from http://www.androhub.com/implement-youtube-player-fragment-android-app/
@@ -106,7 +116,7 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
                     player = youTubePlayer;
 
                     if(getIntent() == null){
-                        player.cueVideo("W4hTJybfU7s"); //load but doesn't autoplay the video
+                        player.loadVideo("W4hTJybfU7s"); //load but doesn't autoplay the video
                     }
                     else{
                         //youtube ID

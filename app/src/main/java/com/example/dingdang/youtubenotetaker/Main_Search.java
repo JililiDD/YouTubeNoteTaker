@@ -1,3 +1,4 @@
+
 package com.example.dingdang.youtubenotetaker;
 
 import android.content.Context;
@@ -29,9 +30,9 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
-// * {@link VideoSearchFragment.OnFragmentInteractionListener} interface
+ // * {@link VideoSearchFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
-// * Use the {@link VideoSearchFragment#newInstance} factory method to
+ // * Use the {@link VideoSearchFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class Main_Search extends AppCompatActivity {
@@ -66,8 +67,8 @@ public class Main_Search extends AppCompatActivity {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-//     * @param param1 Parameter 1.
-//     * @param param2 Parameter 2.
+     //     * @param param1 Parameter 1.
+     //     * @param param2 Parameter 2.
      * @return A new instance of fragment VideoSearchFragment.
      */
     // TODO: Rename and change types and number of parameters
@@ -84,13 +85,19 @@ public class Main_Search extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main__search);
+        userType = getIntent().getStringExtra("USER_TYPE"); // Get user type to provide different functions to guest and member users
 //        if (getArguments() != null) {
 //            mParam1 = getArguments().getString(ARG_PARAM1);
 //            mParam2 = getArguments().getString(ARG_PARAM2);
+
 //        }
+//        View view = inflater.inflate(R.layout.activity_main__search, container, false);
         searchBtn = (Button)findViewById(R.id.search_btn);
         searchInput = (EditText)findViewById(R.id.search_input);
         videosFound = (ListView)findViewById(R.id.videos_found);
+                handler = new Handler();
+        addClickListener();
+
         searchBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -107,7 +114,6 @@ public class Main_Search extends AppCompatActivity {
 //                return true;
 //            }
         });
-        addClickListener();
 
     }
 
@@ -119,7 +125,7 @@ public class Main_Search extends AppCompatActivity {
 //        View view = inflater.inflate(R.layout.activity_main__search, container, false);
 //
 //        // For youtube search
-//        // Refered from https://code.tutsplus.com/tutorials/create-a-youtube-client-on-android--cms-22858
+//        // Refered from https://code.tutsplus.com/tutorials/create-a-youtube-client-on-an View view = inflater.inflate(R.layout.activity_main__search, container, false);droid--cms-22858
 //        searchInput = (EditText)view.findViewById(R.id.search_input);
 //        videosFound = (ListView)view.findViewById(R.id.videos_found);
 //
@@ -141,19 +147,19 @@ public class Main_Search extends AppCompatActivity {
 //    }
 
     private void searchOnYoutube(final String keywords){
-//        new Thread(){
-//            public void run(){
-                YoutubeConnector yc = new YoutubeConnector(getContext());
-                searchResults = yc.search(keywords);
-                 updateVideosFound();
+        new Thread(){
+            public void run(){
+        YoutubeConnector yc = new YoutubeConnector(Main_Search.this);
+        searchResults = yc.search(keywords);
+//        updateVideosFound();
 
-//                handler.post(new Runnable(){
-//                    public void run(){
-//                        updateVideosFound();
-//                    }
-//                });
-//            }
-//        }.start();
+                handler.post(new Runnable(){
+                    public void run(){
+                        updateVideosFound();
+                    }
+                });
+            }
+        }.start();
     }
 
     private void updateVideosFound(){
@@ -186,14 +192,17 @@ public class Main_Search extends AppCompatActivity {
             public void onItemClick(AdapterView<?> av, View v, int pos,
                                     long id) {
                 // Get userType from guestActivity
-                GuestActivity guestActivity = (GuestActivity) getApplicationContext();
-                userType = guestActivity.getUserType();
+//                GuestActivity guestActivity = (GuestActivity) getApplicationContext();
+//                userType = guestActivity.getUserType();
+//                if(userType.equals("GUEST")) {
+                    Intent intent = new Intent(getApplicationContext(), GuestActivity.class);
+                    intent.putExtra("VIDEO_ID", searchResults.get(pos).getId());
+                    intent.putExtra("USER_TYPE", userType);
+//                intent.putExtra("USER_TYPE", "GUEST");
+                    startActivity(intent);
 
-                Intent intent = new Intent(getApplicationContext(), GuestActivity.class);
-                intent.putExtra("VIDEO_ID", searchResults.get(pos).getId());
-//                intent.putExtra("USER_TYPE", userType);
-                intent.putExtra("USER_TYPE", "GUEST");
-                startActivity(intent);
+//                }
+
 
             }
 
@@ -240,3 +249,6 @@ public class Main_Search extends AppCompatActivity {
 //    }
 
 }
+
+
+
