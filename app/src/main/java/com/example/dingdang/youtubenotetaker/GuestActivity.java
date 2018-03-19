@@ -89,7 +89,7 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
             public void onTabReselected(TabLayout.Tab tab) {
 
             }
-        });
+    });
     }
     /**
      * initialize youtube player via Fragment and get instance of YoutubePlayer
