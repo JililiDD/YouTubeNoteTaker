@@ -1,8 +1,13 @@
 package com.example.dingdang.youtubenotetaker;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -24,8 +29,12 @@ import java.util.Map;
 public class UserNoteBooks extends AppCompatActivity {
 
     // String to store the username of current user
-    private String mUsername;
+    private String mUsername, userId;
     private static final String TAG = "MyActivity";
+    private ArrayAdapter<String> itemsAdapter;
+    private String videoId;
+    //private ArrayList<String> myVideoList = new ArrayList<String>();
+    String[] myVideoList = new String[10];
 
     // Firebase related varaibles
     private FirebaseDatabase mFirebaseDatabase;
@@ -36,7 +45,17 @@ public class UserNoteBooks extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.user_note_books_list);
+
+        // List view variable
+        ListView notesList;
+
+        // Set layout for each item of the list view
+        itemsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
+
+        // Initialize ListView variable & bind the adapter to list view
+        notesList = findViewById(R.id.lvNotesList);
+        notesList.setAdapter(itemsAdapter);
 
         // Instantiate Firebase varaibles
         mFirebaseDatabase = FirebaseDatabase.getInstance();
@@ -51,18 +70,17 @@ public class UserNoteBooks extends AppCompatActivity {
 
         }
 
-
-
+        
     }
 
     private void onSignedInInitialize(String username1, String username2) {
         mUsername = username1;
-        String mUsername1 = username2;
+        userId = username2;
 
         //attachDatabaseReadListener();
 
         Log.i(TAG, "DIN onSignedInInitialize, username = " + mUsername);
-        Log.i(TAG, "DIN Username2 (id) = " + mUsername1);
+        Log.i(TAG, "DIN Username2 (id) = " + userId);
         attachDatabaseReadListener();
         detachDatabaseReadListener();
 
@@ -82,9 +100,27 @@ public class UserNoteBooks extends AppCompatActivity {
                         for(DataSnapshot ds: dataSnapshot.getChildren()) {
                             String key = ds.getKey();
                             Log.i(TAG, "DIN key = " + key);
+                            Log.i(TAG, "DIN userId = " + userId);
                             Map<String, Object> value = (Map<String, Object>) ds.getValue();
                             Log.i(TAG, "DIN notebook1 reference = " + value);
+
+                            if(key.equals(userId)) {
+                                // List notes only from this user id
+                                Log.i(TAG, "DIN Inside For, size = " + value.size());
+                                int i = 1;
+                                for(Map.Entry<String, Object> entry : value.entrySet()) {
+                                    String a = "MyNoteBook"+i;
+                                    videoId = entry.getKey();
+                                    //myVideoList.add(videoId);
+                                    myVideoList[i-1]=videoId;
+                                    Log.i(TAG, "DIN PRINT = " + videoId + "/" + entry.getValue());
+                                    itemsAdapter.add(a);
+                                    i++;
+                                }
+                            }
                         }
+
+
                     }
 
                     @Override
@@ -136,6 +172,9 @@ public class UserNoteBooks extends AppCompatActivity {
             mMessagesDatabaseReference.removeEventListener(mChildEventListener);
             mChildEventListener = null;
         }*/
+
+        //wipe resources
+        //itemsAdapter.clear();
     }
 
 
