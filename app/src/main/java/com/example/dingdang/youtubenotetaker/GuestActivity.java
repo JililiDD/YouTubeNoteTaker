@@ -1,13 +1,16 @@
 package com.example.dingdang.youtubenotetaker;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -41,13 +44,13 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
     private FirebaseUser user;
     private String useruid;
 
+    private EditText searchText;
 
     private Button btnPlay, btnTakeNote, btnInitialize;
     private YouTubePlayer.OnInitializedListener mOnInitializedListener;
     private YouTubePlayer player;
     private ListView lvNotes;
     private ArrayAdapter<String> lvNotesItemAdapter;
-
 
 
 
@@ -74,7 +77,7 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
 
         // Initiate a tab layout and add tabs
         tabs = (TabLayout) findViewById(R.id.guestTabLayout);
-        tabs.addTab(tabs.newTab().setText("Search"));
+//        tabs.addTab(tabs.newTab().setText("Search"));
         tabs.addTab(tabs.newTab().setText("Note"));
         tabs.setTabGravity(TabLayout.GRAVITY_FILL);
 
@@ -82,7 +85,15 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
         pagerAdapter = new PagerAdapter(getSupportFragmentManager(), tabs.getTabCount());
         pager.setAdapter(pagerAdapter);
         pager.setOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
-
+        searchText = (EditText)findViewById(R.id.search_input);
+        searchText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), Main_Search.class);
+                intent.putExtra("USER_TYPE", userType);
+                startActivity(intent);
+            }
+        });
         tabs.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -132,7 +143,6 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
                     else{
                         //youtube ID
                         player.loadVideo(getIntent().getStringExtra("VIDEO_ID"));
-
                     }
                 }
             }

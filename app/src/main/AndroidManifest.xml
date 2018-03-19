@@ -21,7 +21,7 @@
         <activity
             android:name=".GuestActivity"
             android:parentActivityName=".MainActivity"
-            android:windowSoftInputMode="stateHidden" />
+            android:windowSoftInputMode="stateHidden|adjustPan|adjustResize" />
         <activity android:name=".EmailActivity" />
         <activity
             android:name=".GoogleLoginActivity"
@@ -31,7 +31,7 @@
             android:parentActivityName=".FirebaseLoginActivity" />
         <activity android:name=".FirebaseLoginActivity"
             android:parentActivityName=".MainActivity"/>
-
+        <activity android:name=".Main_Search"></activity>
     </application>
 
 </manifest>
