@@ -70,7 +70,41 @@ public class UserNoteBooks extends AppCompatActivity {
 
         }
 
-        
+        notesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 0) {
+                    Intent intent = new Intent (view.getContext() , GuestActivity.class);
+                    intent.putExtra("VIDEO_ID", myVideoList[0]);
+                    //intent.putExtra("USER_TYPE", userType);
+                    intent.putExtra("USER_TYPE", "GUEST");
+                    startActivityForResult(intent,0);
+                }
+                if (position == 1) {
+                    Intent intent = new Intent (view.getContext() , GuestActivity.class);
+                    intent.putExtra("VIDEO_ID", myVideoList[1]);
+                    //intent.putExtra("USER_TYPE", userType);
+                    intent.putExtra("USER_TYPE", "GUEST");
+                    startActivityForResult(intent,0);
+
+                }
+                if (position == 2) {
+                    Intent intent = new Intent (view.getContext() , GuestActivity.class);
+                    intent.putExtra("VIDEO_ID", myVideoList[2]);
+                    //intent.putExtra("USER_TYPE", userType);
+                    intent.putExtra("USER_TYPE", "GUEST");
+                    startActivityForResult(intent,0);
+
+                }
+                if( position == 3) {
+                    Intent intent = new Intent (view.getContext() , GuestActivity.class);
+                    intent.putExtra("VIDEO_ID", myVideoList[3]);
+                    //intent.putExtra("USER_TYPE", userType);
+                    intent.putExtra("USER_TYPE", "GUEST");
+                    startActivityForResult(intent,0);
+                }
+            }
+        });
     }
 
     private void onSignedInInitialize(String username1, String username2) {
