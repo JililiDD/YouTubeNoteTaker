@@ -177,9 +177,12 @@
 
             <Button
                 android:id="@+id/btnEditDelete"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Delete"/>
+                android:layout_width="45sp"
+                android:layout_height="45sp"
+
+                android:background="@android:drawable/ic_menu_delete"
+
+                android:src="@android:drawable/ic_menu_delete" />
 
         </LinearLayout>
 
@@ -250,6 +253,8 @@
                 android:text="Cancel"
                 android:layout_toRightOf="@id/btnEditNoteReplay"
                 />
+
+
         </RelativeLayout>
 
     </RelativeLayout>

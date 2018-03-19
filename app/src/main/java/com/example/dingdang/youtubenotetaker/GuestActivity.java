@@ -2,6 +2,7 @@ package com.example.dingdang.youtubenotetaker;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -39,7 +40,7 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
     private static final String TAG = "Uri parse: ";
     private String userType;
     private String youtubeId;
-
+    FloatingActionButton floatbtn;
     private String linkExist;
     private FirebaseUser user;
     private String useruid;
@@ -85,6 +86,14 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
         pagerAdapter = new PagerAdapter(getSupportFragmentManager(), tabs.getTabCount());
         pager.setAdapter(pagerAdapter);
         pager.setOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
+
+        floatbtn=(FloatingActionButton) findViewById(R.id.btnFloat);
+        floatbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showpopup();
+            }
+        });
         searchText = (EditText)findViewById(R.id.search_input);
         searchText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,6 +120,15 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
             }
         });
 
+    }
+
+    private void showpopup() {
+        android.app.AlertDialog.Builder popup = new android.app.AlertDialog.Builder(GuestActivity.this);
+        popup.setMessage("<Enter Notes..>");
+        popup.setTitle("Notes");
+        popup.setCancelable(true);
+        android.app.AlertDialog alt=popup.create();
+        alt.show();
     }
 
     /**

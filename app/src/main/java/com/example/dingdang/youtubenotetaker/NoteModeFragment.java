@@ -1,6 +1,8 @@
 package com.example.dingdang.youtubenotetaker;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -509,7 +511,7 @@ public class NoteModeFragment extends Fragment {
 
             }
         });
-        btnEditDelete.setOnTouchListener(new View.OnTouchListener() {
+      btnEditDelete.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction()==MotionEvent.ACTION_DOWN){
@@ -524,101 +526,152 @@ public class NoteModeFragment extends Fragment {
             }
         });
 
-       /** btnEditDelete.setOnClickListener(new View.OnClickListener() {
+        btnEditDelete.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
-                if (isRegisteredUser()) {
-                    Log.i("delete btn info","  "+deleteChecker.toString());
-                    myRef.addValueEventListener(theFireListener);
-                    myRef.removeEventListener(theFireListener);
 
-                    deleteChecker=true;
+                // Delete the selected note item
 
+                AlertDialog.Builder delnote = new AlertDialog.Builder(getContext());
+                delnote.setMessage("Delete note?");
+                delnote.setCancelable(true);
 
-                    //deleteChecker=false;
-                   //myRef.addValueEventListener(theFireListener);
-                    /**ValueEventListener thelistener=new ValueEventListener() {
-                        String theselectid ="";
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()){
-                                if (childDataSnapshot.getKey().toString().equals(youtubeId)){
-                                    FirebaseDatabase database1 = FirebaseDatabase.getInstance();
-                                    final DatabaseReference myChildrenRef = database1.getReference("user").child(useruid).child(youtubeId);
+                delnote.setPositiveButton(
+                        "Yes",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                NoteItem selectedNoteItem = getSelectedNote();
+                                String removeItemNoteId =selectedNoteItem.getNoteId();
+                                noteList.remove(selectedNoteItem);
+                                ArrayAdapter<NoteItem> lvNotesItemAdapter = new ArrayAdapter<>(getActivity().getApplicationContext(), R.layout.item_black, noteList);
+                                lvNotes.setAdapter(lvNotesItemAdapter);
 
-                                    myChildrenRef.addValueEventListener(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(DataSnapshot dataSnapshot) {
-
-                                            noteList.clear();
-                                            ArrayAdapter<NoteItem> lvNotesItemAdapter1 = new ArrayAdapter<>(getActivity().getApplicationContext(),
-                                                    R.layout.item_black, noteList);
-
-                                            int i=0;
-                                            int k=0;
-                                            for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
-
-                                                HashMap<String, String> newItem = (HashMap<String, String>) childDataSnapshot.getValue();
-                                                if (newItem.get("Selected").equals("true")){
-                                                    k++;
-                                                    Log.i("count true","  "+k);
-                                                    theselectid=newItem.get("NoteId");
-                                                    FirebaseDatabase databaser = FirebaseDatabase.getInstance();
-                                                    DatabaseReference myRefr = databaser.getReference("user").child(useruid).child(youtubeId).child(theselectid);
-                                                    Log.i("selectedinfo inside",""+myRefr.toString()); //displays the key for the node
-                                                    myRefr.removeValue();
-                                                    break;
-
-
-                                                }
-
-                                            }
-
-                                            for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
-                                                HashMap<String, String> newItem = (HashMap<String, String>) childDataSnapshot.getValue();
-                                                if (newItem.get("Selected").equals("false")) {
-                                                    NoteItem newNoteItem = new NoteItem(0, newItem.get("Time"), newItem.get("Subject"), newItem.get("Note"));
-                                                    newNoteItem.setNoteId(newItem.get("NoteId"));
-                                                    newNoteItem.setNotebookName(newItem.get("NotebookName"));
-                                                    lvNotesItemAdapter1.add(newNoteItem);
-                                                    i++;
-                                                    Log.i("count false","  "+i);
-
-                                                }
-
-                                            }
-
-
-                                            lvNotes.setAdapter(lvNotesItemAdapter1);
-                                            llNoteList.setVisibility(View.VISIBLE);  // Display llNoteList UI
-                                            rlNotepad.setVisibility(View.GONE); // Hide rlNotepad UI
-                                            rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UIi=0;
-
-
-
-                                        }
-
-                                        @Override
-                                        public void onCancelled(DatabaseError databaseError) {
-
-                                        }
-                                    });
-                                    break;
-
-                                }
-
+                                llNoteList.setVisibility(View.VISIBLE);  // Display llNoteList UI
+                                rlNotepad.setVisibility(View.GONE); // Hide rlNotepad UI
+                                rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UI
+                                //remove the noteItem from the database
+                             /*   FirebaseDatabase database = FirebaseDatabase.getInstance();
+                                DatabaseReference myRef = database.getReference("user").child(useruid).child(youtubeId);
+                                myRef.child(removeItemNoteId).removeValue(); */
+                                dialog.cancel();
+                                Toast.makeText(getContext(),"Note deleted",Toast.LENGTH_SHORT).show();
                             }
+                        });
+
+                delnote.setNegativeButton(
+                        "No",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+                AlertDialog alertdel = delnote.create();
+                alertdel.show();
+                // Update the ListView
+
+            }
+        });
 
 
 
-                        }
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
+        /** btnEditDelete.setOnClickListener(new View.OnClickListener() {
 
-                        }
-                    };*/
+             @Override
+             public void onClick(View view) {
+                 if (isRegisteredUser()) {
+                     Log.i("delete btn info","  "+deleteChecker.toString());
+                     myRef.addValueEventListener(theFireListener);
+                     myRef.removeEventListener(theFireListener);
+
+                     deleteChecker=true;
+
+
+                     //deleteChecker=false;
+                    //myRef.addValueEventListener(theFireListener);
+                     /**ValueEventListener thelistener=new ValueEventListener() {
+                         String theselectid ="";
+                         @Override
+                         public void onDataChange(DataSnapshot dataSnapshot) {
+                             for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()){
+                                 if (childDataSnapshot.getKey().toString().equals(youtubeId)){
+                                     FirebaseDatabase database1 = FirebaseDatabase.getInstance();
+                                     final DatabaseReference myChildrenRef = database1.getReference("user").child(useruid).child(youtubeId);
+
+                                     myChildrenRef.addValueEventListener(new ValueEventListener() {
+                                         @Override
+                                         public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                             noteList.clear();
+                                             ArrayAdapter<NoteItem> lvNotesItemAdapter1 = new ArrayAdapter<>(getActivity().getApplicationContext(),
+                                                     R.layout.item_black, noteList);
+
+                                             int i=0;
+                                             int k=0;
+                                             for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
+
+                                                 HashMap<String, String> newItem = (HashMap<String, String>) childDataSnapshot.getValue();
+                                                 if (newItem.get("Selected").equals("true")){
+                                                     k++;
+                                                     Log.i("count true","  "+k);
+                                                     theselectid=newItem.get("NoteId");
+                                                     FirebaseDatabase databaser = FirebaseDatabase.getInstance();
+                                                     DatabaseReference myRefr = databaser.getReference("user").child(useruid).child(youtubeId).child(theselectid);
+                                                     Log.i("selectedinfo inside",""+myRefr.toString()); //displays the key for the node
+                                                     myRefr.removeValue();
+                                                     break;
+
+
+                                                 }
+
+                                             }
+
+                                             for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
+                                                 HashMap<String, String> newItem = (HashMap<String, String>) childDataSnapshot.getValue();
+                                                 if (newItem.get("Selected").equals("false")) {
+                                                     NoteItem newNoteItem = new NoteItem(0, newItem.get("Time"), newItem.get("Subject"), newItem.get("Note"));
+                                                     newNoteItem.setNoteId(newItem.get("NoteId"));
+                                                     newNoteItem.setNotebookName(newItem.get("NotebookName"));
+                                                     lvNotesItemAdapter1.add(newNoteItem);
+                                                     i++;
+                                                     Log.i("count false","  "+i);
+
+                                                 }
+
+                                             }
+
+
+                                             lvNotes.setAdapter(lvNotesItemAdapter1);
+                                             llNoteList.setVisibility(View.VISIBLE);  // Display llNoteList UI
+                                             rlNotepad.setVisibility(View.GONE); // Hide rlNotepad UI
+                                             rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UIi=0;
+
+
+
+                                         }
+
+                                         @Override
+                                         public void onCancelled(DatabaseError databaseError) {
+
+                                         }
+                                     });
+                                     break;
+
+                                 }
+
+                             }
+
+
+
+                         }
+
+                         @Override
+                         public void onCancelled(DatabaseError databaseError) {
+
+                         }
+                     };*/
 
 
                     /**ValueEventListener thesecondlistener=new ValueEventListener() {

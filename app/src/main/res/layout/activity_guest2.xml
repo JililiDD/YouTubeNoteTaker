@@ -62,4 +62,16 @@
 
         </android.support.v4.view.ViewPager>
     </LinearLayout>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/btnFloat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/tabView"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="23dp"
+        android:layout_marginEnd="30dp"
+        android:clickable="true"
+        android:visibility="gone"
+        app:backgroundTint="@color/cardview_light_background"
+        app:srcCompat="@android:drawable/ic_menu_edit" />
 </RelativeLayout>
