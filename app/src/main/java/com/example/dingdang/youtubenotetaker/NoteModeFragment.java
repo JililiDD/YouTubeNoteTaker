@@ -438,6 +438,7 @@ public class NoteModeFragment extends Fragment {
 
 
                 }else{
+
                     lvNotesItemAdapter.add(noteItem);
                     lvNotes.setAdapter(lvNotesItemAdapter);
 
@@ -446,18 +447,6 @@ public class NoteModeFragment extends Fragment {
                     rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UI
                 }
 
-
-
-
-
-                /**lvNotesItemAdapter.add(noteItem);
-                lvNotes.setAdapter(lvNotesItemAdapter);
-
-                llNoteList.setVisibility(View.VISIBLE);  // Display llNoteList UI
-                rlNotepad.setVisibility(View.GONE); // Hide rlNotepad UI
-                rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UI*/
-
-                // Clear user inputs
                 etUserNoteInput.getText().clear();
                 etUserSubjectInput.getText().clear();
             }
@@ -509,20 +498,6 @@ public class NoteModeFragment extends Fragment {
                 // Referred from: http://blog.csdn.net/fengge34/article/details/46391453
                 mListener.onFragmentInteraction(Uri.parse(parseString)); // Pass to GuestActivity to replay the video at the note time
 
-            }
-        });
-      btnEditDelete.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction()==MotionEvent.ACTION_DOWN){
-                    finalcountdelete++;
-                    Log.i("deletecount"," "+finalcountdelete);
-                    myRef.addValueEventListener(theFireListener);
-                }else if (event.getAction()==MotionEvent.ACTION_UP){
-                    myRef.removeEventListener(theFireListener);
-
-                }
-                return false;
             }
         });
 
@@ -839,18 +814,6 @@ public class NoteModeFragment extends Fragment {
 
         });*/
 
-        lvNotes.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if(event.getAction()==MotionEvent.ACTION_UP){
-                    myRef.removeEventListener(theFireListener);
-                }
-                return false;
-            }
-        });
-
-
-
 
 
         lvNotes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -859,7 +822,7 @@ public class NoteModeFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, final int pos, long l) {
                 finalcountlist++;
                 Log.i("listcount"," "+finalcountlist);
-                myRef.removeEventListener(theFireListener);
+                //myRef.removeEventListener(theFireListener);
                 /**rlEditNote.setVisibility(View.VISIBLE);
                 llNoteList.setVisibility(View.GONE);
                 rlNotepad.setVisibility(View.GONE);*/
@@ -925,6 +888,10 @@ public class NoteModeFragment extends Fragment {
 
 
                 }else{
+
+                    rlEditNote.setVisibility(View.VISIBLE);
+                    llNoteList.setVisibility(View.GONE);
+                    rlNotepad.setVisibility(View.GONE);
                      //Get selected NoteItem object
                     setSelectedNote(noteList.get(pos));
 
