@@ -112,14 +112,14 @@ public class UserNoteBooks extends AppCompatActivity {
                     Intent intent = new Intent (view.getContext() , GuestActivity.class);
                     intent.putExtra("VIDEO_ID", myVideoList[0]);
                     //intent.putExtra("USER_TYPE", userType);
-                    intent.putExtra("USER_TYPE", "GUEST");
+                    intent.putExtra("USER_TYPE", "REGISTERED");
                     startActivityForResult(intent,0);
                 }
                 if (position == 1) {
                     Intent intent = new Intent (view.getContext() , GuestActivity.class);
                     intent.putExtra("VIDEO_ID", myVideoList[1]);
                     //intent.putExtra("USER_TYPE", userType);
-                    intent.putExtra("USER_TYPE", "GUEST");
+                    intent.putExtra("USER_TYPE", "REGISTERED");
                     startActivityForResult(intent,0);
 
                 }
@@ -127,7 +127,7 @@ public class UserNoteBooks extends AppCompatActivity {
                     Intent intent = new Intent (view.getContext() , GuestActivity.class);
                     intent.putExtra("VIDEO_ID", myVideoList[2]);
                     //intent.putExtra("USER_TYPE", userType);
-                    intent.putExtra("USER_TYPE", "GUEST");
+                    intent.putExtra("USER_TYPE", "REGISTERED");
                     startActivityForResult(intent,0);
 
                 }
@@ -135,7 +135,7 @@ public class UserNoteBooks extends AppCompatActivity {
                     Intent intent = new Intent (view.getContext() , GuestActivity.class);
                     intent.putExtra("VIDEO_ID", myVideoList[3]);
                     //intent.putExtra("USER_TYPE", userType);
-                    intent.putExtra("USER_TYPE", "GUEST");
+                    intent.putExtra("USER_TYPE", "REGISTERED");
                     startActivityForResult(intent,0);
                 }
             }
