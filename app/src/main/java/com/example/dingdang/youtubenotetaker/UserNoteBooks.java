@@ -1,5 +1,4 @@
 package com.example.dingdang.youtubenotetaker;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -119,7 +118,7 @@ public class UserNoteBooks extends AppCompatActivity {
                     Intent intent = new Intent (view.getContext() , GuestActivity.class);
                     intent.putExtra("VIDEO_ID", myVideoList[1]);
                     //intent.putExtra("USER_TYPE", userType);
-                    intent.putExtra("USER_TYPE", "REGISTERED");
+                    intent.putExtra("USER_TYPE", "GUEST");
                     startActivityForResult(intent,0);
 
                 }
@@ -127,7 +126,7 @@ public class UserNoteBooks extends AppCompatActivity {
                     Intent intent = new Intent (view.getContext() , GuestActivity.class);
                     intent.putExtra("VIDEO_ID", myVideoList[2]);
                     //intent.putExtra("USER_TYPE", userType);
-                    intent.putExtra("USER_TYPE", "REGISTERED");
+                    intent.putExtra("USER_TYPE", "GUEST");
                     startActivityForResult(intent,0);
 
                 }
@@ -135,7 +134,7 @@ public class UserNoteBooks extends AppCompatActivity {
                     Intent intent = new Intent (view.getContext() , GuestActivity.class);
                     intent.putExtra("VIDEO_ID", myVideoList[3]);
                     //intent.putExtra("USER_TYPE", userType);
-                    intent.putExtra("USER_TYPE", "REGISTERED");
+                    intent.putExtra("USER_TYPE", "GUEST");
                     startActivityForResult(intent,0);
                 }
             }
@@ -194,7 +193,7 @@ public class UserNoteBooks extends AppCompatActivity {
 
     private void attachDatabaseReadListener() {
 
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("user");
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("testuser");
         ref.addListenerForSingleValueEvent(
                 new ValueEventListener() {
                     @Override
