@@ -59,7 +59,7 @@ public class NoteModeFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     // Components
-    private Button btnEmail, btnTakeNote, btnSave, btnReplay, btnCancel, btnEditNoteCancel, btnEditNoteSave, btnEditDelete,btnShowNoteCancel,btnShwoEdit;
+    private Button btnEmail, btnTakeNote, btnSave, btnReplay, btnCancel, btnEditNoteCancel, btnEditNoteSave, btnEditDelete,btnShowNoteCancel,btnShwoEdit,btnShwoReplay;
     private ListView lvNotes;
     private ArrayAdapter<NoteItem> lvNotesItemAdapter;
     private LinearLayout llNoteList,LL_showNote;
@@ -135,6 +135,7 @@ public class NoteModeFragment extends Fragment {
         etEditSubject = (EditText) view.findViewById(R.id.EditNoteSubject);
         etEditNote = (EditText) view.findViewById(R.id.EditNoteUsrNoteInput);
         LL_showNote=(LinearLayout) view.findViewById(R.id.LL_showNote);
+        btnShwoReplay=(Button) view.findViewById(R.id.btnShwoReplay);
 
 
 
@@ -281,6 +282,23 @@ public class NoteModeFragment extends Fragment {
 
                         }
                     });
+                }
+            }
+        });
+
+        btnShwoReplay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isRegisteredUser()){
+                    rlEditNote.setVisibility(View.VISIBLE);
+                    llNoteList.setVisibility(View.GONE);
+                    rlNotepad.setVisibility(View.GONE);
+                    LL_showNote.setVisibility(View.GONE);
+                    String parseString = "replay " + Long.toString(getSelectedNote().getCurrentTime()); // Pass the note time to GuestActivity as well
+                    // Referred from: http://blog.csdn.net/fengge34/article/details/46391453
+                    mListener.onFragmentInteraction(Uri.parse(parseString)); // Pass to GuestActivity to replay the video at the note time
+
+
                 }
             }
         });
@@ -726,14 +744,6 @@ public class NoteModeFragment extends Fragment {
 
             }
         });
-        lvNotes.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                llNoteList.setVisibility(View.GONE);
-                return false;
-            }
-        });
-
         lvNotes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
