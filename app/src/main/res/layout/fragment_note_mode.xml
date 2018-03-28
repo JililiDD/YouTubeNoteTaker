@@ -223,39 +223,40 @@
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"/>
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/EditNoteNotepadButtons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:layout_below="@id/EditNoteUsrNoteInput">
+            android:layout_below="@id/EditNoteUsrNoteInput"
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/btnEditNoteSave"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Save"
-                android:layout_toLeftOf="@id/btnEditNoteReplay"
+                android:layout_gravity="center"
+                android:layout_marginRight="10dp"
+
+
                 />
 
-            <Button
-                android:id="@+id/btnEditNoteReplay"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Replay"
-                android:layout_centerHorizontal="true"
-                />
+
 
             <Button
                 android:id="@+id/btnEditNoteCancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Cancel"
-                android:layout_toRightOf="@id/btnEditNoteReplay"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+
+
                 />
 
 
-        </RelativeLayout>
+        </LinearLayout>
 
     </RelativeLayout>
 

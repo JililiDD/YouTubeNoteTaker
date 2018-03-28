@@ -120,7 +120,7 @@ public class NoteModeFragment extends Fragment {
         btnTakeNote = (Button) view.findViewById(R.id.btnTakeNote);
         btnSave = (Button) view.findViewById(R.id.btnSave);
         btnCancel = (Button) view.findViewById(R.id.btnCancel);
-        btnReplay = (Button) view.findViewById(R.id.btnEditNoteReplay);
+      //  btnReplay = (Button) view.findViewById(R.id.btnEditNoteReplay);
         btnEditNoteSave = (Button) view.findViewById(R.id.btnEditNoteSave);
         btnEditNoteCancel = (Button) view.findViewById(R.id.btnEditNoteCancel);
         btnEditDelete = (Button) view.findViewById(R.id.btnEditDelete);
@@ -635,27 +635,27 @@ public class NoteModeFragment extends Fragment {
             }
         });
 
-        btnReplay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (isRegisteredUser()){
-                    rlEditNote.setVisibility(View.VISIBLE);
-                    llNoteList.setVisibility(View.GONE);
-                    rlNotepad.setVisibility(View.GONE);
-                    LL_showNote.setVisibility(View.GONE);
-                    String parseString = "replay " + Long.toString(getSelectedNote().getCurrentTime()); // Pass the note time to GuestActivity as well
-                    // Referred from: http://blog.csdn.net/fengge34/article/details/46391453
-                    mListener.onFragmentInteraction(Uri.parse(parseString)); // Pass to GuestActivity to replay the video at the note time
-
-
-                }else{
-                    String parseString = "replay " + Long.toString(getSelectedNote().getCurrentTime()); // Pass the note time to GuestActivity as well
-                    // Referred from: http://blog.csdn.net/fengge34/article/details/46391453
-                    mListener.onFragmentInteraction(Uri.parse(parseString)); // Pass to GuestActivity to replay the video at the note time
-
-                }
-            }
-        });
+//        btnReplay.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if (isRegisteredUser()){
+//                    rlEditNote.setVisibility(View.VISIBLE);
+//                    llNoteList.setVisibility(View.GONE);
+//                    rlNotepad.setVisibility(View.GONE);
+//                    LL_showNote.setVisibility(View.GONE);
+//                    String parseString = "replay " + Long.toString(getSelectedNote().getCurrentTime()); // Pass the note time to GuestActivity as well
+//                    // Referred from: http://blog.csdn.net/fengge34/article/details/46391453
+//                    mListener.onFragmentInteraction(Uri.parse(parseString)); // Pass to GuestActivity to replay the video at the note time
+//
+//
+//                }else{
+//                    String parseString = "replay " + Long.toString(getSelectedNote().getCurrentTime()); // Pass the note time to GuestActivity as well
+//                    // Referred from: http://blog.csdn.net/fengge34/article/details/46391453
+//                    mListener.onFragmentInteraction(Uri.parse(parseString)); // Pass to GuestActivity to replay the video at the note time
+//
+//                }
+//            }
+//        });
 
         btnEditDelete.setOnClickListener(new View.OnClickListener() {
             @Override
