@@ -59,13 +59,13 @@ public class NoteModeFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     // Components
-    private Button btnEmail, btnTakeNote, btnSave, btnReplay, btnCancel, btnEditNoteCancel, btnEditNoteSave, btnEditDelete;
+    private Button btnEmail, btnTakeNote, btnSave, btnReplay, btnCancel, btnEditNoteCancel, btnEditNoteSave, btnEditDelete,btnShowNoteCancel,btnShwoEdit;
     private ListView lvNotes;
     private ArrayAdapter<NoteItem> lvNotesItemAdapter;
-    private LinearLayout llNoteList;
+    private LinearLayout llNoteList,LL_showNote;
     private RelativeLayout rlNotepad, rlEditNote;
     private EditText etUserNoteInput, etUserSubjectInput, etEditSubject, etEditNote;
-    private TextView tvTimeAtPause, tvEditNoteTime;
+    private TextView tvTimeAtPause, tvEditNoteTime,ShowNoteElapsedTime,ShowNoteSubject,ShowNoteUsrNoteInputText;
     private long elapsedTime = 0;
     private List<NoteItem> noteList;
     private NoteItem selectedNote;
@@ -134,6 +134,23 @@ public class NoteModeFragment extends Fragment {
         tvEditNoteTime = (TextView) view.findViewById(R.id.EditNoteElapsedTime);
         etEditSubject = (EditText) view.findViewById(R.id.EditNoteSubject);
         etEditNote = (EditText) view.findViewById(R.id.EditNoteUsrNoteInput);
+        LL_showNote=(LinearLayout) view.findViewById(R.id.LL_showNote);
+
+
+
+        btnShowNoteCancel=(Button) view.findViewById(R.id.btnShowNoteCancel);
+        btnShwoEdit=(Button) view.findViewById(R.id.btnShwoEdit);
+
+
+        //ShowNoteElapsedTime,ShowNoteSubject,ShowNoteUsrNoteInputText
+        ShowNoteElapsedTime=(TextView) view.findViewById(R.id.ShowNoteElapsedTime);
+        ShowNoteSubject=(TextView) view.findViewById(R.id.ShowNoteSubject);
+        ShowNoteUsrNoteInputText=(TextView) view.findViewById(R.id.ShowNoteUsrNoteInputText);
+
+
+
+
+
         deleteChecker=false;
         listChecker=false;
         finalcount=0;
@@ -163,6 +180,7 @@ public class NoteModeFragment extends Fragment {
         // Hide rlNotepad and rlEditNote UIs by default
         rlNotepad.setVisibility(View.GONE);
         rlEditNote.setVisibility(View.GONE);
+        LL_showNote.setVisibility(View.GONE);
 
 
 
@@ -206,7 +224,9 @@ public class NoteModeFragment extends Fragment {
                                         lvNotesItemAdapter1.add(newNoteItem);
                                         lvNotes.clearChoices();
                                         lvNotes.setAdapter(lvNotesItemAdapter1);
+                                        LL_showNote.setVisibility(View.GONE);
                                         llNoteList.setVisibility(View.VISIBLE);
+
 
                                     }
 
@@ -231,6 +251,52 @@ public class NoteModeFragment extends Fragment {
 
 
         }
+
+        btnShowNoteCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                llNoteList.setVisibility(View.VISIBLE);  // Hide llNoteList UI
+                rlNotepad.setVisibility(View.GONE); // Display rlNotepad UI
+                rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UI
+                LL_showNote.setVisibility(View.GONE);
+                if (isRegisteredUser()){
+                    myRef.child(youtubeId).orderByChild("Selected").addListenerForSingleValueEvent(new ValueEventListener() {
+
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            String theselectid = "";
+                            for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()){
+                                HashMap<String, String> newItem = (HashMap<String, String>) childDataSnapshot.getValue();
+                                if (newItem.get("Selected").equals("true")){
+                                    theselectid=newItem.get("NoteId");
+                                }
+
+                            }
+                            myRef.child(youtubeId).child(theselectid).child("Selected").setValue("false");
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+            }
+        });
+
+
+        btnShwoEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isRegisteredUser()){
+                    llNoteList.setVisibility(View.GONE);  // Hide llNoteList UI
+                    rlNotepad.setVisibility(View.GONE); // Display rlNotepad UI
+                    rlEditNote.setVisibility(View.VISIBLE); // Hide rlEditNote UI
+                    LL_showNote.setVisibility(View.GONE);
+                }
+            }
+        });
 
 
 
@@ -264,6 +330,7 @@ public class NoteModeFragment extends Fragment {
                 llNoteList.setVisibility(View.GONE);  // Hide llNoteList UI
                 rlNotepad.setVisibility(View.VISIBLE); // Display rlNotepad UI
                 rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UI
+                LL_showNote.setVisibility(View.GONE);
 
                 // Referred from: http://blog.csdn.net/fengge34/article/details/46391453
                 mListener.onFragmentInteraction(Uri.parse("pause")); // Pass to GuestActivity to pause the video
@@ -364,6 +431,7 @@ public class NoteModeFragment extends Fragment {
                     llNoteList.setVisibility(View.VISIBLE);  // Display llNoteList UI
                     rlNotepad.setVisibility(View.GONE); // Hide rlNotepad UI
                     rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UI
+                    LL_showNote.setVisibility(View.GONE);
                 }
 
                 etUserNoteInput.getText().clear();
@@ -381,6 +449,7 @@ public class NoteModeFragment extends Fragment {
                 llNoteList.setVisibility(View.VISIBLE);  // Display llNoteList UI
                 rlNotepad.setVisibility(View.GONE); // Hide rlNotepad UI
                 rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UI
+                LL_showNote.setVisibility(View.GONE);
             }
         });
 
@@ -392,6 +461,7 @@ public class NoteModeFragment extends Fragment {
                     rlEditNote.setVisibility(View.VISIBLE);
                     llNoteList.setVisibility(View.GONE);
                     rlNotepad.setVisibility(View.GONE);
+                    LL_showNote.setVisibility(View.GONE);
 
                     myRef.child(youtubeId).orderByChild("Selected").addListenerForSingleValueEvent(new ValueEventListener() {
 
@@ -445,6 +515,7 @@ public class NoteModeFragment extends Fragment {
                             llNoteList.setVisibility(View.VISIBLE);  // Display llNoteList UI
                             rlNotepad.setVisibility(View.GONE); // Hide rlNotepad UI
                             rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UIi=0;
+                            LL_showNote.setVisibility(View.GONE);
 
 
 
@@ -482,6 +553,7 @@ public class NoteModeFragment extends Fragment {
                     rlEditNote.setVisibility(View.VISIBLE);
                     llNoteList.setVisibility(View.GONE);
                     rlNotepad.setVisibility(View.GONE);
+                    LL_showNote.setVisibility(View.GONE);
                     myRef.child(youtubeId).orderByChild("Selected").addListenerForSingleValueEvent(new ValueEventListener() {
 
                         @Override
@@ -507,6 +579,7 @@ public class NoteModeFragment extends Fragment {
                     llNoteList.setVisibility(View.VISIBLE);  // Display llNoteList UI
                     rlNotepad.setVisibility(View.GONE); // Hide rlNotepad UI
                     rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UI
+                    LL_showNote.setVisibility(View.GONE);
 
                 }else{
                     llNoteList.setVisibility(View.VISIBLE);  // Display llNoteList UI
@@ -524,30 +597,7 @@ public class NoteModeFragment extends Fragment {
                     rlEditNote.setVisibility(View.VISIBLE);
                     llNoteList.setVisibility(View.GONE);
                     rlNotepad.setVisibility(View.GONE);
-                    myRef.child(youtubeId).orderByChild("Selected").addListenerForSingleValueEvent(new ValueEventListener() {
-
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            String theselectid = "";
-                            for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()){
-                                HashMap<String, String> newItem = (HashMap<String, String>) childDataSnapshot.getValue();
-                                if (newItem.get("Selected").equals("true")){
-                                    theselectid=newItem.get("NoteId");
-                                }
-
-                            }
-                            myRef.child(youtubeId).child(theselectid).child("Selected").setValue("false");
-
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-
-
-
+                    LL_showNote.setVisibility(View.GONE);
                     String parseString = "replay " + Long.toString(getSelectedNote().getCurrentTime()); // Pass the note time to GuestActivity as well
                     // Referred from: http://blog.csdn.net/fengge34/article/details/46391453
                     mListener.onFragmentInteraction(Uri.parse(parseString)); // Pass to GuestActivity to replay the video at the note time
@@ -569,6 +619,7 @@ public class NoteModeFragment extends Fragment {
                     rlEditNote.setVisibility(View.VISIBLE);
                     llNoteList.setVisibility(View.GONE);
                     rlNotepad.setVisibility(View.GONE);
+                    LL_showNote.setVisibility(View.GONE);
                     AlertDialog.Builder delnote = new AlertDialog.Builder(getContext());
                     delnote.setMessage("Delete note?");
                     delnote.setCancelable(true);
@@ -605,6 +656,7 @@ public class NoteModeFragment extends Fragment {
                                             llNoteList.setVisibility(View.VISIBLE);  // Display llNoteList UI
                                             rlNotepad.setVisibility(View.GONE); // Hide rlNotepad UI
                                             rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UIi=0;
+                                            LL_showNote.setVisibility(View.GONE);
 
                                         }
 
@@ -674,15 +726,24 @@ public class NoteModeFragment extends Fragment {
 
             }
         });
+        lvNotes.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                llNoteList.setVisibility(View.GONE);
+                return false;
+            }
+        });
 
         lvNotes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, final int pos, long l) {
-                rlEditNote.setVisibility(View.VISIBLE);
-                llNoteList.setVisibility(View.GONE);
-                rlNotepad.setVisibility(View.GONE);
                 if(isRegisteredUser()){
+                    LL_showNote.setVisibility(View.VISIBLE);
+                    //rlEditNote.setVisibility(View.VISIBLE);
+                    rlEditNote.setVisibility(View.GONE);
+                    llNoteList.setVisibility(View.GONE);
+                    rlNotepad.setVisibility(View.GONE);
                     //remove the noteItem from the database
                     myRef.addValueEventListener(new ValueEventListener() {
                         @Override
@@ -726,11 +787,30 @@ public class NoteModeFragment extends Fragment {
                     NoteItem seItem=noteList.get(pos);
                     lvNotes.clearChoices();
                     DatabaseReference myChildrenRef1 =myRef.child(youtubeId).child(seItem.getNoteId());
+                    //String seID=seItem.getNoteId().toString();
+
                     myChildrenRef1.child("Selected").setValue("true");
+                    myChildrenRef1.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            //ShowNoteElapsedTime,ShowNoteSubject,ShowNoteUsrNoteInputText
+                            ShowNoteElapsedTime.setText(dataSnapshot.child("Time").getValue().toString());
+                            ShowNoteSubject.setText(dataSnapshot.child("Subject").getValue().toString());
+                            ShowNoteUsrNoteInputText.setText(dataSnapshot.child("Note").getValue().toString());
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
 
 //                    rlEditNote.setVisibility(View.VISIBLE);
 //                    llNoteList.setVisibility(View.GONE);
 //                    rlNotepad.setVisibility(View.GONE);
+
+
                     tvEditNoteTime.setText(selectedNote.getTime());
                     etEditSubject.setText(selectedNote.getSubject());
                     etEditNote.setText(selectedNote.getNote());
