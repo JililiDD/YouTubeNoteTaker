@@ -97,6 +97,7 @@ public class NoteItem {
     public Map putInToFireBase(){
         Map<String, String> noteItem = new HashMap<String, String>();
         noteItem.put("Note",this.getNote());
+        noteItem.put("CurrentTime",Long.toString(this.getCurrentTime()));
         noteItem.put("Subject",this.getSubject());
         noteItem.put("Time",this.getTime());
         noteItem.put("NoteId",this.getNoteId());

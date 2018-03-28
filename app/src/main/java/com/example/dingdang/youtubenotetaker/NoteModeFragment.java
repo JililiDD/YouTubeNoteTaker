@@ -290,13 +290,40 @@ public class NoteModeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (isRegisteredUser()){
-                    rlEditNote.setVisibility(View.VISIBLE);
-                    llNoteList.setVisibility(View.GONE);
-                    rlNotepad.setVisibility(View.GONE);
-                    LL_showNote.setVisibility(View.GONE);
-                    String parseString = "replay " + Long.toString(getSelectedNote().getCurrentTime()); // Pass the note time to GuestActivity as well
-                    // Referred from: http://blog.csdn.net/fengge34/article/details/46391453
-                    mListener.onFragmentInteraction(Uri.parse(parseString)); // Pass to GuestActivity to replay the video at the note time
+//                    rlEditNote.setVisibility(View.VISIBLE);
+//                    llNoteList.setVisibility(View.GONE);
+//                    rlNotepad.setVisibility(View.GONE);
+//                    LL_showNote.setVisibility(View.GONE);
+                    myRef.child(youtubeId).orderByChild("Selected").addListenerForSingleValueEvent(new ValueEventListener() {
+
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            String theselectid = "";
+                            String timestr="";
+                            for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()){
+                                HashMap<String, String> newItem = (HashMap<String, String>) childDataSnapshot.getValue();
+                                if (newItem.get("Selected").equals("true")){
+                                    theselectid=newItem.get("NoteId");
+                                    timestr=newItem.get("CurrentTime");
+                                }
+
+                            }
+                           // String timestr=myRef.child(youtubeId).child(theselectid).child("CurrentTime").toString();
+                            Log.i("time",timestr);
+                            String parseString = "replay " + timestr; // Pass the note time to GuestActivity as well
+                            // Referred from: http://blog.csdn.net/fengge34/article/details/46391453
+                            mListener.onFragmentInteraction(Uri.parse(parseString)); // Pass to GuestActivity to replay the video at the note time
+
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                        }
+                    });
+
+
+
 
 
                 }
