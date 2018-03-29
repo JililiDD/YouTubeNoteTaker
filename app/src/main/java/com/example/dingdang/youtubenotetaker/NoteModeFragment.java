@@ -149,16 +149,6 @@ public class NoteModeFragment extends Fragment {
         ShowNoteUsrNoteInputText=(TextView) view.findViewById(R.id.ShowNoteUsrNoteInputText);
 
 
-
-
-
-        deleteChecker=false;
-        listChecker=false;
-        finalcount=0;
-        finalcountdelete=0;
-        finalcountlist=0;
-
-
         database = FirebaseDatabase.getInstance();
 
 
@@ -283,6 +273,17 @@ public class NoteModeFragment extends Fragment {
                         }
                     });
                 }
+
+                else{
+                    llNoteList.setVisibility(View.VISIBLE);  // Hide llNoteList UI
+                    rlNotepad.setVisibility(View.GONE); // Display rlNotepad UI
+                    rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UI
+                    LL_showNote.setVisibility(View.GONE);
+                }
+
+
+
+
             }
         });
 
@@ -326,7 +327,17 @@ public class NoteModeFragment extends Fragment {
 
 
 
+                }else{
+
+
+
+                    String parseString = "replay " + Long.toString(getSelectedNote().getCurrentTime()); // Pass the note time to GuestActivity as well
+//                    // Referred from: http://blog.csdn.net/fengge34/article/details/46391453
+                    mListener.onFragmentInteraction(Uri.parse(parseString)); // Pass to GuestActivity to replay the video at the note time
+
+
                 }
+
             }
         });
 
@@ -335,6 +346,17 @@ public class NoteModeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (isRegisteredUser()){
+
+
+
+
+                    llNoteList.setVisibility(View.GONE);  // Hide llNoteList UI
+                    rlNotepad.setVisibility(View.GONE); // Display rlNotepad UI
+                    rlEditNote.setVisibility(View.VISIBLE); // Hide rlEditNote UI
+                    LL_showNote.setVisibility(View.GONE);
+                }
+
+                else{
                     llNoteList.setVisibility(View.GONE);  // Hide llNoteList UI
                     rlNotepad.setVisibility(View.GONE); // Display rlNotepad UI
                     rlEditNote.setVisibility(View.VISIBLE); // Hide rlEditNote UI
@@ -347,14 +369,18 @@ public class NoteModeFragment extends Fragment {
 
         /** ListView UI buttons*/
         btnEmail.setOnClickListener(new View.OnClickListener() {
+            //https://www.youtube.com/watch?v=_
             @Override
             public void onClick(View view) {
+
                 if(noteList.isEmpty()){
                     Toast.makeText(getContext(),"No notes taken",Toast.LENGTH_SHORT).show();
                 }
                 else{
+                    String emailYoutubeURL="https://www.youtube.com/watch?v=_"+youtubeId+"\n"+"\n";
                     // Create email message content from notes taken
                     StringBuilder emailContent = new StringBuilder();
+                    emailContent.append(emailYoutubeURL);
                     for(NoteItem notes : noteList){
                         emailContent.append(notes.toEmailFormat());
                     }
@@ -854,12 +880,17 @@ public class NoteModeFragment extends Fragment {
 
 
                 }else{
-
-                    rlEditNote.setVisibility(View.VISIBLE);
+                    setSelectedNote(noteList.get(pos));
+                    rlEditNote.setVisibility(View.GONE);
                     llNoteList.setVisibility(View.GONE);
                     rlNotepad.setVisibility(View.GONE);
+                    LL_showNote.setVisibility(View.VISIBLE);
+                    ShowNoteElapsedTime.setText(selectedNote.getTime());
+                    ShowNoteSubject.setText(selectedNote.getSubject());
+                    ShowNoteUsrNoteInputText.setText(selectedNote.getNote());
+
                      //Get selected NoteItem object
-                    setSelectedNote(noteList.get(pos));
+                    //setSelectedNote(noteList.get(pos));
 
                      //Set the text fields to the NoteItem object's corresponding values in edit UI
                     tvEditNoteTime.setText(selectedNote.getTime());
