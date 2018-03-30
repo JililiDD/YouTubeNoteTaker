@@ -17,7 +17,7 @@
             android:id="@+id/btnOpenNotebook"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Open a new notebook" />
+            android:text="Search the new video " />
 
         <Button
             android:id="@+id/btnMyNotebooks"

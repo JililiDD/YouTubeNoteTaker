@@ -53,7 +53,7 @@ public class AfterLoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //TODO: Fetch users notebooks from Firebase and display them in UserNotebooksActivity
-                Intent intent = new Intent(getApplicationContext(), UserNoteBooks.class);
+                Intent intent = new Intent(getApplicationContext(), Main_Search.class);
                 intent.putExtra("USER_TYPE", "REGISTERED");
                 startActivity(intent);
             }
