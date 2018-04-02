@@ -22,6 +22,13 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -43,8 +50,10 @@ public class Main_Search extends AppCompatActivity {
 
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+
+    private FirebaseDatabase database;
+
+    private DatabaseReference myReNoteBook;
 
     // Components needed for youtube search
     // Refered from https://code.tutsplus.com/tutorials/create-a-youtube-client-on-android--cms-22858
@@ -54,6 +63,8 @@ public class Main_Search extends AppCompatActivity {
     private Handler handler;
     private List<VideoItem> searchResults;
     private String userType;
+    private FirebaseUser user;
+    private String useruid;
 
 
 
@@ -92,6 +103,8 @@ public class Main_Search extends AppCompatActivity {
 
 //        }
 //        View view = inflater.inflate(R.layout.activity_main__search, container, false);
+        database= FirebaseDatabase.getInstance();
+
         searchBtn = (Button)findViewById(R.id.search_btn);
         searchInput = (EditText)findViewById(R.id.search_input);
         videosFound = (ListView)findViewById(R.id.videos_found);
@@ -189,7 +202,7 @@ public class Main_Search extends AppCompatActivity {
     private void addClickListener(){
         videosFound.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> av, View v, int pos,
+            public void onItemClick(AdapterView<?> av, View v, final int pos,
                                     long id) {
                 // Get userType from guestActivity
 //                GuestActivity guestActivity = (GuestActivity) getApplicationContext();
@@ -197,9 +210,45 @@ public class Main_Search extends AppCompatActivity {
 //                if(userType.equals("GUEST")) {
                     Intent intent = new Intent(getApplicationContext(), GuestActivity.class);
                     intent.putExtra("VIDEO_ID", searchResults.get(pos).getId());
-                    intent.putExtra("USER_TYPE", userType);
+                    final String youtubeID=searchResults.get(pos).getId();
+                user = FirebaseAuth.getInstance().getCurrentUser();
+                //get the current userId
+                useruid=user.getUid();
+                myReNoteBook=database.getReference("notebook");
+                myReNoteBook.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Boolean notebookChecker=false;
+                        for(DataSnapshot childDataSnapshot : dataSnapshot.getChildren()){
+                            if (childDataSnapshot.getValue().equals(youtubeID)){
+                                notebookChecker=true;
+                            }
+                        }
+                        if (!notebookChecker){
+                            Intent intent = new Intent(getApplicationContext(), AddNotebookNameActivity.class);
+                            intent.putExtra("VIDEO_ID", youtubeID);
+                            startActivity(intent);
+                        }
+                        else{
+                            Intent intent = new Intent(getApplicationContext(), GuestActivity.class);
+                            intent.putExtra("USER_TYPE", userType);
 //                intent.putExtra("USER_TYPE", "GUEST");
-                    startActivity(intent);
+                            startActivity(intent);
+                        }
+
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+
+//                intent.putExtra("USER_TYPE", userType);
+////                intent.putExtra("USER_TYPE", "GUEST");
+//                    startActivity(intent);
 
 //                }
 

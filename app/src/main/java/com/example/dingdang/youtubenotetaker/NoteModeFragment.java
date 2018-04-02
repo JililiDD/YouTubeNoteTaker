@@ -75,6 +75,7 @@ public class NoteModeFragment extends Fragment {
     private String useruid;
     private FirebaseDatabase database;
     private DatabaseReference myRef;
+    private DatabaseReference myReNoteBook;
     private Boolean deleteChecker,listChecker;
     private int finalcount,finalcountdelete,finalcountlist;
 
@@ -188,9 +189,12 @@ public class NoteModeFragment extends Fragment {
         int main=0;
         if(isRegisteredUser()){
             main++;
-            user = FirebaseAuth.getInstance().getCurrentUser();
-            //get the current userId
-            useruid=user.getUid();
+
+
+
+
+
+
             myRef = database.getReference("user").child(useruid);
             myRef.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -916,6 +920,9 @@ public class NoteModeFragment extends Fragment {
     public boolean isRegisteredUser(){
         return userType.equals("REGISTERED");
     }
+    public String getYoutubeId() {
+        return youtubeId;
+    } // YIWEIF
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
