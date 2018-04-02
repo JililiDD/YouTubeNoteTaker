@@ -2,6 +2,7 @@
 package com.example.dingdang.youtubenotetaker;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -178,6 +179,8 @@ public class Main_Search extends AppCompatActivity {
         }.start();
     }
 
+    // Following youtube search functionality was referred from:
+    // https://code.tutsplus.com/tutorials/create-a-youtube-client-on-an View view = inflater.inflate(R.layout.activity_main__search, container, false);droid--cms-22858
     private void updateVideosFound(){
         ArrayAdapter<VideoItem> adapter = new ArrayAdapter<VideoItem>(getApplicationContext(), R.layout.video_item, searchResults){
             @Override
@@ -194,8 +197,6 @@ public class Main_Search extends AppCompatActivity {
                 title.setText(searchResult.getTitle());
                 description.setText(searchResult.getDescription());
                 return convertView;
-
-
             }
         };
 
@@ -235,40 +236,20 @@ public class Main_Search extends AppCompatActivity {
                             startActivity(intent);
                         }
                         else if(notebookChecker){
-//                            AlertDialog.Builder delnote = new AlertDialog.Builder(getApplicationContext());
-//                            delnote.setMessage("Viewed video");
-//                            delnote.setCancelable(true);
-//
-//                            delnote.setPositiveButton(
-//                                    "Open",
-//                                    new DialogInterface.OnClickListener() {
-//                                        public void onClick(DialogInterface dialog, int id) {
-//                                            Intent intent = new Intent(getApplicationContext(), GuestActivity.class);
-//                                            intent.putExtra("VIDEO_ID", youtubeID);
-//                                            intent.putExtra("USER_TYPE", userType);
-//                                            startActivity(intent);
-//
-//                                            dialog.cancel();
-//                                        }
-//                                    });
-//
-//                            delnote.setNegativeButton(
-//                                    "Cancel",
-//                                    new DialogInterface.OnClickListener() {
-//                                        public void onClick(DialogInterface dialog, int id) {
-//                                            dialog.cancel();
-//                                        }
-//                                    });
-//
-//                            AlertDialog alertdel = delnote.create();
-//                            alertdel.show();
-
-
-                            Intent intent = new Intent(getApplicationContext(), GuestActivity.class);
-                            intent.putExtra("USER_TYPE", userType);
-                            intent.putExtra("VIDEO_ID", youtubeID);
-//                intent.putExtra("USER_TYPE", "GUEST");
-                            startActivity(intent);
+                            Dialog deleteConfirmBox = new android.support.v7.app.AlertDialog.Builder(Main_Search.this)
+                                    .setMessage("You have already made a notebook on this video.\nDo you want to open the notebook?")
+                                    .setPositiveButton("Open", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int whichButton) {
+                                            Intent intent = new Intent(getApplicationContext(), GuestActivity.class);
+                                            intent.putExtra("VIDEO_ID", youtubeID);
+                                            intent.putExtra("USER_TYPE", userType);
+                                            startActivity(intent);
+                                            dialog.dismiss();
+                                        }
+                                    })
+                                    .setNegativeButton("Cancel", null)
+                                    .create();
+                            deleteConfirmBox.show();
                         }
 
 
