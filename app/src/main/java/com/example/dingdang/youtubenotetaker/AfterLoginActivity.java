@@ -2,6 +2,7 @@ package com.example.dingdang.youtubenotetaker;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -31,6 +32,10 @@ public class AfterLoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_after_login);
+
+        //Remove back button on the title bar
+        //Code referenced from: https://stackoverflow.com/a/22313897
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         btnMyNotebooks = (Button) findViewById(R.id.btnMyNotebooks);
         btnOpenNotebook = (Button) findViewById(R.id.btnOpenNotebook);
