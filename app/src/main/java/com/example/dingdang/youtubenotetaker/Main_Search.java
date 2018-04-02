@@ -1,13 +1,16 @@
 
 package com.example.dingdang.youtubenotetaker;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -214,24 +217,56 @@ public class Main_Search extends AppCompatActivity {
                 user = FirebaseAuth.getInstance().getCurrentUser();
                 //get the current userId
                 useruid=user.getUid();
-                myReNoteBook=database.getReference("notebook");
+                myReNoteBook=database.getReference("notebook").child(useruid);
                 myReNoteBook.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Boolean notebookChecker=false;
                         for(DataSnapshot childDataSnapshot : dataSnapshot.getChildren()){
-                            if (childDataSnapshot.getValue().equals(youtubeID)){
+                            if (childDataSnapshot.getKey().equals(youtubeID)){
+                                Log.i("youtueb",youtubeID);
                                 notebookChecker=true;
                             }
                         }
                         if (!notebookChecker){
                             Intent intent = new Intent(getApplicationContext(), AddNotebookNameActivity.class);
                             intent.putExtra("VIDEO_ID", youtubeID);
+                            intent.putExtra("USER_TYPE", userType);
                             startActivity(intent);
                         }
-                        else{
+                        else if(notebookChecker){
+//                            AlertDialog.Builder delnote = new AlertDialog.Builder(getApplicationContext());
+//                            delnote.setMessage("Viewed video");
+//                            delnote.setCancelable(true);
+//
+//                            delnote.setPositiveButton(
+//                                    "Open",
+//                                    new DialogInterface.OnClickListener() {
+//                                        public void onClick(DialogInterface dialog, int id) {
+//                                            Intent intent = new Intent(getApplicationContext(), GuestActivity.class);
+//                                            intent.putExtra("VIDEO_ID", youtubeID);
+//                                            intent.putExtra("USER_TYPE", userType);
+//                                            startActivity(intent);
+//
+//                                            dialog.cancel();
+//                                        }
+//                                    });
+//
+//                            delnote.setNegativeButton(
+//                                    "Cancel",
+//                                    new DialogInterface.OnClickListener() {
+//                                        public void onClick(DialogInterface dialog, int id) {
+//                                            dialog.cancel();
+//                                        }
+//                                    });
+//
+//                            AlertDialog alertdel = delnote.create();
+//                            alertdel.show();
+
+
                             Intent intent = new Intent(getApplicationContext(), GuestActivity.class);
                             intent.putExtra("USER_TYPE", userType);
+                            intent.putExtra("VIDEO_ID", youtubeID);
 //                intent.putExtra("USER_TYPE", "GUEST");
                             startActivity(intent);
                         }
