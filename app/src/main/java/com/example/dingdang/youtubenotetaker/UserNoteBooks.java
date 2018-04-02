@@ -42,6 +42,7 @@ public class UserNoteBooks extends AppCompatActivity {
     //private ArrayList<String> myVideoList = new ArrayList<String>();
     String[] myVideoList = new String[10];
     public static final int RC_SIGN_IN = 1;
+    public int count_of_notes_per_user = 0;
 
     // Firebase related varaibles
     private FirebaseDatabase mFirebaseDatabase;
@@ -107,7 +108,21 @@ public class UserNoteBooks extends AppCompatActivity {
         notesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 0) {
+
+                int count = count_of_notes_per_user, counter=0;
+                for(counter=0; counter < count_of_notes_per_user; counter++) {
+                    if(position == counter) {
+                        Intent intent = new Intent (view.getContext() , GuestActivity.class);
+                        intent.putExtra("VIDEO_ID", myVideoList[counter]);
+                        //intent.putExtra("USER_TYPE", userType);
+                        intent.putExtra("USER_TYPE", "REGISTERED");
+                        startActivityForResult(intent,0);
+                    }
+                }
+
+
+
+                /**if (position == 0) {
                     Intent intent = new Intent (view.getContext() , GuestActivity.class);
                     intent.putExtra("VIDEO_ID", myVideoList[0]);
                     //intent.putExtra("USER_TYPE", userType);
@@ -136,7 +151,7 @@ public class UserNoteBooks extends AppCompatActivity {
                     //intent.putExtra("USER_TYPE", userType);
                     intent.putExtra("USER_TYPE", "GUEST");
                     startActivityForResult(intent,0);
-                }
+                }*/
             }
         });
     }
@@ -193,7 +208,7 @@ public class UserNoteBooks extends AppCompatActivity {
 
     private void attachDatabaseReadListener() {
 
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("testuser");
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("notebook");
         ref.addListenerForSingleValueEvent(
                 new ValueEventListener() {
                     @Override
@@ -214,14 +229,16 @@ public class UserNoteBooks extends AppCompatActivity {
                                 Log.i(TAG, "DIN Inside For, size = " + value.size());
                                 int i = 1;
                                 for(Map.Entry<String, Object> entry : value.entrySet()) {
-                                    String a = "MyNoteBook"+i;
-                                    videoId = entry.getKey();
+                                    String noteBookName = entry.getValue().toString();
+                                    videoId = entry.getKey().toString();
                                     //myVideoList.add(videoId);
                                     myVideoList[i-1]=videoId;
                                     Log.i(TAG, "DIN PRINT = " + videoId + "/" + entry.getValue());
-                                    itemsAdapter.add(a);
+                                    itemsAdapter.add(noteBookName);
                                     i++;
+                                    count_of_notes_per_user++;
                                 }
+                                Log.i(TAG, "DIN count of notes per user =  " + count_of_notes_per_user);
                             }
                         }
 
