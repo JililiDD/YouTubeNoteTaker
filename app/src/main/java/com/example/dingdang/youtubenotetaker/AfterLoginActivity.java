@@ -42,7 +42,7 @@ public class AfterLoginActivity extends AppCompatActivity {
         btnOpenNotebook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), GuestActivity.class);
+                Intent intent = new Intent(getApplicationContext(), Main_Search.class);
                 intent.putExtra("USER_TYPE", "REGISTERED");
                 startActivity(intent);
             }
