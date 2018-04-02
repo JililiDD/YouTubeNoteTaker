@@ -65,12 +65,9 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
         youtubeId = getIntent().getStringExtra("VIDEO_ID"); // Get youtube video id (YIWEI)
         linkExist=getIntent().getStringExtra("LINK_EXIST");
 
-
-
-
-
-
-
+        //Remove back button on the title bar
+        //Code referenced from: https://stackoverflow.com/a/22313897
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         initializeYoutubePlayer();
 
