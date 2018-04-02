@@ -54,11 +54,15 @@ public class AddNotebookNameActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (isRegisteredUser()){
                     String notebookName=etNotebookNameInput.getText().toString();
-                    myReNoteBook.child(youtubeId).setValue(notebookName);
-                    Intent intent = new Intent(getApplicationContext(), GuestActivity.class);
-                    intent.putExtra("VIDEO_ID", youtubeId);
-                    intent.putExtra("USER_TYPE", userType);
-                    startActivity(intent);
+                    if (notebookName.equals("")){
+                        Toast.makeText(AddNotebookNameActivity.this, "Notebook name cannot be empty!",Toast.LENGTH_SHORT).show();
+                    } else {
+                        myReNoteBook.child(youtubeId).setValue(notebookName);
+                        Intent intent = new Intent(getApplicationContext(), GuestActivity.class);
+                        intent.putExtra("VIDEO_ID", youtubeId);
+                        intent.putExtra("USER_TYPE", userType);
+                        startActivity(intent);
+                    }
                 }
 
 
@@ -68,12 +72,6 @@ public class AddNotebookNameActivity extends AppCompatActivity {
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
-
-
-
-
                 Intent intent = new Intent(getApplicationContext(), AfterLoginActivity.class);
                 intent.putExtra("VIDEO_ID", youtubeId);
                 intent.putExtra("USER_TYPE", userType);
