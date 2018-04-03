@@ -167,6 +167,7 @@ public class NoteModeFragment extends Fragment {
 
         //the youtubeID
         youtubeId = guestActivity.getYoutubeId(); //YIWEI
+        Log.i("vedio id",youtubeId);
         Toast.makeText(getContext(),youtubeId,Toast.LENGTH_SHORT).show(); // YIWEI
 
         // Hide rlNotepad and rlEditNote UIs by default
@@ -186,62 +187,87 @@ public class NoteModeFragment extends Fragment {
         else{
             Toast.makeText(getContext(),"GUEST",Toast.LENGTH_SHORT).show();
         }
-        int main=0;
         if(isRegisteredUser()){
-            main++;
-
-
-
-
-
-
-            myRef = database.getReference("user").child(useruid);
+//            myRef = database.getReference("user").child(useruid);
+//            Log.i("userId",useruid);
+//            myRef.addValueEventListener(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(DataSnapshot dataSnapshot) {
+//                    for(DataSnapshot childDataSnapshot : dataSnapshot.getChildren()){
+//                        Log.i("VEDIO","---------------");
+//                        if(childDataSnapshot.getKey().toString().equals(youtubeId)){
+//
+//                            noteList.clear();
+//                            final DatabaseReference myChildrenRef = myRef.child(youtubeId);
+//                            myChildrenRef.addValueEventListener(new ValueEventListener() {
+//                                ArrayAdapter<NoteItem> lvNotesItemAdapter1 = new ArrayAdapter<>(getActivity().getApplicationContext(),
+//                                        R.layout.item_black, noteList);
+//                                @Override
+//                                public void onDataChange(DataSnapshot dataSnapshot) {
+//                                    for(DataSnapshot childDataSnapshot : dataSnapshot.getChildren()){
+//
+//                                        HashMap<String,String> newItem= (HashMap<String, String>) childDataSnapshot.getValue();
+//
+//                                        NoteItem newNoteItem=new NoteItem(0,newItem.get("Time"),newItem.get("Subject"),newItem.get("Note"));
+//                                        newNoteItem.setNoteId(newItem.get("NoteId"));
+//                                        newNoteItem.setNotebookName(newItem.get("NotebookName"));
+//                                        newNoteItem.setSelected("false");
+//                                        lvNotesItemAdapter1.add(newNoteItem);
+//                                        //Log.i("VEDIO","---------------");
+//                                        lvNotes.clearChoices();
+//                                        lvNotes.setAdapter(lvNotesItemAdapter1);
+//
+//                                    }
+//
+//                                }
+//                                @Override
+//                                public void onCancelled(DatabaseError databaseError) {
+//
+//                                }
+//                            });
+//
+//                        }
+//                        break;
+//
+//                    }
+//                }
+//
+//                @Override
+//                public void onCancelled(DatabaseError databaseError) {
+//
+//                }
+//            });
+            myRef = database.getReference("user").child(useruid).child(youtubeId);
+            Log.i("userId",useruid);
             myRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
+                    ArrayAdapter<NoteItem> lvNotesItemAdapter1 = new ArrayAdapter<>(getActivity().getApplicationContext(),
+                            R.layout.item_black, noteList);
+
+
                     for(DataSnapshot childDataSnapshot : dataSnapshot.getChildren()){
-                        if(childDataSnapshot.getKey().toString().equals(youtubeId)){
-                            noteList.clear();
-                            final DatabaseReference myChildrenRef = myRef.child(youtubeId);
-                            myChildrenRef.addValueEventListener(new ValueEventListener() {
-                                ArrayAdapter<NoteItem> lvNotesItemAdapter1 = new ArrayAdapter<>(getActivity().getApplicationContext(),
-                                        R.layout.item_black, noteList);
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    for(DataSnapshot childDataSnapshot : dataSnapshot.getChildren()){
-
-                                        HashMap<String,String> newItem= (HashMap<String, String>) childDataSnapshot.getValue();
-
-                                        NoteItem newNoteItem=new NoteItem(0,newItem.get("Time"),newItem.get("Subject"),newItem.get("Note"));
-                                        newNoteItem.setNoteId(newItem.get("NoteId"));
-                                        newNoteItem.setNotebookName(newItem.get("NotebookName"));
-                                        newNoteItem.setSelected("false");
-                                        lvNotesItemAdapter1.add(newNoteItem);
-                                        lvNotes.clearChoices();
-                                        lvNotes.setAdapter(lvNotesItemAdapter1);
 
 
-                                    }
+                        HashMap<String,String> newItem= (HashMap<String, String>) childDataSnapshot.getValue();
 
-                                }
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-
-                                }
-                            });
+                        NoteItem newNoteItem=new NoteItem(0,newItem.get("Time"),newItem.get("Subject"),newItem.get("Note"));
+                        newNoteItem.setNoteId(newItem.get("NoteId"));
+                        newNoteItem.setNotebookName(newItem.get("NotebookName"));
+                        newNoteItem.setSelected("false");
+                        lvNotesItemAdapter1.add(newNoteItem);
+                        //Log.i("VEDIO","---------------");
+                        lvNotes.clearChoices();
+                        lvNotes.setAdapter(lvNotesItemAdapter1);
 
                         }
-                        break;
-
-                    }
                 }
-
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
 
-                }
-            });
+                    }
 
+            });
 
         }
 
