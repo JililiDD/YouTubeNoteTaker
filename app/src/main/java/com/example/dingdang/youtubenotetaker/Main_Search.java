@@ -46,6 +46,11 @@ import java.util.List;
  // * Use the {@link VideoSearchFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
+
+/**
+    This whole search activity was referred from
+    https://code.tutsplus.com/tutorials/create-a-youtube-client-on-android--cms-22858
+ */
 public class Main_Search extends AppCompatActivity {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -60,7 +65,6 @@ public class Main_Search extends AppCompatActivity {
     private DatabaseReference myReNoteBook;
 
     // Components needed for youtube search
-    // Refered from https://code.tutsplus.com/tutorials/create-a-youtube-client-on-android--cms-22858
     private EditText searchInput;
     private Button searchBtn;
     private ListView videosFound;

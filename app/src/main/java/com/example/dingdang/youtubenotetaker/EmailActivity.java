@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-// Email function is referred to from: https://www.youtube.com/watch?v=x9VkNlB0Z6Y
+/** Email function is referred to from: https://www.youtube.com/watch?v=x9VkNlB0Z6Y*/
 public class EmailActivity extends AppCompatActivity {
     private EditText to, subject, message;
     private Button btnSendEmail;
