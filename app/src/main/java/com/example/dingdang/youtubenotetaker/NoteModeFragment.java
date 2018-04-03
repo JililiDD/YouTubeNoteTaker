@@ -492,37 +492,47 @@ public class NoteModeFragment extends Fragment {
 
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            ArrayAdapter<NoteItem> lvNotesItemAdapter1 = new ArrayAdapter<>(getActivity().getApplicationContext(),
-                                    R.layout.item_black, noteList);
-                            noteList.clear();
                             String theselectid = "";
-                            String theTime="";
                             for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()){
                                 HashMap<String, String> newItem = (HashMap<String, String>) childDataSnapshot.getValue();
                                 if (newItem.get("Selected").equals("true")){
                                     theselectid=newItem.get("NoteId");
-                                    theTime=newItem.get("Time");
-                                }
-                                else
-                                {
-                                    newItem= (HashMap<String, String>) childDataSnapshot.getValue();
-                                    NoteItem newNoteItem=new NoteItem(0,newItem.get("Time"),newItem.get("Subject"),newItem.get("Note"));
-                                    newNoteItem.setNoteId(newItem.get("NoteId"));
-                                    newNoteItem.setNotebookName(newItem.get("NotebookName"));
-                                    // newNoteItem.setSelected("false");
-                                    lvNotesItemAdapter1.add(newNoteItem);
-                                    //Log.i("VEDIO","---------------");
-                                    lvNotes.clearChoices();
                                 }
 
                             }
                             myRef.child(theselectid).child("Selected").setValue("false");
                             myRef.child(theselectid).child("Subject").setValue(etEditSubject.getText().toString());
                             myRef.child(theselectid).child("Note").setValue(etEditNote.getText().toString());
-                            NoteItem newNoteItem=new NoteItem(0,theTime,etEditSubject.getText().toString(),etEditNote.getText().toString());
-                            lvNotesItemAdapter1.add(newNoteItem);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+
+                    });
+                    myRef = database.getReference("user").child(useruid).child(youtubeId);
+                    myRef.addValueEventListener(new ValueEventListener() {
+
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            noteList.clear();
+                            ArrayAdapter<NoteItem> lvNotesItemAdapter1 = new ArrayAdapter<>(getActivity().getApplicationContext(),
+                                    R.layout.item_black, noteList);
+
+                            String theselectid = "";
+                            for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()){
+                                HashMap<String, String> newItem = (HashMap<String, String>) childDataSnapshot.getValue();
+
+                                    NoteItem newNoteItem = new NoteItem(0, newItem.get("Time"), newItem.get("Subject"), newItem.get("Note"));
+                                    newNoteItem.setNoteId(newItem.get("NoteId"));
+                                    newNoteItem.setNotebookName(newItem.get("NotebookName"));
+                                    lvNotesItemAdapter1.add(newNoteItem);
 
 
+
+
+                            }
 
                             lvNotes.setAdapter(lvNotesItemAdapter1);
                             llNoteList.setVisibility(View.VISIBLE);  // Display llNoteList UI
@@ -532,16 +542,14 @@ public class NoteModeFragment extends Fragment {
 
 
 
-
                         }
-
 
                         @Override
                         public void onCancelled(DatabaseError databaseError) {
 
                         }
-
                     });
+
 
 
 
