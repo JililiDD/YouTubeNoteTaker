@@ -532,10 +532,10 @@ public class NoteModeFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (isRegisteredUser()){
-                    rlEditNote.setVisibility(View.VISIBLE);
-                    llNoteList.setVisibility(View.GONE);
-                    rlNotepad.setVisibility(View.GONE);
-                    LL_showNote.setVisibility(View.GONE);
+//                    rlEditNote.setVisibility(View.VISIBLE);
+//                    llNoteList.setVisibility(View.GONE);
+//                    rlNotepad.setVisibility(View.GONE);
+//                    LL_showNote.setVisibility(View.GONE);
 
                     myRef.child(youtubeId).orderByChild("Selected").addListenerForSingleValueEvent(new ValueEventListener() {
 
@@ -612,6 +612,7 @@ public class NoteModeFragment extends Fragment {
                     llNoteList.setVisibility(View.VISIBLE);  // Display llNoteList UI
                     rlNotepad.setVisibility(View.GONE); // Hide rlNotepad UI
                     rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UI
+                    LL_showNote.setVisibility(View.GONE);
                 }
 
 
@@ -623,43 +624,10 @@ public class NoteModeFragment extends Fragment {
         btnEditNoteCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isRegisteredUser()){
-                    rlEditNote.setVisibility(View.VISIBLE);
-                    llNoteList.setVisibility(View.GONE);
-                    rlNotepad.setVisibility(View.GONE);
-                    LL_showNote.setVisibility(View.GONE);
-                    myRef.child(youtubeId).orderByChild("Selected").addListenerForSingleValueEvent(new ValueEventListener() {
-
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            String theselectid = "";
-                            for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()){
-                                HashMap<String, String> newItem = (HashMap<String, String>) childDataSnapshot.getValue();
-                                if (newItem.get("Selected").equals("true")){
-                                    theselectid=newItem.get("NoteId");
-                                }
-
-                            }
-                            myRef.child(youtubeId).child(theselectid).child("Selected").setValue("false");
-
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-
-                    llNoteList.setVisibility(View.VISIBLE);  // Display llNoteList UI
-                    rlNotepad.setVisibility(View.GONE); // Hide rlNotepad UI
-                    rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UI
-                    LL_showNote.setVisibility(View.GONE);
-
-                }else{
-                    llNoteList.setVisibility(View.VISIBLE);  // Display llNoteList UI
-                    rlNotepad.setVisibility(View.GONE); // Hide rlNotepad UI
-                    rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UI
-                }
+                llNoteList.setVisibility(View.VISIBLE);  // Display llNoteList UI
+                rlNotepad.setVisibility(View.GONE); // Hide rlNotepad UI
+                rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UI
+                LL_showNote.setVisibility(View.GONE);
 
             }
         });
