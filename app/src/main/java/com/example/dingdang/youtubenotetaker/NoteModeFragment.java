@@ -219,8 +219,6 @@ public class NoteModeFragment extends Fragment {
                                         lvNotesItemAdapter1.add(newNoteItem);
                                         lvNotes.clearChoices();
                                         lvNotes.setAdapter(lvNotesItemAdapter1);
-                                        LL_showNote.setVisibility(View.GONE);
-                                        llNoteList.setVisibility(View.VISIBLE);
 
 
                                     }
@@ -475,6 +473,7 @@ public class NoteModeFragment extends Fragment {
                                             llNoteList.setVisibility(View.VISIBLE);  // Display llNoteList UI
                                             rlNotepad.setVisibility(View.GONE); // Hide rlNotepad UI
                                             rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UIi=0;
+                                            LL_showNote.setVisibility(View.GONE);
 
 
                                         }
