@@ -177,6 +177,7 @@ public class NoteModeFragment extends Fragment {
 
 
 
+
         if(isRegisteredUser()){
             user = FirebaseAuth.getInstance().getCurrentUser();
             //get the current userId
@@ -188,58 +189,10 @@ public class NoteModeFragment extends Fragment {
             Toast.makeText(getContext(),"GUEST",Toast.LENGTH_SHORT).show();
         }
         if(isRegisteredUser()){
-//            myRef = database.getReference("user").child(useruid);
-//            Log.i("userId",useruid);
-//            myRef.addValueEventListener(new ValueEventListener() {
-//                @Override
-//                public void onDataChange(DataSnapshot dataSnapshot) {
-//                    for(DataSnapshot childDataSnapshot : dataSnapshot.getChildren()){
-//                        Log.i("VEDIO","---------------");
-//                        if(childDataSnapshot.getKey().toString().equals(youtubeId)){
-//
-//                            noteList.clear();
-//                            final DatabaseReference myChildrenRef = myRef.child(youtubeId);
-//                            myChildrenRef.addValueEventListener(new ValueEventListener() {
-//                                ArrayAdapter<NoteItem> lvNotesItemAdapter1 = new ArrayAdapter<>(getActivity().getApplicationContext(),
-//                                        R.layout.item_black, noteList);
-//                                @Override
-//                                public void onDataChange(DataSnapshot dataSnapshot) {
-//                                    for(DataSnapshot childDataSnapshot : dataSnapshot.getChildren()){
-//
-//                                        HashMap<String,String> newItem= (HashMap<String, String>) childDataSnapshot.getValue();
-//
-//                                        NoteItem newNoteItem=new NoteItem(0,newItem.get("Time"),newItem.get("Subject"),newItem.get("Note"));
-//                                        newNoteItem.setNoteId(newItem.get("NoteId"));
-//                                        newNoteItem.setNotebookName(newItem.get("NotebookName"));
-//                                        newNoteItem.setSelected("false");
-//                                        lvNotesItemAdapter1.add(newNoteItem);
-//                                        //Log.i("VEDIO","---------------");
-//                                        lvNotes.clearChoices();
-//                                        lvNotes.setAdapter(lvNotesItemAdapter1);
-//
-//                                    }
-//
-//                                }
-//                                @Override
-//                                public void onCancelled(DatabaseError databaseError) {
-//
-//                                }
-//                            });
-//
-//                        }
-//                        break;
-//
-//                    }
-//                }
-//
-//                @Override
-//                public void onCancelled(DatabaseError databaseError) {
-//
-//                }
-//            });
-            myRef = database.getReference("user").child(useruid).child(youtubeId);
+
+            DatabaseReference myRefyouTube = database.getReference("user").child(useruid).child(youtubeId);
             Log.i("userId",useruid);
-            myRef.addValueEventListener(new ValueEventListener() {
+            myRefyouTube.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     ArrayAdapter<NoteItem> lvNotesItemAdapter1 = new ArrayAdapter<>(getActivity().getApplicationContext(),
@@ -793,42 +746,19 @@ public class NoteModeFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, final int pos, long l) {
                 if(isRegisteredUser()){
-//                    LL_showNote.setVisibility(View.VISIBLE);
-//                    rlEditNote.setVisibility(View.GONE);
-//                    llNoteList.setVisibility(View.GONE);
-//                    rlNotepad.setVisibility(View.GONE);
-
-                    //remove the noteItem from the database
+                    myRef = database.getReference("user").child(useruid).child(youtubeId);
                     myRef.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            for(final DataSnapshot childDataSnapshot : dataSnapshot.getChildren()){
-                                if(childDataSnapshot.getKey().toString().equals(youtubeId)){
-
-                                    DatabaseReference myChildrenRef = myRef.child(youtubeId);
-                                    myChildrenRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(DataSnapshot dataSnapshot) {
-                                            noteList.clear();
-                                            ArrayAdapter<NoteItem> lvNotesItemAdapter1 = new ArrayAdapter<>(getActivity().getApplicationContext(),
+                            ArrayAdapter<NoteItem> lvNotesItemAdapter1 = new ArrayAdapter<>(getActivity().getApplicationContext(),
                                                     R.layout.item_black, noteList);
-                                            for(DataSnapshot childDataSnapshot : dataSnapshot.getChildren()){
-                                                HashMap<String,String> newItem= (HashMap<String, String>) childDataSnapshot.getValue();
+
+                            for(final DataSnapshot childDataSnapshot : dataSnapshot.getChildren()){
+                                HashMap<String,String> newItem= (HashMap<String, String>) childDataSnapshot.getValue();
                                                 NoteItem newNoteItem=new NoteItem(0,newItem.get("Time"),newItem.get("Subject"),newItem.get("Note"));
                                                 newNoteItem.setNoteId(newItem.get("NoteId"));
                                                 newNoteItem.setNotebookName(newItem.get("NotebookName"));
                                                 noteList.add(newNoteItem);
-                                            }
-
-                                                   }
-                                        @Override
-                                        public void onCancelled(DatabaseError databaseError) {
-
-                                        }
-
-                                    });
-                                  break;
-                                }
                             }
                         }
 
@@ -840,7 +770,7 @@ public class NoteModeFragment extends Fragment {
                     setSelectedNote(noteList.get(pos));
                     NoteItem seItem=noteList.get(pos);
                     lvNotes.clearChoices();
-                    DatabaseReference myChildrenRef1 =myRef.child(youtubeId).child(seItem.getNoteId());
+                    DatabaseReference myChildrenRef1 =myRef.child(seItem.getNoteId());
                     //String seID=seItem.getNoteId().toString();
 
                     myChildrenRef1.child("Selected").setValue("true");
