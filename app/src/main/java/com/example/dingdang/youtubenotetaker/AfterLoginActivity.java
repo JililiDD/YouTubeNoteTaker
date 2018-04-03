@@ -53,7 +53,6 @@ public class AfterLoginActivity extends AppCompatActivity {
             }
         });
 
-
         btnMyNotebooks.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -145,5 +144,12 @@ public class AfterLoginActivity extends AppCompatActivity {
 
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    // Prevent a logged in user going back to the home login page. Solution is referred from:
+    // https://stackoverflow.com/a/26492794
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
     }
 }
