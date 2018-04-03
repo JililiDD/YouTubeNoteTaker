@@ -41,7 +41,7 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
     private String userType;
     private String youtubeId;
     FloatingActionButton floatbtn;
-    private String linkExist;
+    private String linkExist, previousActivity;
     private FirebaseUser user;
     private String useruid;
 
@@ -64,6 +64,7 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
         userType = getIntent().getStringExtra("USER_TYPE"); // Get user type to provide different functions to guest and member users
         youtubeId = getIntent().getStringExtra("VIDEO_ID"); // Get youtube video id (YIWEI)
         linkExist=getIntent().getStringExtra("LINK_EXIST");
+        previousActivity = getIntent().getStringExtra("FROM");
 
         //Remove back button on the title bar
         //Code referenced from: https://stackoverflow.com/a/22313897
@@ -212,5 +213,18 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
 
     public String getYoutubeId() {
         return youtubeId;
-    } // YIWEI
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(isRegisteredUser() && previousActivity != null) {
+            Intent intent = new Intent(getApplicationContext(), UserNoteBooks.class);
+            intent.putExtra("USER_TYPE", "REGISTERED");
+            startActivity(intent);
+        } else if(previousActivity == null){
+            Intent intent = new Intent(getApplicationContext(), AfterLoginActivity.class);
+            intent.putExtra("USER_TYPE", "REGISTERED");
+            startActivity(intent);
+        }
+    }
 }

@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -39,8 +40,8 @@ public class UserNoteBooks extends AppCompatActivity {
     private static final String TAG = "MyActivity";
     private ArrayAdapter<String> itemsAdapter;
     private String videoId;
-    //private ArrayList<String> myVideoList = new ArrayList<String>();
-    String[] myVideoList = new String[10];
+    private ArrayList<String> myVideoList = new ArrayList<String>();
+    //String[] myVideoList = new String[10];
     public static final int RC_SIGN_IN = 1;
     public int count_of_notes_per_user = 0;
 
@@ -113,9 +114,10 @@ public class UserNoteBooks extends AppCompatActivity {
                 for(counter=0; counter < count_of_notes_per_user; counter++) {
                     if(position == counter) {
                         Intent intent = new Intent (view.getContext() , GuestActivity.class);
-                        intent.putExtra("VIDEO_ID", myVideoList[counter]);
+                        intent.putExtra("VIDEO_ID", myVideoList.get(counter));
                         //intent.putExtra("USER_TYPE", userType);
                         intent.putExtra("USER_TYPE", "REGISTERED");
+                        intent.putExtra("FROM", "USERNOTEBOOKS");
                         startActivityForResult(intent,0);
                     }
                 }
@@ -178,7 +180,7 @@ public class UserNoteBooks extends AppCompatActivity {
         // remove AuthStateListener when activity goes out of picture
         mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
         //detachDatabaseReadListener();
-        itemsAdapter.clear();
+        //itemsAdapter.clear();
     }
 
     @Override
@@ -231,8 +233,8 @@ public class UserNoteBooks extends AppCompatActivity {
                                 for(Map.Entry<String, Object> entry : value.entrySet()) {
                                     String noteBookName = entry.getValue().toString();
                                     videoId = entry.getKey().toString();
-                                    //myVideoList.add(videoId);
-                                    myVideoList[i-1]=videoId;
+                                    myVideoList.add(videoId);
+                                    //myVideoList[i-1]=videoId;
                                     Log.i(TAG, "DIN PRINT = " + videoId + "/" + entry.getValue());
                                     itemsAdapter.add(noteBookName);
                                     i++;
@@ -282,6 +284,13 @@ public class UserNoteBooks extends AppCompatActivity {
 
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(getApplicationContext(), AfterLoginActivity.class);
+        intent.putExtra("USER_TYPE", "REGISTERED");
+        startActivity(intent);
     }
 
 }
