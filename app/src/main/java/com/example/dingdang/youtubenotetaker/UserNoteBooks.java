@@ -48,6 +48,7 @@ public class UserNoteBooks extends AppCompatActivity {
     //String[] myVideoList = new String[100];
     public static final int RC_SIGN_IN = 1;
     public int count_of_notes_per_user = 0;
+    private boolean login_once = false;
 
     // Firebase related varaibles
     private FirebaseDatabase mFirebaseDatabase;
@@ -103,16 +104,24 @@ public class UserNoteBooks extends AppCompatActivity {
                 }
                 else {
                     // User signed out, so put in sign in flow
-                    onSignedOutCleanup();
-                    startActivityForResult(
-                            AuthUI.getInstance()
-                                    .createSignInIntentBuilder()
-                                    .setIsSmartLockEnabled(false)
-                                    .setAvailableProviders(Arrays.asList(
-                                            new AuthUI.IdpConfig.EmailBuilder().build(),
-                                            new AuthUI.IdpConfig.GoogleBuilder().build()))
-                                    .build(),
-                            RC_SIGN_IN);
+                    if(login_once == false) {
+                            onSignedOutCleanup();
+                            startActivityForResult(
+                                    AuthUI.getInstance()
+                                            .createSignInIntentBuilder()
+                                            .setIsSmartLockEnabled(false)
+                                            .setAvailableProviders(Arrays.asList(
+                                                    new AuthUI.IdpConfig.EmailBuilder().build()))
+                                            .build(),
+                                    RC_SIGN_IN);
+                            login_once = true;
+                    }
+                    else if(login_once == true) {
+                        login_once = false;
+                        Intent intent = new Intent(UserNoteBooks.this, MainActivity.class);
+                        intent.putExtra("USER_TYPE", "GUEST");
+                        startActivity(intent);
+                    }
                 }
             }
         };

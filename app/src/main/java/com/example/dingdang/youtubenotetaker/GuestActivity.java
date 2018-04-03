@@ -192,12 +192,7 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
         }
     }
 
-    @Override
-    public void onBackPressed()
-    {
-        Log.i(TAG, "SHENOY BACK BUTTON PRESSED!! ");
 
-    }
     public boolean isRegisteredUser(){
         return userType.equals("REGISTERED");
     }

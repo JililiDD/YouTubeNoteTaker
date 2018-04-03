@@ -105,6 +105,8 @@ public class AfterLoginActivity extends AppCompatActivity {
 
     }
 
+    // Prevent a logged in user going back to the home login page. Solution is referred from:
+    // https://stackoverflow.com/a/26492794
     @Override
     public void onBackPressed()
     {
@@ -167,10 +169,4 @@ public class AfterLoginActivity extends AppCompatActivity {
         }
     }
 
-    // Prevent a logged in user going back to the home login page. Solution is referred from:
-    // https://stackoverflow.com/a/26492794
-    @Override
-    public void onBackPressed() {
-        moveTaskToBack(true);
-    }
 }
