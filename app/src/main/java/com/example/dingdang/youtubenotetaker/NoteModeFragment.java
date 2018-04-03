@@ -456,10 +456,10 @@ public class NoteModeFragment extends Fragment {
                                     myChildrenRef.addValueEventListener(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(DataSnapshot dataSnapshot) {
-                                            noteList.clear();
+                                            //noteList.clear();
                                             ArrayAdapter<NoteItem> lvNotesItemAdapter1 = new ArrayAdapter<>(getActivity().getApplicationContext(),
                                                     R.layout.item_black, noteList);
-
+                                            noteList.clear();
                                             for(DataSnapshot childDataSnapshot : dataSnapshot.getChildren()){
                                                 HashMap<String,String> newItem= (HashMap<String, String>) childDataSnapshot.getValue();
 
@@ -470,12 +470,11 @@ public class NoteModeFragment extends Fragment {
                                                 lvNotesItemAdapter1.add(newNoteItem);
                                             }
                                             lvNotes.setAdapter(lvNotesItemAdapter1);
+
                                             llNoteList.setVisibility(View.VISIBLE);  // Display llNoteList UI
                                             rlNotepad.setVisibility(View.GONE); // Hide rlNotepad UI
                                             rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UIi=0;
                                             LL_showNote.setVisibility(View.GONE);
-
-
                                         }
 
                                         @Override
@@ -532,11 +531,6 @@ public class NoteModeFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (isRegisteredUser()){
-//                    rlEditNote.setVisibility(View.VISIBLE);
-//                    llNoteList.setVisibility(View.GONE);
-//                    rlNotepad.setVisibility(View.GONE);
-//                    LL_showNote.setVisibility(View.GONE);
-
                     myRef.child(youtubeId).orderByChild("Selected").addListenerForSingleValueEvent(new ValueEventListener() {
 
                         @Override
@@ -773,11 +767,11 @@ public class NoteModeFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, final int pos, long l) {
                 if(isRegisteredUser()){
-                    LL_showNote.setVisibility(View.VISIBLE);
-                    //rlEditNote.setVisibility(View.VISIBLE);
-                    rlEditNote.setVisibility(View.GONE);
-                    llNoteList.setVisibility(View.GONE);
-                    rlNotepad.setVisibility(View.GONE);
+//                    LL_showNote.setVisibility(View.VISIBLE);
+//                    rlEditNote.setVisibility(View.GONE);
+//                    llNoteList.setVisibility(View.GONE);
+//                    rlNotepad.setVisibility(View.GONE);
+
                     //remove the noteItem from the database
                     myRef.addValueEventListener(new ValueEventListener() {
                         @Override
@@ -840,9 +834,10 @@ public class NoteModeFragment extends Fragment {
                         }
                     });
 
-//                    rlEditNote.setVisibility(View.VISIBLE);
-//                    llNoteList.setVisibility(View.GONE);
-//                    rlNotepad.setVisibility(View.GONE);
+                    LL_showNote.setVisibility(View.VISIBLE);
+                    rlEditNote.setVisibility(View.GONE);
+                    llNoteList.setVisibility(View.GONE);
+                    rlNotepad.setVisibility(View.GONE);
 
 
                     tvEditNoteTime.setText(selectedNote.getTime());
@@ -914,6 +909,8 @@ public class NoteModeFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
+
+
 
     /**
      * This interface must be implemented by activities that contain this
