@@ -193,6 +193,13 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
             player.seekToMillis(msNoteTime);
         }
     }
+
+    @Override
+    public void onBackPressed()
+    {
+        Log.i(TAG, "SHENOY BACK BUTTON PRESSED!! ");
+
+    }
     public boolean isRegisteredUser(){
         return userType.equals("REGISTERED");
     }

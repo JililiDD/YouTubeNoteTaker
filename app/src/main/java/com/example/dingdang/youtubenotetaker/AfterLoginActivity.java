@@ -1,9 +1,12 @@
 package com.example.dingdang.youtubenotetaker;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,6 +24,9 @@ public class AfterLoginActivity extends AppCompatActivity {
 
     Button btnOpenNotebook, btnMyNotebooks;
     private static final int RC_SIGN_IN = 1;
+    private boolean login_once = false;
+
+    private static final String TAG = "AfterLoginActivity";
 
     // Firebase variable
     private FirebaseAuth.AuthStateListener mAuthStateListener;
@@ -71,19 +77,36 @@ public class AfterLoginActivity extends AppCompatActivity {
                 }
                 else {
                     // User signed out, so put in sign in flow
-                    startActivityForResult(
-                            AuthUI.getInstance()
-                                    .createSignInIntentBuilder()
-                                    .setIsSmartLockEnabled(false)
-                                    .setAvailableProviders(Arrays.asList(
-                                            new AuthUI.IdpConfig.EmailBuilder().build(),
-                                            new AuthUI.IdpConfig.GoogleBuilder().build()))
-                                    .build(),
-                            RC_SIGN_IN);
+                    Log.i(TAG, "SHENOY Putting in user to login again");
+                    if(login_once == false) {
+                            startActivityForResult(
+                                    AuthUI.getInstance()
+                                            .createSignInIntentBuilder()
+                                            .setIsSmartLockEnabled(false)
+                                            .setAvailableProviders(Arrays.asList(
+                                                    new AuthUI.IdpConfig.EmailBuilder().build()))
+                                            .build(),
+                                    RC_SIGN_IN);
+
+                            login_once = true;
+                    }
+                    else if(login_once == true) {
+                        Log.i(TAG, "SHENOY calling onBackPressed function!! ");
+                        onBackPressed();
+                    }
+
                 }
             }
         };
 
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        Log.i(TAG, "SHENOY BACK BUTTON PRESSED!! ");
+        login_once = false;
+        moveTaskToBack(true);
     }
 
     @Override
@@ -93,11 +116,9 @@ public class AfterLoginActivity extends AppCompatActivity {
                 Toast.makeText(AfterLoginActivity.this, "Signed In !!",Toast.LENGTH_SHORT).show();
             }
             else if (resultCode == RESULT_CANCELED) {
-                Toast.makeText(AfterLoginActivity.this, "DS Sign In Cancel !!",Toast.LENGTH_LONG).show();
-                finish();
-                Intent intent = new Intent(AfterLoginActivity.this, MainActivity.class);
-                intent.putExtra("USER_TYPE", "GUEST");
-                startActivity(intent);
+                Toast.makeText(AfterLoginActivity.this, "SHENOY GOING BACK !!",Toast.LENGTH_LONG).show();
+                Log.i(TAG, "SHENOY user has signed in");
+                moveTaskToBack(true);
             }
         }
         else {

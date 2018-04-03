@@ -1,4 +1,7 @@
 package com.example.dingdang.youtubenotetaker;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -38,9 +41,10 @@ public class UserNoteBooks extends AppCompatActivity {
     private String mUsername, userId;
     private static final String TAG = "MyActivity";
     private ArrayAdapter<String> itemsAdapter;
+    private ArrayList<String> listAdapter;
     private String videoId;
-    //private ArrayList<String> myVideoList = new ArrayList<String>();
-    String[] myVideoList = new String[10];
+    private ArrayList<String> myVideoList1 = new ArrayList<String>();
+    //String[] myVideoList = new String[100];
     public static final int RC_SIGN_IN = 1;
     public int count_of_notes_per_user = 0;
 
@@ -58,13 +62,20 @@ public class UserNoteBooks extends AppCompatActivity {
 
         // List view variable
         ListView notesList;
+        ListView listNotesList;
 
         // Set layout for each item of the list view
         itemsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
 
+        // set layout for each item of list view to arrayList
+        //listAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,);
         // Initialize ListView variable & bind the adapter to list view
         notesList = findViewById(R.id.lvNotesList);
         notesList.setAdapter(itemsAdapter);
+        notesList.setLongClickable(true);
+
+        listNotesList = findViewById(R.id.lvNotesList);
+
 
         // Instantiate Firebase varaibles
         mFirebaseDatabase = FirebaseDatabase.getInstance();
@@ -112,48 +123,152 @@ public class UserNoteBooks extends AppCompatActivity {
                 int count = count_of_notes_per_user, counter=0;
                 for(counter=0; counter < count_of_notes_per_user; counter++) {
                     if(position == counter) {
+                        Log.i(TAG, "DIN ArrayList content " + myVideoList1.get(position));
+                        //Log.i(TAG, "DIN ArrayList content " + myVideoList[counter]);
                         Intent intent = new Intent (view.getContext() , GuestActivity.class);
-                        intent.putExtra("VIDEO_ID", myVideoList[counter]);
+                        //intent.putExtra("VIDEO_ID", myVideoList[counter]);
+                        intent.putExtra("VIDEO_ID", myVideoList1.get(position));
                         //intent.putExtra("USER_TYPE", userType);
                         intent.putExtra("USER_TYPE", "REGISTERED");
                         startActivityForResult(intent,0);
                     }
                 }
-
-
-
-                /**if (position == 0) {
-                    Intent intent = new Intent (view.getContext() , GuestActivity.class);
-                    intent.putExtra("VIDEO_ID", myVideoList[0]);
-                    //intent.putExtra("USER_TYPE", userType);
-                    intent.putExtra("USER_TYPE", "REGISTERED");
-                    startActivityForResult(intent,0);
-                }
-                if (position == 1) {
-                    Intent intent = new Intent (view.getContext() , GuestActivity.class);
-                    intent.putExtra("VIDEO_ID", myVideoList[1]);
-                    //intent.putExtra("USER_TYPE", userType);
-                    intent.putExtra("USER_TYPE", "GUEST");
-                    startActivityForResult(intent,0);
-
-                }
-                if (position == 2) {
-                    Intent intent = new Intent (view.getContext() , GuestActivity.class);
-                    intent.putExtra("VIDEO_ID", myVideoList[2]);
-                    //intent.putExtra("USER_TYPE", userType);
-                    intent.putExtra("USER_TYPE", "GUEST");
-                    startActivityForResult(intent,0);
-
-                }
-                if( position == 3) {
-                    Intent intent = new Intent (view.getContext() , GuestActivity.class);
-                    intent.putExtra("VIDEO_ID", myVideoList[3]);
-                    //intent.putExtra("USER_TYPE", userType);
-                    intent.putExtra("USER_TYPE", "GUEST");
-                    startActivityForResult(intent,0);
-                }*/
             }
         });
+
+        // Reference : https://stackoverflow.com/questions/23195208/how-to-pop-up-a-dialog-to-confirm-delete-when-user-long-press-on-the-list-item
+        notesList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+                Toast.makeText(UserNoteBooks.this, "Long pressed", Toast.LENGTH_SHORT).show();
+
+                AlertDialog.Builder alert = new AlertDialog.Builder(UserNoteBooks.this);
+                alert.setTitle("Alert!!");
+                alert.setMessage("Are you sure to delete record");
+                alert.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //do your work here
+                        dialog.dismiss();
+                        //Log.i(TAG, "DIN Yes pressed for video ID " + myVideoList1.get(position));
+                        //delete from arrayList
+                        //myVideoList1.remove(position);
+                        //function to delete from firebase database
+                        final String videoId = myVideoList1.get(position);
+                        Log.i(TAG, "DIN YES pressed videoId captured to be deleted is " + videoId);
+
+                        deleteFromDatabase(position, videoId);
+
+                    }
+                });
+                alert.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        dialog.dismiss();
+                    }
+                });
+
+                alert.show();
+
+                return true;
+            }
+        });
+    }
+
+    public void deleteFromDatabase(final int position, final String videoId) {
+
+        final DatabaseReference ref1 = FirebaseDatabase.getInstance().getReference().child("notebook");
+        final DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference().child("user");
+
+        ref1.addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        int deleted=0;
+                        for(DataSnapshot ds: dataSnapshot.getChildren()) {
+                            String key = ds.getKey();
+                            Log.i(TAG, "DIN deleteFromDatbaase ref1 key = " + key);
+                            Log.i(TAG, "DIN deleteFromDatabase ref1 userId = " + userId);
+                            Map<String, Object> value = (Map<String, Object>) ds.getValue();
+                            if(key.equals(userId)) {
+                                for(Map.Entry<String, Object> entry : value.entrySet()) {
+                                    String noteBookName = entry.getValue().toString();
+                                    String videoId1 = entry.getKey().toString();
+                                    Log.i(TAG, "DIN deleteFromDatbaase ref1 received videoID= " + videoId);
+                                    Log.i(TAG, "DIN deleteFromDatbaase ref1 to be checked videoID= " + videoId1);
+                                    if(videoId1.equals(videoId)) {
+                                        // found match
+                                        Log.i(TAG, "DIN deleteFromDatbaase match found ! ref1 ID1= " + videoId1);
+                                        // delete from database
+                                        ref1.child(userId).child(videoId1).removeValue();
+                                        Log.i(TAG, "DIN deleteFromDatbaase ref1 - Deleted from DB ");
+                                        // Update the entry as well on screen !
+                                        itemsAdapter.remove(noteBookName);
+                                        Log.i(TAG, "DIN deleteFromDatbaase ref1 - removed from itemsAdapter " + itemsAdapter.getPosition(noteBookName));
+                                        itemsAdapter.notifyDataSetChanged();
+                                        Log.i(TAG, "DIN deleteFromDatbaase ref1 - Notify datasetChanged() ");
+                                        deleted = 1;
+                                    }
+                                    if(deleted == 1)
+                                        break;
+                                }
+                            }
+                            if(deleted == 1)
+                                break;
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                }
+        );
+
+        ref2.addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        int deleted1 = 0;
+                        for(DataSnapshot ds1: dataSnapshot.getChildren()) {
+                            String key1 = ds1.getKey().toString();
+                            Log.i(TAG, "DIN deleteFromDatbaase ref2 key = " + key1);
+                            Log.i(TAG, "DIN deleteFromDatabase ref2 userId = " + userId);
+                            Map<String, Object> value1 = (Map<String, Object>) ds1.getValue();
+                            if(key1.equals(userId.toString())) {
+                                for(Map.Entry<String, Object> entry1 : value1.entrySet()) {
+                                    String noteBookName = entry1.getValue().toString();
+                                    String videoId2 = entry1.getKey().toString();
+
+                                    Log.i(TAG, "DIN deleteFromDatbaase ref2 received videoID= " + videoId);
+                                    Log.i(TAG, "DIN deleteFromDatbaase ref2 to be checked videoID2= " + videoId2);
+                                    if(videoId2.equals(videoId)) {
+                                        // found match
+
+                                        // delete from database
+                                        ref2.child(userId).child(videoId2).removeValue();
+                                        Log.i(TAG, "DIN deleteFromDatbaase ref2 - Deleted from DB ");
+                                        deleted1 = 1;
+                                        break;
+                                    }
+                                    if (deleted1 == 1)
+                                        break;
+                                }
+                            }
+                            if(deleted1 == 1)
+                                break;
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                }
+        );
     }
 
     @Override
@@ -231,8 +346,8 @@ public class UserNoteBooks extends AppCompatActivity {
                                 for(Map.Entry<String, Object> entry : value.entrySet()) {
                                     String noteBookName = entry.getValue().toString();
                                     videoId = entry.getKey().toString();
-                                    //myVideoList.add(videoId);
-                                    myVideoList[i-1]=videoId;
+                                    myVideoList1.add(videoId);
+                                    //myVideoList[i-1]=videoId;
                                     Log.i(TAG, "DIN PRINT = " + videoId + "/" + entry.getValue());
                                     itemsAdapter.add(noteBookName);
                                     i++;
