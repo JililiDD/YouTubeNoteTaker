@@ -221,9 +221,12 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
             Intent intent = new Intent(getApplicationContext(), UserNoteBooks.class);
             intent.putExtra("USER_TYPE", "REGISTERED");
             startActivity(intent);
-        } else if(previousActivity == null){
+        } else if(isRegisteredUser() && previousActivity == null){
             Intent intent = new Intent(getApplicationContext(), AfterLoginActivity.class);
             intent.putExtra("USER_TYPE", "REGISTERED");
+            startActivity(intent);
+        } else if (!isRegisteredUser()){
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);
         }
     }

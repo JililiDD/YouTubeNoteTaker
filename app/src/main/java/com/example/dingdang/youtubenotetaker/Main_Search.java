@@ -208,67 +208,63 @@ public class Main_Search extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> av, View v, final int pos,
                                     long id) {
-                // Get userType from guestActivity
-//                GuestActivity guestActivity = (GuestActivity) getApplicationContext();
-//                userType = guestActivity.getUserType();
-//                if(userType.equals("GUEST")) {
+                if(isRegisteredUser()) {
                     Intent intent = new Intent(getApplicationContext(), GuestActivity.class);
                     intent.putExtra("VIDEO_ID", searchResults.get(pos).getId());
                     final String youtubeID=searchResults.get(pos).getId();
-                user = FirebaseAuth.getInstance().getCurrentUser();
-                //get the current userId
-                useruid=user.getUid();
-                myReNoteBook=database.getReference("notebook").child(useruid);
-                myReNoteBook.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        Boolean notebookChecker=false;
-                        for(DataSnapshot childDataSnapshot : dataSnapshot.getChildren()){
-                            if (childDataSnapshot.getKey().equals(youtubeID)){
-                                Log.i("youtueb",youtubeID);
-                                notebookChecker=true;
+                    user = FirebaseAuth.getInstance().getCurrentUser();
+                    //get the current userId
+                    useruid=user.getUid();
+                    myReNoteBook=database.getReference("notebook").child(useruid);
+                    myReNoteBook.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            Boolean notebookChecker = false;
+                            for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
+                                if (childDataSnapshot.getKey().equals(youtubeID)) {
+                                    Log.i("youtueb", youtubeID);
+                                    notebookChecker = true;
+                                }
                             }
+                            if (!notebookChecker) {
+                                Intent intent = new Intent(getApplicationContext(), AddNotebookNameActivity.class);
+                                intent.putExtra("VIDEO_ID", youtubeID);
+                                intent.putExtra("USER_TYPE", userType);
+                                startActivity(intent);
+                            } else if (notebookChecker) {
+                                Dialog deleteConfirmBox = new android.support.v7.app.AlertDialog.Builder(Main_Search.this)
+                                        .setMessage("You have already made a notebook on this video.\nDo you want to open the notebook?")
+                                        .setPositiveButton("Open", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int whichButton) {
+                                                Intent intent = new Intent(getApplicationContext(), GuestActivity.class);
+                                                intent.putExtra("VIDEO_ID", youtubeID);
+                                                intent.putExtra("USER_TYPE", userType);
+                                                startActivity(intent);
+                                                dialog.dismiss();
+                                            }
+                                        })
+                                        .setNegativeButton("Cancel", null)
+                                        .create();
+                                deleteConfirmBox.show();
+                            }
+
+
                         }
-                        if (!notebookChecker){
-                            Intent intent = new Intent(getApplicationContext(), AddNotebookNameActivity.class);
-                            intent.putExtra("VIDEO_ID", youtubeID);
-                            intent.putExtra("USER_TYPE", userType);
-                            startActivity(intent);
-                        }
-                        else if(notebookChecker){
-                            Dialog deleteConfirmBox = new android.support.v7.app.AlertDialog.Builder(Main_Search.this)
-                                    .setMessage("You have already made a notebook on this video.\nDo you want to open the notebook?")
-                                    .setPositiveButton("Open", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int whichButton) {
-                                            Intent intent = new Intent(getApplicationContext(), GuestActivity.class);
-                                            intent.putExtra("VIDEO_ID", youtubeID);
-                                            intent.putExtra("USER_TYPE", userType);
-                                            startActivity(intent);
-                                            dialog.dismiss();
-                                        }
-                                    })
-                                    .setNegativeButton("Cancel", null)
-                                    .create();
-                            deleteConfirmBox.show();
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
                         }
 
+                    });
 
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-
-
-//                intent.putExtra("USER_TYPE", userType);
-////                intent.putExtra("USER_TYPE", "GUEST");
-//                    startActivity(intent);
-
-//                }
-
-
+                }
+                else{
+                    Intent intent = new Intent(getApplicationContext(), GuestActivity.class);
+                    intent.putExtra("VIDEO_ID", searchResults.get(pos).getId());
+                    intent.putExtra("USER_TYPE", "GUEST");
+                    startActivity(intent);
+                }
             }
 
         });
@@ -312,7 +308,9 @@ public class Main_Search extends AppCompatActivity {
 //        // TODO: Update argument type and name
 //        void onFragmentInteraction(Uri uri);
 //    }
-
+    public boolean isRegisteredUser(){
+        return userType.equals("REGISTERED");
+    }
 }
 
 
