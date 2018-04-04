@@ -380,6 +380,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:gravity="center_horizontal"
             android:layout_below="@id/llShowNote">
             <Button
                 android:id="@+id/btnShowNoteCancel"
