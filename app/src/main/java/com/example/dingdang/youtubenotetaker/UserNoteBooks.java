@@ -45,6 +45,7 @@ public class UserNoteBooks extends AppCompatActivity {
     private ArrayList<String> listAdapter;
     private String videoId;
     private ArrayList<String> myVideoList1 = new ArrayList<String>();
+    private ArrayList<String> updatedVideoList = new ArrayList<String>();
     //String[] myVideoList = new String[100];
     public static final int RC_SIGN_IN = 1;
     public int count_of_notes_per_user = 0;
@@ -232,6 +233,7 @@ public class UserNoteBooks extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         int deleted=0;
+                        ListView notesListToUpdate;
                         for(DataSnapshot ds: dataSnapshot.getChildren()) {
                             String key = ds.getKey();
                             Log.i(TAG, "DIN deleteFromDatbaase ref1 key = " + key);
@@ -252,7 +254,11 @@ public class UserNoteBooks extends AppCompatActivity {
                                         // Update the entry as well on screen !
                                         itemsAdapter.remove(noteBookName);
                                         Log.i(TAG, "DIN deleteFromDatbaase ref1 - removed from itemsAdapter " + itemsAdapter.getPosition(noteBookName));
+                                        // Remove from the list as well
+                                        myVideoList1.remove(videoId1);
                                         itemsAdapter.notifyDataSetChanged();
+                                        /** notesListToUpdate = findViewById(R.id.lvNotesList);
+                                        notesListToUpdate.setAdapter(itemsAdapter);*/
                                         Log.i(TAG, "DIN deleteFromDatbaase ref1 - Notify datasetChanged() ");
                                         deleted = 1;
                                     }
@@ -391,6 +397,7 @@ public class UserNoteBooks extends AppCompatActivity {
                                     String noteBookName = entry.getValue().toString();
                                     videoId = entry.getKey().toString();
                                     myVideoList1.add(videoId);
+                                    updatedVideoList.add(videoId);
                                     //myVideoList[i-1]=videoId;
                                     Log.i(TAG, "DIN PRINT = " + videoId + "/" + entry.getValue());
                                     itemsAdapter.add(noteBookName);
