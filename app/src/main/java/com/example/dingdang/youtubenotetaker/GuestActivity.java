@@ -1,6 +1,7 @@
 package com.example.dingdang.youtubenotetaker;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.FragmentTransaction;
 import android.content.ClipData;
 import android.content.DialogInterface;
@@ -1192,17 +1193,27 @@ btnClose.setOnClickListener(new OnClickListener() { //b
 
     @Override
     public void onBackPressed() {
-        if(isRegisteredUser() && previousActivity != null) {
-            Intent intent = new Intent(getApplicationContext(), UserNoteBooks.class);
-            intent.putExtra("USER_TYPE", "REGISTERED");
-            startActivity(intent);
-        } else if(isRegisteredUser() && previousActivity == null){
-            Intent intent = new Intent(getApplicationContext(), AfterLoginActivity.class);
-            intent.putExtra("USER_TYPE", "REGISTERED");
-            startActivity(intent);
-        } else if (!isRegisteredUser()){
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(intent);
-        }
+        Dialog deleteConfirmBox = new android.support.v7.app.AlertDialog.Builder(GuestActivity.this)
+                .setMessage("Leave current notebook?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        if(isRegisteredUser() && previousActivity != null) {
+                            Intent intent = new Intent(getApplicationContext(), UserNoteBooks.class);
+                            intent.putExtra("USER_TYPE", "REGISTERED");
+                            startActivity(intent);
+                        } else if(isRegisteredUser() && previousActivity == null){
+                            Intent intent = new Intent(getApplicationContext(), AfterLoginActivity.class);
+                            intent.putExtra("USER_TYPE", "REGISTERED");
+                            startActivity(intent);
+                        } else if (!isRegisteredUser()){
+                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            startActivity(intent);
+                        }
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton("No", null)
+                .create();
+        deleteConfirmBox.show();
     }
 }
