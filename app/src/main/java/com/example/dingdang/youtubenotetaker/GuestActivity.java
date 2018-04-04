@@ -98,6 +98,7 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), Main_Search.class);
                 intent.putExtra("USER_TYPE", userType);
+                intent.putExtra("FROM", "NOTEMODE");
                 startActivity(intent);
             }
         });

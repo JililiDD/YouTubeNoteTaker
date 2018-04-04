@@ -161,7 +161,6 @@ public class FirebaseLoginActivity extends AppCompatActivity {
     @Override
     public void onBackPressed()
     {
-        Log.i(TAG, "SHENOY BACK BUTTON PRESSED!! ");
         Intent intent = new Intent(FirebaseLoginActivity.this, MainActivity.class);
         //intent.putExtra("USER_TYPE", "REGISTERED");
         startActivity(intent);

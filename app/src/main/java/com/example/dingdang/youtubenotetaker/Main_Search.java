@@ -70,7 +70,7 @@ public class Main_Search extends AppCompatActivity {
     private ListView videosFound;
     private Handler handler;
     private List<VideoItem> searchResults;
-    private String userType;
+    private String userType, previousActivity;
     private FirebaseUser user;
     private String useruid;
 
@@ -105,6 +105,8 @@ public class Main_Search extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main__search);
         userType = getIntent().getStringExtra("USER_TYPE"); // Get user type to provide different functions to guest and member users
+        previousActivity = getIntent().getStringExtra("FROM");
+
 //        if (getArguments() != null) {
 //            mParam1 = getArguments().getString(ARG_PARAM1);
 //            mParam2 = getArguments().getString(ARG_PARAM2);
@@ -314,6 +316,21 @@ public class Main_Search extends AppCompatActivity {
 //    }
     public boolean isRegisteredUser(){
         return userType.equals("REGISTERED");
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(previousActivity != null){
+            super.onBackPressed();
+        }
+        else if (isRegisteredUser()) {
+            Intent intent = new Intent(getApplicationContext(), AfterLoginActivity.class);
+            intent.putExtra("USER_TYPE", "REGISTERED");
+            startActivity(intent);
+        } else{
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
+        }
     }
 }
 
