@@ -1070,7 +1070,7 @@ btnClose.setOnClickListener(new OnClickListener() { //b
                     // When youtube is initialized successfully, set player to youTubePlayer
                     // Then, player can be used for playing, pausing videos, etc.
                     player = youTubePlayer;
-                    Toast.makeText(GuestActivity.this, "toast1", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(GuestActivity.this, "toast1", Toast.LENGTH_SHORT).show();
                    //  player.seekToMillis((int) getElapsedTime());
 
 
@@ -1078,7 +1078,7 @@ btnClose.setOnClickListener(new OnClickListener() { //b
                         player.cueVideo("W4hTJybfU7s"); //load but doesn't autoplay the video
                     }
                     else{
-                        Toast.makeText(GuestActivity.this, "toast2", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(GuestActivity.this, "toast2", Toast.LENGTH_SHORT).show();
                         //youtube ID
                         player.loadVideo(getIntent().getStringExtra("VIDEO_ID")); //b
 

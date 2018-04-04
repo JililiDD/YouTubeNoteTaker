@@ -401,66 +401,72 @@ public class NoteModeFragment extends Fragment {
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Create an ArrayAdapter<NoteItem> for storing NoteItem objects
-                ArrayAdapter<NoteItem> lvNotesItemAdapter = new ArrayAdapter<>(getActivity().getApplicationContext(),
-                        R.layout.item_black, noteList);
-                NoteItem noteItem = new NoteItem(elapsedTime, tvTimeAtPause.getText().toString(), etUserSubjectInput.getText().toString(), etUserNoteInput.getText().toString());
+                if(etUserSubjectInput.getText().toString().equals("")){
+                    Toast.makeText(getContext(),"Note subject cannot be empty",Toast.LENGTH_SHORT).show();
+                }
+                else{
 
-                if(isRegisteredUser()){
+                    // Create an ArrayAdapter<NoteItem> for storing NoteItem objects
+                    ArrayAdapter<NoteItem> lvNotesItemAdapter = new ArrayAdapter<>(getActivity().getApplicationContext(),
+                            R.layout.item_black, noteList);
+                    NoteItem noteItem = new NoteItem(elapsedTime, tvTimeAtPause.getText().toString(), etUserSubjectInput.getText().toString(), etUserNoteInput.getText().toString());
 
-                    myRef = database.getReference("user").child(useruid).child(youtubeId);
-                    String theNoteId =myRef.push().getKey();
-                    noteItem.setNoteId(theNoteId);
-                    Map<String,NoteItem> theData=noteItem.putInToFireBase();
+                    if(isRegisteredUser()){
 
-                    //Map<String, String> userData=tempItem.putInToFireBase();
-                    myRef.child(theNoteId).setValue(theData);
+                        myRef = database.getReference("user").child(useruid).child(youtubeId);
+                        String theNoteId =myRef.push().getKey();
+                        noteItem.setNoteId(theNoteId);
+                        Map<String,NoteItem> theData=noteItem.putInToFireBase();
 
-                    //DatabaseReference myRef1 = database.getReference("user").child(useruid);
-                    myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                        ArrayAdapter<NoteItem> lvNotesItemAdapter1 = new ArrayAdapter<>(getActivity().getApplicationContext(),
-                                R.layout.item_black, noteList);
+                        //Map<String, String> userData=tempItem.putInToFireBase();
+                        myRef.child(theNoteId).setValue(theData);
 
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            noteList.clear();
-                            for(DataSnapshot childDataSnapshot : dataSnapshot.getChildren()){
-                                HashMap<String,String> newItem= (HashMap<String, String>) childDataSnapshot.getValue();
+                        //DatabaseReference myRef1 = database.getReference("user").child(useruid);
+                        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            ArrayAdapter<NoteItem> lvNotesItemAdapter1 = new ArrayAdapter<>(getActivity().getApplicationContext(),
+                                    R.layout.item_black, noteList);
 
-                                NoteItem newNoteItem=new NoteItem(0,newItem.get("Time"),newItem.get("Subject"),newItem.get("Note"));
-                                newNoteItem.setNoteId(newItem.get("NoteId"));
-                                newNoteItem.setNotebookName(newItem.get("NotebookName"));
-                                newNoteItem.setSelected("false");
-                                lvNotesItemAdapter1.add(newNoteItem);
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                noteList.clear();
+                                for(DataSnapshot childDataSnapshot : dataSnapshot.getChildren()){
+                                    HashMap<String,String> newItem= (HashMap<String, String>) childDataSnapshot.getValue();
+
+                                    NoteItem newNoteItem=new NoteItem(0,newItem.get("Time"),newItem.get("Subject"),newItem.get("Note"));
+                                    newNoteItem.setNoteId(newItem.get("NoteId"));
+                                    newNoteItem.setNotebookName(newItem.get("NotebookName"));
+                                    newNoteItem.setSelected("false");
+                                    lvNotesItemAdapter1.add(newNoteItem);
                                 }
                                 lvNotes.setAdapter(lvNotesItemAdapter1);
-                            llNoteList.setVisibility(View.VISIBLE);  // Display llNoteList UI
-                            rlNotepad.setVisibility(View.GONE); // Hide rlNotepad UI
-                            rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UIi=0;
-                            LL_showNote.setVisibility(View.GONE);
-                        }
+                                llNoteList.setVisibility(View.VISIBLE);  // Display llNoteList UI
+                                rlNotepad.setVisibility(View.GONE); // Hide rlNotepad UI
+                                rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UIi=0;
+                                LL_showNote.setVisibility(View.GONE);
+                            }
 
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
 
-                        }
-                    });
+                            }
+                        });
 
 
-                }else{
+                    }else{
 
-                    lvNotesItemAdapter.add(noteItem);
-                    lvNotes.setAdapter(lvNotesItemAdapter);
+                        lvNotesItemAdapter.add(noteItem);
+                        lvNotes.setAdapter(lvNotesItemAdapter);
 
-                    llNoteList.setVisibility(View.VISIBLE);  // Display llNoteList UI
-                    rlNotepad.setVisibility(View.GONE); // Hide rlNotepad UI
-                    rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UI
-                    LL_showNote.setVisibility(View.GONE);
+                        llNoteList.setVisibility(View.VISIBLE);  // Display llNoteList UI
+                        rlNotepad.setVisibility(View.GONE); // Hide rlNotepad UI
+                        rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UI
+                        LL_showNote.setVisibility(View.GONE);
+                    }
+
+                    etUserNoteInput.getText().clear();
+                    etUserSubjectInput.getText().clear();
                 }
-
-                etUserNoteInput.getText().clear();
-                etUserSubjectInput.getText().clear();
             }
         });
 
