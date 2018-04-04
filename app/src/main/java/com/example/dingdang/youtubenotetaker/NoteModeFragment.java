@@ -168,7 +168,7 @@ public class NoteModeFragment extends Fragment {
         //the youtubeID
         youtubeId = guestActivity.getYoutubeId(); //YIWEI
         Log.i("vedio id",youtubeId);
-        Toast.makeText(getContext(),youtubeId,Toast.LENGTH_SHORT).show(); // YIWEI
+        //Toast.makeText(getContext(),youtubeId,Toast.LENGTH_SHORT).show(); // YIWEI
 
         // Hide rlNotepad and rlEditNote UIs by default
         rlNotepad.setVisibility(View.GONE);
@@ -183,15 +183,15 @@ public class NoteModeFragment extends Fragment {
             //get the current userId
             useruid=user.getUid();
             myRef = database.getReference("user").child(useruid);
-            Toast.makeText(getContext(),"REGISTERED USER",Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getContext(),"REGISTERED USER",Toast.LENGTH_SHORT).show();
         }
         else{
-            Toast.makeText(getContext(),"GUEST",Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getContext(),"GUEST",Toast.LENGTH_SHORT).show();
         }
         if(isRegisteredUser()){
 
             DatabaseReference myRefyouTube = database.getReference("user").child(useruid).child(youtubeId);
-            Log.i("userId",useruid);
+            //Log.i("userId",useruid);
             myRefyouTube.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {

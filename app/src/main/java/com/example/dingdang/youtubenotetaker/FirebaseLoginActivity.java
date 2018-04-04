@@ -77,7 +77,7 @@ public class FirebaseLoginActivity extends AppCompatActivity {
                 else {
                     // User signed out, so put in sign in flow
                     //onSignedOutCleanup();
-                    Log.i(TAG, "SHENOY Putting in user to login again login_once = " + login_once);
+                    //Log.i(TAG, "SHENOY Putting in user to login again login_once = " + login_once);
                     if(login_once == false) {
                             startActivityForResult(
                                     AuthUI.getInstance()
@@ -90,7 +90,7 @@ public class FirebaseLoginActivity extends AppCompatActivity {
                             login_once = true;
                     }
                     else if(login_once == true) {
-                        Log.i(TAG, "SHENOY calling onBackPressed function!! ");
+                        //Log.i(TAG, "SHENOY calling onBackPressed function!! ");
                         onBackPressed();
                     }
                 }
