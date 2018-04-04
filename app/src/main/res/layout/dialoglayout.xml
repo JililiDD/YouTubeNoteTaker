@@ -189,6 +189,12 @@
                 android:layout_marginStart="10dp"
                 android:textColor="#000000"/>
 
+            <Button
+                android:id="@+id/btnEditDelete"
+                android:layout_width="20sp"
+                android:layout_height="20sp"
+                android:background="@android:drawable/ic_menu_delete"
+                android:src="@android:drawable/ic_menu_delete" />
 
 
         </LinearLayout>
@@ -390,14 +396,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Edit" />
-
-            <Button
-                android:id="@+id/btnEditDelete"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                android:src="@android:drawable/ic_menu_delete"
-                android:text="Delete" />
 
 
         </LinearLayout>
