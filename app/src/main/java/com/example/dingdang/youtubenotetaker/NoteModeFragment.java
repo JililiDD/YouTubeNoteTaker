@@ -120,7 +120,7 @@ public class NoteModeFragment extends Fragment {
         btnTakeNote = (Button) view.findViewById(R.id.btnTakeNote);
         btnSave = (Button) view.findViewById(R.id.btnSave);
         btnCancel = (Button) view.findViewById(R.id.btnCancel);
-      //  btnReplay = (Button) view.findViewById(R.id.btnEditNoteReplay);
+        //  btnReplay = (Button) view.findViewById(R.id.btnEditNoteReplay);
         btnEditNoteSave = (Button) view.findViewById(R.id.btnEditNoteSave);
         btnEditNoteCancel = (Button) view.findViewById(R.id.btnEditNoteCancel);
         btnEditDelete = (Button) view.findViewById(R.id.btnEditDelete);
@@ -150,9 +150,6 @@ public class NoteModeFragment extends Fragment {
 
 
         database = FirebaseDatabase.getInstance();
-
-
-
 
 
 
@@ -309,7 +306,7 @@ public class NoteModeFragment extends Fragment {
                                 }
 
                             }
-                           // String timestr=myRef.child(youtubeId).child(theselectid).child("CurrentTime").toString();
+                            // String timestr=myRef.child(youtubeId).child(theselectid).child("CurrentTime").toString();
                             Log.i("time",timestr);
                             String parseString = "replay " + timestr; // Pass the note time to GuestActivity as well
                             // Referred from: http://blog.csdn.net/fengge34/article/details/46391453
@@ -699,10 +696,18 @@ public class NoteModeFragment extends Fragment {
                             "Yes",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
+
                                     myRef.child(youtubeId).orderByChild("Selected").addListenerForSingleValueEvent(new ValueEventListener() {
 
                                         @Override
                                         public void onDataChange(DataSnapshot dataSnapshot) {
+
+
+
+
+
+
+
                                             noteList.clear();
                                             ArrayAdapter<NoteItem> lvNotesItemAdapter1 = new ArrayAdapter<>(getActivity().getApplicationContext(),
                                                     R.layout.item_black, noteList);
@@ -736,7 +741,13 @@ public class NoteModeFragment extends Fragment {
 
                                         }
                                     });
-
+                                  /*  NoteItem selectedNoteItem = getSelectedNote(); //b
+                                    String removeItemNoteId =selectedNoteItem.getNoteId();
+                                    noteList.remove(selectedNoteItem);
+                                    //remove the noteItem from the database
+                                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                                    DatabaseReference myRef = database.getReference("user").child(useruid).child(youtubeId);
+                                    myRef.child(removeItemNoteId).removeValue(); *///b
                                     dialog.cancel();
                                     Toast.makeText(getContext(),"Note deleted",Toast.LENGTH_SHORT).show();
                                 }
@@ -776,6 +787,14 @@ public class NoteModeFragment extends Fragment {
                                     llNoteList.setVisibility(View.VISIBLE);  // Display llNoteList UI
                                     rlNotepad.setVisibility(View.GONE); // Hide rlNotepad UI
                                     rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UI
+
+
+                                    LL_showNote.setVisibility(View.GONE); //b
+
+
+
+
+
                                     dialog.cancel();
                                     Toast.makeText(getContext(),"Note deleted",Toast.LENGTH_SHORT).show();
                                 }
@@ -829,14 +848,14 @@ public class NoteModeFragment extends Fragment {
                                                 noteList.add(newNoteItem);
                                             }
 
-                                                   }
+                                        }
                                         @Override
                                         public void onCancelled(DatabaseError databaseError) {
 
                                         }
 
                                     });
-                                  break;
+                                    break;
                                 }
                             }
                         }
@@ -889,15 +908,15 @@ public class NoteModeFragment extends Fragment {
                     ShowNoteSubject.setText(selectedNote.getSubject());
                     ShowNoteUsrNoteInputText.setText(selectedNote.getNote());
 
-                     //Get selected NoteItem object
+                    //Get selected NoteItem object
                     //setSelectedNote(noteList.get(pos));
 
-                     //Set the text fields to the NoteItem object's corresponding values in edit UI
+                    //Set the text fields to the NoteItem object's corresponding values in edit UI
                     tvEditNoteTime.setText(selectedNote.getTime());
                     etEditSubject.setText(selectedNote.getSubject());
                     etEditNote.setText(selectedNote.getNote());
                 }
-             }
+            }
         });
 
 

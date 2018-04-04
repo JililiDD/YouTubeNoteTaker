@@ -32,6 +32,8 @@
         <activity android:name=".FirebaseLoginActivity"
             android:parentActivityName=".MainActivity"/>
         <activity android:name=".UserNoteBooks" />
+        <activity android:name=".GuestActivityPopup"
+            android:theme="@style/Theme.AppCompat.Dialog.Alert"/>
 
         <activity android:name=".Main_Search"></activity>
     </application>
