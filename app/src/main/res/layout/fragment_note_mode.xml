@@ -112,14 +112,15 @@
             android:layout_below="@id/llSubject"
             android:hint="Note here"
             android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"/>
+            android:layout_marginEnd="10dp"
+            android:layout_above="@id/notepadButtons"/>
 
         <RelativeLayout
             android:id="@+id/notepadButtons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:layout_below="@id/usrNoteInput">
+            android:layout_alignParentBottom="true">
             <Button
                 android:id="@+id/btnSave"
                 android:layout_width="wrap_content"
@@ -221,15 +222,16 @@
             android:layout_below="@id/llEditNoteSubject"
             android:hint="Note here"
             android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"/>
+            android:layout_marginEnd="10dp"
+            android:layout_above="@id/EditNoteNotepadButtons"/>
 
         <LinearLayout
             android:id="@+id/EditNoteNotepadButtons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:layout_below="@id/EditNoteUsrNoteInput"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_alignParentBottom="true">
 
             <Button
                 android:id="@+id/btnEditNoteSave"
@@ -364,7 +366,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_below="@id/llShowNote">
+                android:layout_below="@id/llShowNote"
+                android:layout_alignParentBottom="true">
                 <Button
                     android:id="@+id/btnShowNoteCancel"
                     android:layout_width="wrap_content"
