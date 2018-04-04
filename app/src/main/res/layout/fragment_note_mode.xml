@@ -123,6 +123,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/llSubject"
+            android:layout_above="@id/notepadButtons"
             android:hint="Note here"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"/>
@@ -132,7 +133,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:layout_below="@id/usrNoteInput">
+            android:layout_alignParentBottom="true">
             <Button
                 android:id="@+id/btnSave"
                 android:layout_width="wrap_content"
