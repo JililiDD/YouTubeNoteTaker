@@ -282,98 +282,109 @@
 
 
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/LL_showNote"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:id="@+id/llShowNoteElapsedTime"
-            android:orientation="horizontal"
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp">
+            android:layout_alignParentTop="true"
+            android:layout_above="@+id/ShowNoteUsrBtn">
 
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:textSize="20dp"
-                android:textAlignment="textStart"
-                android:text="Time"
-                android:textColor="#000000"
-                android:layout_marginStart="10dp"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/ShowNoteElapsedTime"
-                android:layout_width="fill_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="0.7"
-                android:text="test"
-                android:textSize="20dp"
-                android:layout_marginStart="10dp"
-                android:textColor="#000000"/>
+                <LinearLayout
+                    android:id="@+id/llShowNoteElapsedTime"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp">
 
-        </LinearLayout>
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:textSize="20dp"
+                        android:textAlignment="textStart"
+                        android:text="Time"
+                        android:textColor="#000000"
+                        android:layout_marginStart="10dp"/>
 
-        <LinearLayout
-            android:id="@+id/llShowSubject"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:layout_below="@id/ShowNoteElapsedTime">
+                    <TextView
+                        android:id="@+id/ShowNoteElapsedTime"
+                        android:layout_width="fill_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.7"
+                        android:text="test"
+                        android:textSize="20dp"
+                        android:layout_marginStart="10dp"
+                        android:textColor="#000000"/>
 
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1.2"
-                android:textAlignment="textStart"
-                android:textSize="20dp"
-                android:text="Subject"
-                android:textColor="#000000"
-                android:layout_marginStart="10dp"/>
+                </LinearLayout>
 
-            <TextView
-                android:id="@+id/ShowNoteSubject"
-                android:layout_width="fill_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="0.4"
-                android:layout_marginStart="10dp"
-                android:textColor="#000000"
-                android:layout_marginEnd="10dp"/>
+                <LinearLayout
+                    android:id="@+id/llShowSubject"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:layout_below="@id/llShowNoteElapsedTime">
 
-        </LinearLayout>
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1.2"
+                        android:textAlignment="textStart"
+                        android:textSize="20dp"
+                        android:text="Subject"
+                        android:textColor="#000000"
+                        android:layout_marginStart="10dp"/>
+
+                    <TextView
+                        android:id="@+id/ShowNoteSubject"
+                        android:layout_width="fill_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.4"
+                        android:layout_marginStart="10dp"
+                        android:textColor="#000000"
+                        android:layout_marginEnd="10dp"/>
+
+                </LinearLayout>
 
 
-        <LinearLayout
-            android:id="@+id/llShowNote"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:layout_below="@id/llShowSubject">
-            <TextView
-                android:id="@+id/ShowNoteUsrNoteInput"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1.2"
-                android:textAlignment="textStart"
-                android:textSize="20dp"
-                android:text="Note here"
-                android:textColor="#000000"
-                android:layout_marginStart="10dp"/>
-            <TextView
-                android:id="@+id/ShowNoteUsrNoteInputText"
-                android:layout_width="fill_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="0.4"
-                android:layout_marginStart="10dp"
-                android:textColor="#000000"
-                android:layout_marginEnd="10dp"/>
+                <LinearLayout
+                    android:id="@+id/llShowNote"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:layout_below="@id/llShowSubject">
+                    <TextView
+                        android:id="@+id/ShowNoteUsrNoteInput"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.2"
+                        android:textAlignment="textStart"
+                        android:textSize="20dp"
+                        android:text="Note"
+                        android:textColor="#000000"
+                        android:layout_marginStart="10dp"/>
+                    <TextView
+                        android:id="@+id/ShowNoteUsrNoteInputText"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.4"
+                        android:layout_marginStart="10dp"
+                        android:textColor="#000000"
+                        android:layout_marginEnd="10dp"/>
 
-        </LinearLayout>
+                </LinearLayout>
+            </RelativeLayout>
+        </ScrollView>
 
         <LinearLayout
             android:id="@+id/ShowNoteUsrBtn"
@@ -381,7 +392,8 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_horizontal"
-            android:layout_below="@id/llShowNote">
+            android:layout_alignParentBottom="true"
+            >
             <Button
                 android:id="@+id/btnShowNoteCancel"
                 android:layout_width="wrap_content"
@@ -404,7 +416,7 @@
 
         </LinearLayout>
 
-    </LinearLayout>
+    </RelativeLayout>
 
 
 </RelativeLayout>

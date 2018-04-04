@@ -62,8 +62,8 @@ public class NoteModeFragment extends Fragment {
     private Button btnEmail, btnTakeNote, btnSave, btnReplay, btnCancel, btnEditNoteCancel, btnEditNoteSave, btnEditDelete,btnShowNoteCancel,btnShwoEdit,btnShwoReplay;
     private ListView lvNotes;
     private ArrayAdapter<NoteItem> lvNotesItemAdapter;
-    private LinearLayout llNoteList,LL_showNote;
-    private RelativeLayout rlNotepad, rlEditNote;
+    private LinearLayout llNoteList;
+    private RelativeLayout rlNotepad, rlEditNote, LL_showNote;
     private EditText etUserNoteInput, etUserSubjectInput, etEditSubject, etEditNote;
     private TextView tvTimeAtPause, tvEditNoteTime,ShowNoteElapsedTime,ShowNoteSubject,ShowNoteUsrNoteInputText;
     private long elapsedTime = 0;
@@ -135,7 +135,7 @@ public class NoteModeFragment extends Fragment {
         tvEditNoteTime = (TextView) view.findViewById(R.id.EditNoteElapsedTime);
         etEditSubject = (EditText) view.findViewById(R.id.EditNoteSubject);
         etEditNote = (EditText) view.findViewById(R.id.EditNoteUsrNoteInput);
-        LL_showNote=(LinearLayout) view.findViewById(R.id.LL_showNote);
+        LL_showNote=view.findViewById(R.id.LL_showNote);
         btnShwoReplay=(Button) view.findViewById(R.id.btnShwoReplay);
 
 
