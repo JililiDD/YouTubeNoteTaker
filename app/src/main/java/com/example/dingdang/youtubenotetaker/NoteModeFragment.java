@@ -59,7 +59,7 @@ public class NoteModeFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     // Components
-    private Button btnEmail, btnTakeNote, btnSave, btnReplay, btnCancel, btnEditNoteCancel, btnEditNoteSave, btnEditDelete,btnShowNoteCancel,btnShwoEdit,btnShwoReplay;
+    private Button btnEmail, btnTakeNote, btnSave, btnCancel, btnEditNoteCancel, btnEditNoteSave, btnEditDelete,btnShowNoteCancel,btnShwoEdit,btnShwoReplay;
     private ListView lvNotes;
     private ArrayAdapter<NoteItem> lvNotesItemAdapter;
     private LinearLayout llNoteList;
@@ -75,11 +75,6 @@ public class NoteModeFragment extends Fragment {
     private String useruid;
     private FirebaseDatabase database;
     private DatabaseReference myRef;
-    private DatabaseReference myReNoteBook;
-    private Boolean deleteChecker,listChecker;
-    private int finalcount,finalcountdelete,finalcountlist;
-
-
 
     public NoteModeFragment() {
         // Required empty public constructor
@@ -138,8 +133,6 @@ public class NoteModeFragment extends Fragment {
         LL_showNote=view.findViewById(R.id.LL_showNote);
         btnShwoReplay=(Button) view.findViewById(R.id.btnShwoReplay);
 
-
-
         btnShowNoteCancel=(Button) view.findViewById(R.id.btnShowNoteCancel);
         btnShwoEdit=(Button) view.findViewById(R.id.btnShwoEdit);
 
@@ -149,43 +142,28 @@ public class NoteModeFragment extends Fragment {
         ShowNoteSubject=(TextView) view.findViewById(R.id.ShowNoteSubject);
         ShowNoteUsrNoteInputText=(TextView) view.findViewById(R.id.ShowNoteUsrNoteInputText);
 
-
         database = FirebaseDatabase.getInstance();
-
-
 
         noteList = new ArrayList<>();
 
         // Get userType and youtube video ID from current GuestActivity
         GuestActivity guestActivity = (GuestActivity) getActivity();
         userType = guestActivity.getUserType();
-        //linkExist=guestActivity.
-
 
         //the youtubeID
         youtubeId = guestActivity.getYoutubeId(); //YIWEI
         Log.i("vedio id",youtubeId);
-        //Toast.makeText(getContext(),youtubeId,Toast.LENGTH_SHORT).show(); // YIWEI
 
         // Hide rlNotepad and rlEditNote UIs by default
         rlNotepad.setVisibility(View.GONE);
         rlEditNote.setVisibility(View.GONE);
         LL_showNote.setVisibility(View.GONE);
 
-
-
         if(isRegisteredUser()){
             user = FirebaseAuth.getInstance().getCurrentUser();
             //get the current userId
             useruid=user.getUid();
             myRef = database.getReference("user").child(useruid);
-            //Toast.makeText(getContext(),"REGISTERED USER",Toast.LENGTH_SHORT).show();
-        }
-        else{
-            //Toast.makeText(getContext(),"GUEST",Toast.LENGTH_SHORT).show();
-        }
-        if(isRegisteredUser()){
-
             DatabaseReference myRefyouTube = database.getReference("user").child(useruid).child(youtubeId);
             //Log.i("userId",useruid);
             myRefyouTube.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -201,7 +179,6 @@ public class NoteModeFragment extends Fragment {
                         newNoteItem.setNotebookName(newItem.get("NotebookName"));
                         newNoteItem.setSelected("false");
                         lvNotesItemAdapter1.add(newNoteItem);
-                        //Log.i("VEDIO","---------------");
                         lvNotes.clearChoices();
                         lvNotes.setAdapter(lvNotesItemAdapter1);
                         }
@@ -218,100 +195,87 @@ public class NoteModeFragment extends Fragment {
         btnShowNoteCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+            llNoteList.setVisibility(View.VISIBLE);  // Hide llNoteList UI
+            rlNotepad.setVisibility(View.GONE); // Display rlNotepad UI
+            rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UI
+            LL_showNote.setVisibility(View.GONE);
+
+            if (isRegisteredUser()){
+                myRef = database.getReference("user").child(useruid).child(youtubeId);
+                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        String theselectid = "";
+                        for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()){
+                            HashMap<String, String> newItem = (HashMap<String, String>) childDataSnapshot.getValue();
+                            if (newItem.get("Selected").equals("true")){
+                                theselectid=newItem.get("NoteId");
+                            }
+
+                        }
+                        myRef.child(theselectid).child("Selected").setValue("false");
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+            else{
                 llNoteList.setVisibility(View.VISIBLE);  // Hide llNoteList UI
                 rlNotepad.setVisibility(View.GONE); // Display rlNotepad UI
                 rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UI
                 LL_showNote.setVisibility(View.GONE);
-                myRef = database.getReference("user").child(useruid).child(youtubeId);
-
-                if (isRegisteredUser()){
-                    myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            String theselectid = "";
-                            for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()){
-                                HashMap<String, String> newItem = (HashMap<String, String>) childDataSnapshot.getValue();
-                                if (newItem.get("Selected").equals("true")){
-                                    theselectid=newItem.get("NoteId");
-                                }
-
-                            }
-                            myRef.child(theselectid).child("Selected").setValue("false");
-
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-                }
-
-                else{
-                    llNoteList.setVisibility(View.VISIBLE);  // Hide llNoteList UI
-                    rlNotepad.setVisibility(View.GONE); // Display rlNotepad UI
-                    rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UI
-                    LL_showNote.setVisibility(View.GONE);
-                }
-
-
-
-
+            }
             }
         });
 
         btnShwoReplay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isRegisteredUser()){
+            if (isRegisteredUser()){
 //                    rlEditNote.setVisibility(View.VISIBLE);
 //                    llNoteList.setVisibility(View.GONE);
 //                    rlNotepad.setVisibility(View.GONE);
 //                    LL_showNote.setVisibility(View.GONE);
-                    myRef = database.getReference("user").child(useruid).child(youtubeId);
-                    myRef.orderByChild("Selected").addListenerForSingleValueEvent(new ValueEventListener() {
+                myRef = database.getReference("user").child(useruid).child(youtubeId);
+                myRef.orderByChild("Selected").addListenerForSingleValueEvent(new ValueEventListener() {
 
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            String theselectid = "";
-                            String timestr="";
-                            for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()){
-                                HashMap<String, String> newItem = (HashMap<String, String>) childDataSnapshot.getValue();
-                                if (newItem.get("Selected").equals("true")){
-                                    theselectid=newItem.get("NoteId");
-                                    timestr=newItem.get("CurrentTime");
-                                }
-
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        String theselectid = "";
+                        String timestr="";
+                        for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()){
+                            HashMap<String, String> newItem = (HashMap<String, String>) childDataSnapshot.getValue();
+                            if (newItem.get("Selected").equals("true")){
+                                theselectid=newItem.get("NoteId");
+                                timestr=newItem.get("CurrentTime");
                             }
-                            // String timestr=myRef.child(youtubeId).child(theselectid).child("CurrentTime").toString();
-                            Log.i("time",timestr);
-                            String parseString = "replay " + timestr; // Pass the note time to GuestActivity as well
-                            // Referred from: http://blog.csdn.net/fengge34/article/details/46391453
-                            mListener.onFragmentInteraction(Uri.parse(parseString)); // Pass to GuestActivity to replay the video at the note time
-
 
                         }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                        }
-                    });
-
-
+                        // String timestr=myRef.child(youtubeId).child(theselectid).child("CurrentTime").toString();
+                        Log.i("time",timestr);
+                        String parseString = "replay " + timestr; // Pass the note time to GuestActivity as well
+                        // Referred from: http://blog.csdn.net/fengge34/article/details/46391453
+                        mListener.onFragmentInteraction(Uri.parse(parseString)); // Pass to GuestActivity to replay the video at the note time
 
 
+                    }
 
-                }else{
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
 
-
-
-                    String parseString = "replay " + Long.toString(getSelectedNote().getCurrentTime()); // Pass the note time to GuestActivity as well
-//                    // Referred from: http://blog.csdn.net/fengge34/article/details/46391453
-                    mListener.onFragmentInteraction(Uri.parse(parseString)); // Pass to GuestActivity to replay the video at the note time
-
-
-                }
+            }else{
+                String parseString = "replay " + Long.toString(getSelectedNote().getCurrentTime()); // Pass the note time to GuestActivity as well
+                // Referred from: http://blog.csdn.net/fengge34/article/details/46391453
+                mListener.onFragmentInteraction(Uri.parse(parseString)); // Pass to GuestActivity to replay the video at the note time
+            }
 
             }
         });
@@ -320,26 +284,12 @@ public class NoteModeFragment extends Fragment {
         btnShwoEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isRegisteredUser()){
-
-
-
-
-                    llNoteList.setVisibility(View.GONE);  // Hide llNoteList UI
-                    rlNotepad.setVisibility(View.GONE); // Display rlNotepad UI
-                    rlEditNote.setVisibility(View.VISIBLE); // Hide rlEditNote UI
-                    LL_showNote.setVisibility(View.GONE);
-                }
-
-                else{
-                    llNoteList.setVisibility(View.GONE);  // Hide llNoteList UI
-                    rlNotepad.setVisibility(View.GONE); // Display rlNotepad UI
-                    rlEditNote.setVisibility(View.VISIBLE); // Hide rlEditNote UI
-                    LL_showNote.setVisibility(View.GONE);
-                }
+                llNoteList.setVisibility(View.GONE);  // Hide llNoteList UI
+                rlNotepad.setVisibility(View.GONE); // Display rlNotepad UI
+                rlEditNote.setVisibility(View.VISIBLE); // Hide rlEditNote UI
+                LL_showNote.setVisibility(View.GONE);
             }
         });
-
 
 
         /** ListView UI buttons*/
@@ -348,23 +298,23 @@ public class NoteModeFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                if(noteList.isEmpty()){
-                    Toast.makeText(getContext(),"No notes taken",Toast.LENGTH_SHORT).show();
+            if(noteList.isEmpty()){
+                Toast.makeText(getContext(),"No notes taken",Toast.LENGTH_SHORT).show();
+            }
+            else{
+                String emailYoutubeURL="https://www.youtube.com/watch?v=_"+youtubeId+"\n"+"\n";
+                // Create email message content from notes taken
+                StringBuilder emailContent = new StringBuilder();
+                emailContent.append(emailYoutubeURL);
+                for(NoteItem notes : noteList){
+                    emailContent.append(notes.toEmailFormat());
                 }
-                else{
-                    String emailYoutubeURL="https://www.youtube.com/watch?v=_"+youtubeId+"\n"+"\n";
-                    // Create email message content from notes taken
-                    StringBuilder emailContent = new StringBuilder();
-                    emailContent.append(emailYoutubeURL);
-                    for(NoteItem notes : noteList){
-                        emailContent.append(notes.toEmailFormat());
-                    }
 
-                    // Create intent to evoke EmailActivity and pass the message in an Extra
-                    Intent intent = new Intent(getActivity().getApplicationContext(), EmailActivity.class);
-                    intent.putExtra("MESSAGE", emailContent.toString());
-                    startActivity(intent);
-                }
+                // Create intent to evoke EmailActivity and pass the message in an Extra
+                Intent intent = new Intent(getActivity().getApplicationContext(), EmailActivity.class);
+                intent.putExtra("MESSAGE", emailContent.toString());
+                startActivity(intent);
+            }
 
             }
         });
@@ -372,28 +322,27 @@ public class NoteModeFragment extends Fragment {
         btnTakeNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+            llNoteList.setVisibility(View.GONE);  // Hide llNoteList UI
+            rlNotepad.setVisibility(View.VISIBLE); // Display rlNotepad UI
+            rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UI
+            LL_showNote.setVisibility(View.GONE);
 
-                llNoteList.setVisibility(View.GONE);  // Hide llNoteList UI
-                rlNotepad.setVisibility(View.VISIBLE); // Display rlNotepad UI
-                rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UI
-                LL_showNote.setVisibility(View.GONE);
+            // Referred from: http://blog.csdn.net/fengge34/article/details/46391453
+            mListener.onFragmentInteraction(Uri.parse("pause")); // Pass to GuestActivity to pause the video
 
-                // Referred from: http://blog.csdn.net/fengge34/article/details/46391453
-                mListener.onFragmentInteraction(Uri.parse("pause")); // Pass to GuestActivity to pause the video
+            // Take elapsed time (milliseconds) when pause from GuestActivity using a getter method in GuestActivity
+            // Using Bundle to pass data from GuestActivity to NoteModeFragment doesn't work in this case
+            // Referenced from: https://stackoverflow.com/a/22065903
+            GuestActivity guestActivity = (GuestActivity) getActivity();
+            elapsedTime = guestActivity.getElapsedTime();
 
-                // Take elapsed time (milliseconds) when pause from GuestActivity using a getter method in GuestActivity
-                // Using Bundle to pass data from GuestActivity to NoteModeFragment doesn't work in this case
-                // Referenced from: https://stackoverflow.com/a/22065903
-                GuestActivity guestActivity = (GuestActivity) getActivity();
-                elapsedTime = guestActivity.getElapsedTime();
+            // Convert elapsedTime to hh:mm:ss format
+            int hour = (int) (elapsedTime/(1000*3600));
+            int min = (int) (elapsedTime/60000) % 60;
+            int second = (int) (elapsedTime/1000) % 60;
+            final String elapsedTimeString = String.format("%02d:%02d:%02d", hour, min, second);
 
-                // Convert elapsedTime to hh:mm:ss format
-                int hour = (int) (elapsedTime/(1000*3600));
-                int min = (int) (elapsedTime/60000) % 60;
-                int second = (int) (elapsedTime/1000) % 60;
-                final String elapsedTimeString = String.format("%02d:%02d:%02d", hour, min, second);
-
-                tvTimeAtPause.setText(elapsedTimeString);
+            tvTimeAtPause.setText(elapsedTimeString);
             }
         });
 
@@ -401,166 +350,58 @@ public class NoteModeFragment extends Fragment {
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(etUserSubjectInput.getText().toString().equals("")){
-                    Toast.makeText(getContext(),"Note subject cannot be empty",Toast.LENGTH_SHORT).show();
-                }
-                else{
-
-                    // Create an ArrayAdapter<NoteItem> for storing NoteItem objects
-                    ArrayAdapter<NoteItem> lvNotesItemAdapter = new ArrayAdapter<>(getActivity().getApplicationContext(),
-                            R.layout.item_black, noteList);
-                    NoteItem noteItem = new NoteItem(elapsedTime, tvTimeAtPause.getText().toString(), etUserSubjectInput.getText().toString(), etUserNoteInput.getText().toString());
-
-                    if(isRegisteredUser()){
-
-                        myRef = database.getReference("user").child(useruid).child(youtubeId);
-                        String theNoteId =myRef.push().getKey();
-                        noteItem.setNoteId(theNoteId);
-                        Map<String,NoteItem> theData=noteItem.putInToFireBase();
-
-                        //Map<String, String> userData=tempItem.putInToFireBase();
-                        myRef.child(theNoteId).setValue(theData);
-
-                        //DatabaseReference myRef1 = database.getReference("user").child(useruid);
-                        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                            ArrayAdapter<NoteItem> lvNotesItemAdapter1 = new ArrayAdapter<>(getActivity().getApplicationContext(),
-                                    R.layout.item_black, noteList);
-
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                noteList.clear();
-                                for(DataSnapshot childDataSnapshot : dataSnapshot.getChildren()){
-                                    HashMap<String,String> newItem= (HashMap<String, String>) childDataSnapshot.getValue();
-
-                                    NoteItem newNoteItem=new NoteItem(0,newItem.get("Time"),newItem.get("Subject"),newItem.get("Note"));
-                                    newNoteItem.setNoteId(newItem.get("NoteId"));
-                                    newNoteItem.setNotebookName(newItem.get("NotebookName"));
-                                    newNoteItem.setSelected("false");
-                                    lvNotesItemAdapter1.add(newNoteItem);
-                                }
-                                lvNotes.setAdapter(lvNotesItemAdapter1);
-                                llNoteList.setVisibility(View.VISIBLE);  // Display llNoteList UI
-                                rlNotepad.setVisibility(View.GONE); // Hide rlNotepad UI
-                                rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UIi=0;
-                                LL_showNote.setVisibility(View.GONE);
-                            }
-
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-
-                            }
-                        });
-
-
-                    }else{
-
-                        lvNotesItemAdapter.add(noteItem);
-                        lvNotes.setAdapter(lvNotesItemAdapter);
-
-                        llNoteList.setVisibility(View.VISIBLE);  // Display llNoteList UI
-                        rlNotepad.setVisibility(View.GONE); // Hide rlNotepad UI
-                        rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UI
-                        LL_showNote.setVisibility(View.GONE);
-                    }
-
-                    etUserNoteInput.getText().clear();
-                    etUserSubjectInput.getText().clear();
-                }
+            if(etUserSubjectInput.getText().toString().equals("")){
+                Toast.makeText(getContext(),"Note subject cannot be empty",Toast.LENGTH_SHORT).show();
             }
-        });
+            else{
 
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Clear user inputs
-                etUserNoteInput.getText().clear();
-                etUserSubjectInput.getText().clear();
+                // Create an ArrayAdapter<NoteItem> for storing NoteItem objects
+                ArrayAdapter<NoteItem> lvNotesItemAdapter = new ArrayAdapter<>(getActivity().getApplicationContext(),
+                        R.layout.item_black, noteList);
+                NoteItem noteItem = new NoteItem(elapsedTime, tvTimeAtPause.getText().toString(), etUserSubjectInput.getText().toString(), etUserNoteInput.getText().toString());
 
-                llNoteList.setVisibility(View.VISIBLE);  // Display llNoteList UI
-                rlNotepad.setVisibility(View.GONE); // Hide rlNotepad UI
-                rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UI
-                LL_showNote.setVisibility(View.GONE);
-            }
-        });
+                if(isRegisteredUser()){
 
-        /** Note editing UI buttons*/
-        btnEditNoteSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (isRegisteredUser()){
                     myRef = database.getReference("user").child(useruid).child(youtubeId);
-                    myRef.orderByChild("Selected").addListenerForSingleValueEvent(new ValueEventListener() {
+                    String theNoteId =myRef.push().getKey();
+                    noteItem.setNoteId(theNoteId);
+                    Map<String,NoteItem> theData=noteItem.putInToFireBase();
 
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            String theselectid = "";
-                            for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()){
-                                HashMap<String, String> newItem = (HashMap<String, String>) childDataSnapshot.getValue();
-                                if (newItem.get("Selected").equals("true")){
-                                    theselectid=newItem.get("NoteId");
-                                }
+                    //Map<String, String> userData=tempItem.putInToFireBase();
+                    myRef.child(theNoteId).setValue(theData);
 
-                            }
-                            myRef.child(theselectid).child("Selected").setValue("false");
-                            myRef.child(theselectid).child("Subject").setValue(etEditSubject.getText().toString());
-                            myRef.child(theselectid).child("Note").setValue(etEditNote.getText().toString());
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-
-                    });
-                    myRef = database.getReference("user").child(useruid).child(youtubeId);
-                    myRef.addValueEventListener(new ValueEventListener() {
+                    //DatabaseReference myRef1 = database.getReference("user").child(useruid);
+                    myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        ArrayAdapter<NoteItem> lvNotesItemAdapter1 = new ArrayAdapter<>(getActivity().getApplicationContext(),
+                                R.layout.item_black, noteList);
 
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             noteList.clear();
-                            ArrayAdapter<NoteItem> lvNotesItemAdapter1 = new ArrayAdapter<>(getActivity().getApplicationContext(),
-                                    R.layout.item_black, noteList);
+                            for(DataSnapshot childDataSnapshot : dataSnapshot.getChildren()){
+                                HashMap<String,String> newItem= (HashMap<String, String>) childDataSnapshot.getValue();
 
-                            String theselectid = "";
-                            for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()){
-                                HashMap<String, String> newItem = (HashMap<String, String>) childDataSnapshot.getValue();
-
-                                    NoteItem newNoteItem = new NoteItem(0, newItem.get("Time"), newItem.get("Subject"), newItem.get("Note"));
-                                    newNoteItem.setNoteId(newItem.get("NoteId"));
-                                    newNoteItem.setNotebookName(newItem.get("NotebookName"));
-                                    lvNotesItemAdapter1.add(newNoteItem);
-
-
-
-
+                                NoteItem newNoteItem=new NoteItem(0,newItem.get("Time"),newItem.get("Subject"),newItem.get("Note"));
+                                newNoteItem.setNoteId(newItem.get("NoteId"));
+                                newNoteItem.setNotebookName(newItem.get("NotebookName"));
+                                newNoteItem.setSelected("false");
+                                lvNotesItemAdapter1.add(newNoteItem);
                             }
-
                             lvNotes.setAdapter(lvNotesItemAdapter1);
                             llNoteList.setVisibility(View.VISIBLE);  // Display llNoteList UI
                             rlNotepad.setVisibility(View.GONE); // Hide rlNotepad UI
                             rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UIi=0;
                             LL_showNote.setVisibility(View.GONE);
-
-
-
                         }
+
 
                         @Override
                         public void onCancelled(DatabaseError databaseError) {
 
                         }
                     });
-
-
-
-
                 }else{
-                    getSelectedNote().setSubject(etEditSubject.getText().toString());
-                    getSelectedNote().setNote(etEditNote.getText().toString());
-
-                    // Update the ListView
-                    ArrayAdapter<NoteItem> lvNotesItemAdapter = new ArrayAdapter<>(getActivity().getApplicationContext(), R.layout.item_black, noteList);
+                    lvNotesItemAdapter.add(noteItem);
                     lvNotes.setAdapter(lvNotesItemAdapter);
 
                     llNoteList.setVisibility(View.VISIBLE);  // Display llNoteList UI
@@ -569,19 +410,108 @@ public class NoteModeFragment extends Fragment {
                     LL_showNote.setVisibility(View.GONE);
                 }
 
+                etUserNoteInput.getText().clear();
+                etUserSubjectInput.getText().clear();
+            }
+            }
+        });
 
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+            // Clear user inputs
+            etUserNoteInput.getText().clear();
+            etUserSubjectInput.getText().clear();
 
+            llNoteList.setVisibility(View.VISIBLE);  // Display llNoteList UI
+            rlNotepad.setVisibility(View.GONE); // Hide rlNotepad UI
+            rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UI
+            LL_showNote.setVisibility(View.GONE);
+            }
+        });
 
+        /** Note editing UI buttons*/
+        btnEditNoteSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+            if (isRegisteredUser()){
+                myRef = database.getReference("user").child(useruid).child(youtubeId);
+                myRef.orderByChild("Selected").addListenerForSingleValueEvent(new ValueEventListener() {
+
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        String theselectid = "";
+                        for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()){
+                            HashMap<String, String> newItem = (HashMap<String, String>) childDataSnapshot.getValue();
+                            if (newItem.get("Selected").equals("true")){
+                                theselectid=newItem.get("NoteId");
+                            }
+
+                        }
+                        myRef.child(theselectid).child("Selected").setValue("false");
+                        myRef.child(theselectid).child("Subject").setValue(etEditSubject.getText().toString());
+                        myRef.child(theselectid).child("Note").setValue(etEditNote.getText().toString());
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+
+                });
+                myRef = database.getReference("user").child(useruid).child(youtubeId);
+                myRef.addValueEventListener(new ValueEventListener() {
+
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        noteList.clear();
+                        ArrayAdapter<NoteItem> lvNotesItemAdapter1 = new ArrayAdapter<>(getActivity().getApplicationContext(),
+                                R.layout.item_black, noteList);
+
+                        String theselectid = "";
+                        for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()){
+                            HashMap<String, String> newItem = (HashMap<String, String>) childDataSnapshot.getValue();
+
+                                NoteItem newNoteItem = new NoteItem(0, newItem.get("Time"), newItem.get("Subject"), newItem.get("Note"));
+                                newNoteItem.setNoteId(newItem.get("NoteId"));
+                                newNoteItem.setNotebookName(newItem.get("NotebookName"));
+                                lvNotesItemAdapter1.add(newNoteItem);
+                        }
+
+                        lvNotes.setAdapter(lvNotesItemAdapter1);
+                        llNoteList.setVisibility(View.VISIBLE);  // Display llNoteList UI
+                        rlNotepad.setVisibility(View.GONE); // Hide rlNotepad UI
+                        rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UIi=0;
+                        LL_showNote.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+            }else{
+                getSelectedNote().setSubject(etEditSubject.getText().toString());
+                getSelectedNote().setNote(etEditNote.getText().toString());
+
+                // Update the ListView
+                ArrayAdapter<NoteItem> lvNotesItemAdapter = new ArrayAdapter<>(getActivity().getApplicationContext(), R.layout.item_black, noteList);
+                lvNotes.setAdapter(lvNotesItemAdapter);
+
+                llNoteList.setVisibility(View.VISIBLE);  // Display llNoteList UI
+                rlNotepad.setVisibility(View.GONE); // Hide rlNotepad UI
+                rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UI
+                LL_showNote.setVisibility(View.GONE);
+            }
             }
         });
 
         btnEditNoteCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                llNoteList.setVisibility(View.VISIBLE);  // Display llNoteList UI
-                rlNotepad.setVisibility(View.GONE); // Hide rlNotepad UI
-                rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UI
-                LL_showNote.setVisibility(View.GONE);
+            llNoteList.setVisibility(View.VISIBLE);  // Display llNoteList UI
+            rlNotepad.setVisibility(View.GONE); // Hide rlNotepad UI
+            rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UI
+            LL_showNote.setVisibility(View.GONE);
 
             }
         });
@@ -589,123 +519,113 @@ public class NoteModeFragment extends Fragment {
         btnEditDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isRegisteredUser()) {
-                    rlEditNote.setVisibility(View.VISIBLE);
-                    llNoteList.setVisibility(View.GONE);
-                    rlNotepad.setVisibility(View.GONE);
-                    LL_showNote.setVisibility(View.GONE);
-                    AlertDialog.Builder delnote = new AlertDialog.Builder(getContext());
-                    delnote.setMessage("Delete note?");
-                    delnote.setCancelable(true);
+            if (isRegisteredUser()) {
+                rlEditNote.setVisibility(View.VISIBLE);
+                llNoteList.setVisibility(View.GONE);
+                rlNotepad.setVisibility(View.GONE);
+                LL_showNote.setVisibility(View.GONE);
+                AlertDialog.Builder delnote = new AlertDialog.Builder(getContext());
+                delnote.setMessage("Delete note?");
+                delnote.setCancelable(true);
 
-                    delnote.setPositiveButton(
-                            "Yes",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    myRef = database.getReference("user").child(useruid).child(youtubeId);
-                                    myRef.orderByChild("Selected").addListenerForSingleValueEvent(new ValueEventListener() {
+                delnote.setPositiveButton(
+                        "Yes",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                myRef = database.getReference("user").child(useruid).child(youtubeId);
+                                myRef.orderByChild("Selected").addListenerForSingleValueEvent(new ValueEventListener() {
 
-                                        @Override
-                                        public void onDataChange(DataSnapshot dataSnapshot) {
-                                            noteList.clear();
-                                            ArrayAdapter<NoteItem> lvNotesItemAdapter1 = new ArrayAdapter<>(getActivity().getApplicationContext(),
-                                                    R.layout.item_black, noteList);
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        noteList.clear();
+                                        ArrayAdapter<NoteItem> lvNotesItemAdapter1 = new ArrayAdapter<>(getActivity().getApplicationContext(),
+                                                R.layout.item_black, noteList);
 
-                                            String theselectid = "";
-                                            for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()){
-                                                HashMap<String, String> newItem = (HashMap<String, String>) childDataSnapshot.getValue();
-                                                if (newItem.get("Selected").equals("true")){
-                                                    theselectid=newItem.get("NoteId");
-                                                }else if(newItem.get("Selected").equals("false")) {
-                                                    NoteItem newNoteItem = new NoteItem(0, newItem.get("Time"), newItem.get("Subject"), newItem.get("Note"));
-                                                    newNoteItem.setNoteId(newItem.get("NoteId"));
-                                                    newNoteItem.setNotebookName(newItem.get("NotebookName"));
-                                                    lvNotesItemAdapter1.add(newNoteItem);
-
-                                                }
+                                        String theselectid = "";
+                                        for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
+                                            HashMap<String, String> newItem = (HashMap<String, String>) childDataSnapshot.getValue();
+                                            if (newItem.get("Selected").equals("true")) {
+                                                theselectid = newItem.get("NoteId");
+                                            } else if (newItem.get("Selected").equals("false")) {
+                                                NoteItem newNoteItem = new NoteItem(0, newItem.get("Time"), newItem.get("Subject"), newItem.get("Note"));
+                                                newNoteItem.setNoteId(newItem.get("NoteId"));
+                                                newNoteItem.setNotebookName(newItem.get("NotebookName"));
+                                                lvNotesItemAdapter1.add(newNoteItem);
 
                                             }
-                                            myRef.child(theselectid).removeValue();
-
-                                            lvNotes.setAdapter(lvNotesItemAdapter1);
-                                            llNoteList.setVisibility(View.VISIBLE);  // Display llNoteList UI
-                                            rlNotepad.setVisibility(View.GONE); // Hide rlNotepad UI
-                                            rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UIi=0;
-                                            LL_showNote.setVisibility(View.GONE);
 
                                         }
+                                        myRef.child(theselectid).removeValue();
 
-                                        @Override
-                                        public void onCancelled(DatabaseError databaseError) {
+                                        lvNotes.setAdapter(lvNotesItemAdapter1);
+                                        llNoteList.setVisibility(View.VISIBLE);  // Display llNoteList UI
+                                        rlNotepad.setVisibility(View.GONE); // Hide rlNotepad UI
+                                        rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UIi=0;
+                                        LL_showNote.setVisibility(View.GONE);
 
-                                        }
-                                    });
+                                    }
 
-                                    dialog.cancel();
-                                    Toast.makeText(getContext(),"Note deleted",Toast.LENGTH_SHORT).show();
-                                }
-                            });
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
 
-                    delnote.setNegativeButton(
-                            "No",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dialog.cancel();
-                                }
-                            });
+                                    }
+                                });
 
-                    AlertDialog alertdel = delnote.create();
-                    alertdel.show();
+                                dialog.cancel();
+                                Toast.makeText(getContext(), "Note deleted", Toast.LENGTH_SHORT).show();
+                            }
+                        });
 
+                delnote.setNegativeButton(
+                        "No",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
 
+                AlertDialog alertdel = delnote.create();
+                alertdel.show();
 
+            } else {
+                // Delete the selected note item
+                AlertDialog.Builder delnote = new AlertDialog.Builder(getContext());
+                delnote.setMessage("Delete note?");
+                delnote.setCancelable(true);
+                delnote.setPositiveButton(
+                        "Yes",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                NoteItem selectedNoteItem = getSelectedNote();
+                                String removeItemNoteId = selectedNoteItem.getNoteId();
+                                noteList.remove(selectedNoteItem);
+                                ArrayAdapter<NoteItem> lvNotesItemAdapter = new ArrayAdapter<>(getActivity().getApplicationContext(), R.layout.item_black, noteList);
+                                lvNotes.setAdapter(lvNotesItemAdapter);
 
-
-
-                } else {
-                    // Delete the selected note item
-                    AlertDialog.Builder delnote = new AlertDialog.Builder(getContext());
-                    delnote.setMessage("Delete note?");
-                    delnote.setCancelable(true);
-                    delnote.setPositiveButton(
-                            "Yes",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    NoteItem selectedNoteItem = getSelectedNote();
-                                    String removeItemNoteId =selectedNoteItem.getNoteId();
-                                    noteList.remove(selectedNoteItem);
-                                    ArrayAdapter<NoteItem> lvNotesItemAdapter = new ArrayAdapter<>(getActivity().getApplicationContext(), R.layout.item_black, noteList);
-                                    lvNotes.setAdapter(lvNotesItemAdapter);
-
-                                    llNoteList.setVisibility(View.VISIBLE);  // Display llNoteList UI
-                                    rlNotepad.setVisibility(View.GONE); // Hide rlNotepad UI
-                                    rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UI
-
-
-                                    LL_showNote.setVisibility(View.GONE); //b
-
-
-
+                                llNoteList.setVisibility(View.VISIBLE);  // Display llNoteList UI
+                                rlNotepad.setVisibility(View.GONE); // Hide rlNotepad UI
+                                rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UI
 
 
-                                    dialog.cancel();
-                                    Toast.makeText(getContext(),"Note deleted",Toast.LENGTH_SHORT).show();
-                                }
-                            });
+                                LL_showNote.setVisibility(View.GONE); //b
 
-                    delnote.setNegativeButton(
-                            "No",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dialog.cancel();
-                                }
-                            });
 
-                    AlertDialog alertdel = delnote.create();
-                    alertdel.show();
-                    // Update the ListView
+                                dialog.cancel();
+                                Toast.makeText(getContext(), "Note deleted", Toast.LENGTH_SHORT).show();
+                            }
+                        });
 
-                }
+                delnote.setNegativeButton(
+                        "No",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+                AlertDialog alertdel = delnote.create();
+                alertdel.show();
+            }
 
             }
         });
@@ -713,81 +633,77 @@ public class NoteModeFragment extends Fragment {
 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, final int pos, long l) {
-                if(isRegisteredUser()){
-                    myRef = database.getReference("user").child(useruid).child(youtubeId);
-                    myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            ArrayAdapter<NoteItem> lvNotesItemAdapter1 = new ArrayAdapter<>(getActivity().getApplicationContext(),
-                                                    R.layout.item_black, noteList);
-                            noteList.clear();
+            if(isRegisteredUser()){
+                myRef = database.getReference("user").child(useruid).child(youtubeId);
+                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        ArrayAdapter<NoteItem> lvNotesItemAdapter1 = new ArrayAdapter<>(getActivity().getApplicationContext(),
+                                                R.layout.item_black, noteList);
+                        noteList.clear();
 
-                            for(final DataSnapshot childDataSnapshot : dataSnapshot.getChildren()){
-                                HashMap<String,String> newItem= (HashMap<String, String>) childDataSnapshot.getValue();
-                                                NoteItem newNoteItem=new NoteItem(0,newItem.get("Time"),newItem.get("Subject"),newItem.get("Note"));
-                                                newNoteItem.setNoteId(newItem.get("NoteId"));
-                                                newNoteItem.setNotebookName(newItem.get("NotebookName"));
-                                                noteList.add(newNoteItem);
-                            }
+                        for(final DataSnapshot childDataSnapshot : dataSnapshot.getChildren()){
+                            HashMap<String,String> newItem= (HashMap<String, String>) childDataSnapshot.getValue();
+                                            NoteItem newNoteItem=new NoteItem(0,newItem.get("Time"),newItem.get("Subject"),newItem.get("Note"));
+                                            newNoteItem.setNoteId(newItem.get("NoteId"));
+                                            newNoteItem.setNotebookName(newItem.get("NotebookName"));
+                                            noteList.add(newNoteItem);
                         }
+                    }
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
 
-                        }
-                    });
-                    setSelectedNote(noteList.get(pos));
-                    NoteItem seItem=noteList.get(pos);
-                    lvNotes.clearChoices();
-                    DatabaseReference myChildrenRef1 =myRef.child(seItem.getNoteId());
-                    //String seID=seItem.getNoteId().toString();
+                    }
+                });
+                setSelectedNote(noteList.get(pos));
+                NoteItem seItem=noteList.get(pos);
+                lvNotes.clearChoices();
+                DatabaseReference myChildrenRef1 =myRef.child(seItem.getNoteId());
+                //String seID=seItem.getNoteId().toString();
 
-                    myChildrenRef1.child("Selected").setValue("true");
-                    myChildrenRef1.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            //ShowNoteElapsedTime,ShowNoteSubject,ShowNoteUsrNoteInputText
-                            ShowNoteElapsedTime.setText(dataSnapshot.child("Time").getValue().toString());
-                            ShowNoteSubject.setText(dataSnapshot.child("Subject").getValue().toString());
-                            ShowNoteUsrNoteInputText.setText(dataSnapshot.child("Note").getValue().toString());
+                myChildrenRef1.child("Selected").setValue("true");
+                myChildrenRef1.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        //ShowNoteElapsedTime,ShowNoteSubject,ShowNoteUsrNoteInputText
+                        ShowNoteElapsedTime.setText(dataSnapshot.child("Time").getValue().toString());
+                        ShowNoteSubject.setText(dataSnapshot.child("Subject").getValue().toString());
+                        ShowNoteUsrNoteInputText.setText(dataSnapshot.child("Note").getValue().toString());
 
-                        }
+                    }
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
 
-                        }
-                    });
+                    }
+                });
 
-                    LL_showNote.setVisibility(View.VISIBLE);
-                    rlEditNote.setVisibility(View.GONE);
-                    llNoteList.setVisibility(View.GONE);
-                    rlNotepad.setVisibility(View.GONE);
-
-
-                    tvEditNoteTime.setText(selectedNote.getTime());
-                    etEditSubject.setText(selectedNote.getSubject());
-                    etEditNote.setText(selectedNote.getNote());
+                LL_showNote.setVisibility(View.VISIBLE);
+                rlEditNote.setVisibility(View.GONE);
+                llNoteList.setVisibility(View.GONE);
+                rlNotepad.setVisibility(View.GONE);
 
 
-                }else{
-                    setSelectedNote(noteList.get(pos));
-                    rlEditNote.setVisibility(View.GONE);
-                    llNoteList.setVisibility(View.GONE);
-                    rlNotepad.setVisibility(View.GONE);
-                    LL_showNote.setVisibility(View.VISIBLE);
-                    ShowNoteElapsedTime.setText(selectedNote.getTime());
-                    ShowNoteSubject.setText(selectedNote.getSubject());
-                    ShowNoteUsrNoteInputText.setText(selectedNote.getNote());
+                tvEditNoteTime.setText(selectedNote.getTime());
+                etEditSubject.setText(selectedNote.getSubject());
+                etEditNote.setText(selectedNote.getNote());
 
-                    //Get selected NoteItem object
-                    //setSelectedNote(noteList.get(pos));
+            }else{
+                setSelectedNote(noteList.get(pos));
+                rlEditNote.setVisibility(View.GONE);
+                llNoteList.setVisibility(View.GONE);
+                rlNotepad.setVisibility(View.GONE);
+                LL_showNote.setVisibility(View.VISIBLE);
+                ShowNoteElapsedTime.setText(selectedNote.getTime());
+                ShowNoteSubject.setText(selectedNote.getSubject());
+                ShowNoteUsrNoteInputText.setText(selectedNote.getNote());
 
-                    //Set the text fields to the NoteItem object's corresponding values in edit UI
-                    tvEditNoteTime.setText(selectedNote.getTime());
-                    etEditSubject.setText(selectedNote.getSubject());
-                    etEditNote.setText(selectedNote.getNote());
-                }
+                //Set the text fields to the NoteItem object's corresponding values in edit UI
+                tvEditNoteTime.setText(selectedNote.getTime());
+                etEditSubject.setText(selectedNote.getSubject());
+                etEditNote.setText(selectedNote.getNote());
+            }
             }
         });
 
