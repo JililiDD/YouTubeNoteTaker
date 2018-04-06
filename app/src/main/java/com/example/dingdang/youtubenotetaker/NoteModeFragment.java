@@ -70,7 +70,6 @@ public class NoteModeFragment extends Fragment {
     private List<NoteItem> noteList;
     private NoteItem selectedNote;
     private String userType, youtubeId;
-    //firebase user get
     private FirebaseUser user;
     private String useruid;
     private FirebaseDatabase database;
@@ -137,7 +136,6 @@ public class NoteModeFragment extends Fragment {
         btnShwoEdit=(Button) view.findViewById(R.id.btnShwoEdit);
 
 
-        //ShowNoteElapsedTime,ShowNoteSubject,ShowNoteUsrNoteInputText
         ShowNoteElapsedTime=(TextView) view.findViewById(R.id.ShowNoteElapsedTime);
         ShowNoteSubject=(TextView) view.findViewById(R.id.ShowNoteSubject);
         ShowNoteUsrNoteInputText=(TextView) view.findViewById(R.id.ShowNoteUsrNoteInputText);
@@ -165,7 +163,6 @@ public class NoteModeFragment extends Fragment {
             useruid=user.getUid();
             myRef = database.getReference("user").child(useruid);
             DatabaseReference myRefyouTube = database.getReference("user").child(useruid).child(youtubeId);
-            //Log.i("userId",useruid);
             myRefyouTube.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -185,9 +182,7 @@ public class NoteModeFragment extends Fragment {
                 }
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-
                     }
-
             });
 
         }
@@ -238,10 +233,6 @@ public class NoteModeFragment extends Fragment {
             @Override
             public void onClick(View v) {
             if (isRegisteredUser()){
-//                    rlEditNote.setVisibility(View.VISIBLE);
-//                    llNoteList.setVisibility(View.GONE);
-//                    rlNotepad.setVisibility(View.GONE);
-//                    LL_showNote.setVisibility(View.GONE);
                 myRef = database.getReference("user").child(useruid).child(youtubeId);
                 myRef.orderByChild("Selected").addListenerForSingleValueEvent(new ValueEventListener() {
 
@@ -257,8 +248,7 @@ public class NoteModeFragment extends Fragment {
                             }
 
                         }
-                        // String timestr=myRef.child(youtubeId).child(theselectid).child("CurrentTime").toString();
-                        Log.i("time",timestr);
+
                         String parseString = "replay " + timestr; // Pass the note time to GuestActivity as well
                         // Referred from: http://blog.csdn.net/fengge34/article/details/46391453
                         mListener.onFragmentInteraction(Uri.parse(parseString)); // Pass to GuestActivity to replay the video at the note time
