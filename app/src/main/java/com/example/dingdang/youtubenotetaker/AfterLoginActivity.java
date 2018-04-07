@@ -27,8 +27,6 @@ public class AfterLoginActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 1;
     private boolean login_once = false;
 
-    private static final String TAG = "AfterLoginActivity";
-
     // Firebase variable
     private FirebaseAuth.AuthStateListener mAuthStateListener;
     private FirebaseAuth mFirebaseAuth;

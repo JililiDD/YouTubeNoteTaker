@@ -22,7 +22,6 @@ import java.util.List;
 
 public class FirebaseLoginActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 123;
-    private static final String TAG = "FirebaseLoginActivity";
     private boolean login_once = false;
 
     // Firebase related variables
