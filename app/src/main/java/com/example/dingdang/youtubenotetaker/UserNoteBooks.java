@@ -39,23 +39,16 @@ import java.util.Map;
 public class UserNoteBooks extends AppCompatActivity {
 
     // String to store the username of current user
-    private String mUsername, userId;
-    private static final String TAG = "MyActivity";
+    private String userId;
     private ArrayAdapter<String> itemsAdapter;
-    private ArrayList<String> listAdapter;
     private String videoId;
     private ArrayList<String> myVideoList1 = new ArrayList<String>();
-    private ArrayList<String> updatedVideoList = new ArrayList<String>();
-    //String[] myVideoList = new String[100];
     public static final int RC_SIGN_IN = 1;
     public int count_of_notes_per_user = 0;
     private boolean login_once = false;
 
     // Firebase related varaibles
-    private FirebaseDatabase mFirebaseDatabase;
-    private DatabaseReference mMessagesDatabaseReference;
     private FirebaseAuth mFirebaseAuth;
-    private ChildEventListener mChildEventListener;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
 
     @Override
@@ -65,25 +58,17 @@ public class UserNoteBooks extends AppCompatActivity {
 
         // List view variable
         ListView notesList;
-        ListView listNotesList;
 
         // Set layout for each item of the list view
         itemsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
 
-        // set layout for each item of list view to arrayList
-        //listAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,);
         // Initialize ListView variable & bind the adapter to list view
         notesList = findViewById(R.id.lvNotesList);
         notesList.setAdapter(itemsAdapter);
         notesList.setLongClickable(true);
 
-        listNotesList = findViewById(R.id.lvNotesList);
-
-
         // Instantiate Firebase varaibles
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
         mFirebaseAuth = FirebaseAuth.getInstance();
-        mMessagesDatabaseReference = mFirebaseDatabase.getReference().child("testuser");
         FirebaseUser user = mFirebaseAuth.getCurrentUser();
 
         if(user != null) {
@@ -93,14 +78,14 @@ public class UserNoteBooks extends AppCompatActivity {
 
         }
 
+        // Reference : https://github.com/udacity/and-nd-firebase
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 // firebaseAuth variable is guaranteed to contain user sign-in or not information
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if(user != null) {
-                    // User logged in
-                    //onSignedInInitialize(user.getDisplayName());
+                    // User logged in, do not do anything
 
                 }
                 else {
@@ -134,50 +119,14 @@ public class UserNoteBooks extends AppCompatActivity {
                 int count = count_of_notes_per_user, counter=0;
                 for(counter=0; counter < count_of_notes_per_user; counter++) {
                     if(position == counter) {
-                        Log.i(TAG, "DIN ArrayList content " + myVideoList1.get(position));
-                        //Log.i(TAG, "DIN ArrayList content " + myVideoList[counter]);
+                        //Load the video along with notes for selected video by user
                         Intent intent = new Intent (view.getContext() , GuestActivity.class);
-                        //intent.putExtra("VIDEO_ID", myVideoList[counter]);
                         intent.putExtra("VIDEO_ID", myVideoList1.get(position));
-                        //intent.putExtra("USER_TYPE", userType);
                         intent.putExtra("USER_TYPE", "REGISTERED");
                         intent.putExtra("FROM", "USERNOTEBOOKS");
                         startActivityForResult(intent,0);
                     }
                 }
-
-
-
-                /**if (position == 0) {
-                    Intent intent = new Intent (view.getContext() , GuestActivity.class);
-                    intent.putExtra("VIDEO_ID", myVideoList[0]);
-                    //intent.putExtra("USER_TYPE", userType);
-                    intent.putExtra("USER_TYPE", "REGISTERED");
-                    startActivityForResult(intent,0);
-                }
-                if (position == 1) {
-                    Intent intent = new Intent (view.getContext() , GuestActivity.class);
-                    intent.putExtra("VIDEO_ID", myVideoList[1]);
-                    //intent.putExtra("USER_TYPE", userType);
-                    intent.putExtra("USER_TYPE", "GUEST");
-                    startActivityForResult(intent,0);
-
-                }
-                if (position == 2) {
-                    Intent intent = new Intent (view.getContext() , GuestActivity.class);
-                    intent.putExtra("VIDEO_ID", myVideoList[2]);
-                    //intent.putExtra("USER_TYPE", userType);
-                    intent.putExtra("USER_TYPE", "GUEST");
-                    startActivityForResult(intent,0);
-
-                }
-                if( position == 3) {
-                    Intent intent = new Intent (view.getContext() , GuestActivity.class);
-                    intent.putExtra("VIDEO_ID", myVideoList[3]);
-                    //intent.putExtra("USER_TYPE", userType);
-                    intent.putExtra("USER_TYPE", "GUEST");
-                    startActivityForResult(intent,0);
-                }*/
             }
         });
 
@@ -185,24 +134,19 @@ public class UserNoteBooks extends AppCompatActivity {
         notesList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
-                Toast.makeText(UserNoteBooks.this, "Long pressed", Toast.LENGTH_SHORT).show();
-
+                // Alert the user to make sure user actually wants to delete the note book.
                 AlertDialog.Builder alert = new AlertDialog.Builder(UserNoteBooks.this);
                 alert.setTitle("Alert!!");
-                alert.setMessage("Are you sure to delete record");
+                alert.setMessage("Delete Notebook ?");
                 alert.setPositiveButton("YES", new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        //do your work here
+
                         dialog.dismiss();
-                        //Log.i(TAG, "DIN Yes pressed for video ID " + myVideoList1.get(position));
-                        //delete from arrayList
-                        //myVideoList1.remove(position);
+
                         //function to delete from firebase database
                         final String videoId = myVideoList1.get(position);
-                        Log.i(TAG, "DIN YES pressed videoId captured to be deleted is " + videoId);
-
                         deleteFromDatabase(position, videoId);
 
                     }
@@ -211,13 +155,12 @@ public class UserNoteBooks extends AppCompatActivity {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
+                        // Just dismiss the dialogue, don't do anything.
                         dialog.dismiss();
                     }
                 });
 
                 alert.show();
-
                 return true;
             }
         });
@@ -235,31 +178,30 @@ public class UserNoteBooks extends AppCompatActivity {
                         int deleted=0;
                         ListView notesListToUpdate;
                         for(DataSnapshot ds: dataSnapshot.getChildren()) {
+                            // Retrieve the key and go through list of users to match userId
                             String key = ds.getKey();
-                            Log.i(TAG, "DIN deleteFromDatbaase ref1 key = " + key);
-                            Log.i(TAG, "DIN deleteFromDatabase ref1 userId = " + userId);
                             Map<String, Object> value = (Map<String, Object>) ds.getValue();
                             if(key.equals(userId)) {
                                 for(Map.Entry<String, Object> entry : value.entrySet()) {
+
                                     String noteBookName = entry.getValue().toString();
                                     String videoId1 = entry.getKey().toString();
-                                    Log.i(TAG, "DIN deleteFromDatbaase ref1 received videoID= " + videoId);
-                                    Log.i(TAG, "DIN deleteFromDatbaase ref1 to be checked videoID= " + videoId1);
+
+                                    //videoId1 contains exact video which user wants to delete
                                     if(videoId1.equals(videoId)) {
-                                        // found match
-                                        Log.i(TAG, "DIN deleteFromDatbaase match found ! ref1 ID1= " + videoId1);
-                                        // delete from database
+                                        // found match, delete from database
                                         ref1.child(userId).child(videoId1).removeValue();
-                                        Log.i(TAG, "DIN deleteFromDatbaase ref1 - Deleted from DB ");
+
                                         // Update the entry as well on screen !
                                         itemsAdapter.remove(noteBookName);
-                                        Log.i(TAG, "DIN deleteFromDatbaase ref1 - removed from itemsAdapter " + itemsAdapter.getPosition(noteBookName));
+
                                         // Remove from the list as well
                                         myVideoList1.remove(videoId1);
+
+                                        //Notify adapter about deletion
                                         itemsAdapter.notifyDataSetChanged();
-                                        /** notesListToUpdate = findViewById(R.id.lvNotesList);
-                                        notesListToUpdate.setAdapter(itemsAdapter);*/
-                                        Log.i(TAG, "DIN deleteFromDatbaase ref1 - Notify datasetChanged() ");
+
+                                        // set the flag about notes being deleted, to break from for loop.
                                         deleted = 1;
                                     }
                                     if(deleted == 1)
@@ -273,7 +215,7 @@ public class UserNoteBooks extends AppCompatActivity {
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-
+                        // On cancelled, do not do anything
                     }
                 }
         );
@@ -285,22 +227,16 @@ public class UserNoteBooks extends AppCompatActivity {
                         int deleted1 = 0;
                         for(DataSnapshot ds1: dataSnapshot.getChildren()) {
                             String key1 = ds1.getKey().toString();
-                            Log.i(TAG, "DIN deleteFromDatbaase ref2 key = " + key1);
-                            Log.i(TAG, "DIN deleteFromDatabase ref2 userId = " + userId);
                             Map<String, Object> value1 = (Map<String, Object>) ds1.getValue();
                             if(key1.equals(userId.toString())) {
                                 for(Map.Entry<String, Object> entry1 : value1.entrySet()) {
+
                                     String noteBookName = entry1.getValue().toString();
                                     String videoId2 = entry1.getKey().toString();
 
-                                    Log.i(TAG, "DIN deleteFromDatbaase ref2 received videoID= " + videoId);
-                                    Log.i(TAG, "DIN deleteFromDatbaase ref2 to be checked videoID2= " + videoId2);
                                     if(videoId2.equals(videoId)) {
-                                        // found match
-
-                                        // delete from database
+                                        // found match, delete from database
                                         ref2.child(userId).child(videoId2).removeValue();
-                                        Log.i(TAG, "DIN deleteFromDatbaase ref2 - Deleted from DB ");
                                         deleted1 = 1;
                                         break;
                                     }
@@ -315,21 +251,21 @@ public class UserNoteBooks extends AppCompatActivity {
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-
+                        // Do not do anything currently, if database error comes as cancelled
                     }
                 }
         );
     }
 
+    // Reference : https://github.com/udacity/and-nd-firebase
     @Override
     public void onActivityResult( int requestCode, int resultCode, Intent data) {
         if(requestCode == RC_SIGN_IN) {
             if(resultCode == RESULT_OK) {
-                Toast.makeText(UserNoteBooks.this, "Signed In !!",Toast.LENGTH_SHORT).show();
+                // Sign in is successful. Do not do anything
             }
             else if (resultCode == RESULT_CANCELED) {
-                Toast.makeText(UserNoteBooks.this, "Sign In Cancel !!",Toast.LENGTH_SHORT).show();
-                finish();
+                // Load Main Activity for guest user
                 Intent intent = new Intent(UserNoteBooks.this, MainActivity.class);
                 intent.putExtra("USER_TYPE", "GUEST");
                 startActivity(intent);
@@ -342,8 +278,6 @@ public class UserNoteBooks extends AppCompatActivity {
         super.onPause();
         // remove AuthStateListener when activity goes out of picture
         mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
-        //detachDatabaseReadListener();
-        //itemsAdapter.clear();
     }
 
     @Override
@@ -358,16 +292,12 @@ public class UserNoteBooks extends AppCompatActivity {
         itemsAdapter.clear();
     }
 
+    // Reference : https://github.com/udacity/and-nd-firebase
     private void onSignedInInitialize(String username1, String username2) {
-        mUsername = username1;
+
+        // Initialize userId and call functions to attach DatabaseReadListener
         userId = username2;
-
-        //attachDatabaseReadListener();
-
-        Log.i(TAG, "DIN onSignedInInitialize, username = " + mUsername);
-        Log.i(TAG, "DIN Username2 (id) = " + userId);
         attachDatabaseReadListener();
-        detachDatabaseReadListener();
 
     }
 
@@ -380,31 +310,21 @@ public class UserNoteBooks extends AppCompatActivity {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         //Get map of users in datasnapshot
                         Long count_of_children = dataSnapshot.getChildrenCount();
-                        Log.i(TAG, "DIN count of children = " + count_of_children);
-                        //List<String> td = (ArrayList<String>) dataSnapshot.getValue();
+
                         for(DataSnapshot ds: dataSnapshot.getChildren()) {
                             String key = ds.getKey();
-                            Log.i(TAG, "DIN key = " + key);
-                            Log.i(TAG, "DIN userId = " + userId);
                             Map<String, Object> value = (Map<String, Object>) ds.getValue();
-                            Log.i(TAG, "DIN notebook1 reference = " + value);
 
                             if(key.equals(userId)) {
+
                                 // List notes only from this user id
-                                Log.i(TAG, "DIN Inside For, size = " + value.size());
-                                int i = 1;
                                 for(Map.Entry<String, Object> entry : value.entrySet()) {
                                     String noteBookName = entry.getValue().toString();
                                     videoId = entry.getKey().toString();
                                     myVideoList1.add(videoId);
-                                    updatedVideoList.add(videoId);
-                                    //myVideoList[i-1]=videoId;
-                                    Log.i(TAG, "DIN PRINT = " + videoId + "/" + entry.getValue());
                                     itemsAdapter.add(noteBookName);
-                                    i++;
                                     count_of_notes_per_user++;
                                 }
-                                Log.i(TAG, "DIN count of notes per user =  " + count_of_notes_per_user);
                             }
                         }
 
@@ -413,23 +333,14 @@ public class UserNoteBooks extends AppCompatActivity {
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-                        //handle databaseError
+                        //Do not do anything for database error
 
                     }
                 });
 
     }
 
-    private void detachDatabaseReadListener() {
-        /*if(mChildEventListener != null) {
-            mMessagesDatabaseReference.removeEventListener(mChildEventListener);
-            mChildEventListener = null;
-        }*/
-
-        //wipe resources
-        //itemsAdapter.clear();
-    }
-
+    //Reference : https://stackoverflow.com/questions/6439085/android-how-to-create-option-menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
