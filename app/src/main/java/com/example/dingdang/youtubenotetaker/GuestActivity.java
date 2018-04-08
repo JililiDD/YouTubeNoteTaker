@@ -457,13 +457,13 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
                                     newNoteItem.setSelected("false");
                                     lvNotesItemAdapter1.add(newNoteItem);
                                 }
+                                lvNotesItemAdapter1.notifyDataSetChanged();
                                 lvNotes.setAdapter(lvNotesItemAdapter1);
                                 llNoteList.setVisibility(View.VISIBLE);  // Display llNoteList UI
                                 rlNotepad.setVisibility(View.GONE); // Hide rlNotepad UI
                                 rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UIi=0;
                                 LL_showNote.setVisibility(View.GONE);
                             }
-
 
                             @Override
                             public void onCancelled(DatabaseError databaseError) {
@@ -629,6 +629,7 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
                                             }
                                             myRef.child(theselectid).removeValue();
 
+                                            lvNotesItemAdapter1.notifyDataSetChanged();
                                             lvNotes.setAdapter(lvNotesItemAdapter1);
                                             llNoteList.setVisibility(View.VISIBLE);  // Display llNoteList UI
                                             rlNotepad.setVisibility(View.GONE); // Hide rlNotepad UI
@@ -744,21 +745,16 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
                         }
                     });
 
-                    LL_showNote.setVisibility(View.VISIBLE);
-                    rlEditNote.setVisibility(View.GONE);
-                    llNoteList.setVisibility(View.GONE);
-                    rlNotepad.setVisibility(View.GONE);
-
-
                     tvEditNoteTime.setText(selectedNote.getTime());
                     etEditSubject.setText(selectedNote.getSubject());
                     etEditNote.setText(selectedNote.getNote());
-                } else {
-                    setSelectedNote(noteList.get(pos));
+
+                    LL_showNote.setVisibility(View.VISIBLE);
                     rlEditNote.setVisibility(View.GONE);
                     llNoteList.setVisibility(View.GONE);
                     rlNotepad.setVisibility(View.GONE);
-                    LL_showNote.setVisibility(View.VISIBLE);
+                } else {
+                    setSelectedNote(noteList.get(pos));
                     ShowNoteElapsedTime.setText(selectedNote.getTime());
                     ShowNoteSubject.setText(selectedNote.getSubject());
                     ShowNoteUsrNoteInputText.setText(selectedNote.getNote());
@@ -767,6 +763,11 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
                     tvEditNoteTime.setText(selectedNote.getTime());
                     etEditSubject.setText(selectedNote.getSubject());
                     etEditNote.setText(selectedNote.getNote());
+
+                    rlEditNote.setVisibility(View.GONE);
+                    llNoteList.setVisibility(View.GONE);
+                    rlNotepad.setVisibility(View.GONE);
+                    LL_showNote.setVisibility(View.VISIBLE);
                 }
             }
         });

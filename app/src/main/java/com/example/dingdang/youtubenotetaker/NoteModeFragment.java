@@ -117,7 +117,6 @@ public class NoteModeFragment extends Fragment {
         btnTakeNote = (Button) view.findViewById(R.id.btnTakeNote);
         btnSave = (Button) view.findViewById(R.id.btnSave);
         btnCancel = (Button) view.findViewById(R.id.btnCancel);
-        //  btnReplay = (Button) view.findViewById(R.id.btnEditNoteReplay);
         btnEditNoteSave = (Button) view.findViewById(R.id.btnEditNoteSave);
         btnEditNoteCancel = (Button) view.findViewById(R.id.btnEditNoteCancel);
         btnEditDelete = (Button) view.findViewById(R.id.btnEditDelete);
@@ -143,8 +142,6 @@ public class NoteModeFragment extends Fragment {
         ShowNoteUsrNoteInputText=(TextView) view.findViewById(R.id.ShowNoteUsrNoteInputText);
 
         database = FirebaseDatabase.getInstance();
-
-        //**noteList = new ArrayList<>();
 
         // Get userType and youtube video ID from current GuestActivity
         GuestActivity guestActivity = (GuestActivity) getActivity();
@@ -361,10 +358,8 @@ public class NoteModeFragment extends Fragment {
                     noteItem.setNoteId(theNoteId);
                     Map<String,NoteItem> theData=noteItem.putInToFireBase();
 
-                    //Map<String, String> userData=tempItem.putInToFireBase();
                     myRef.child(theNoteId).setValue(theData);
 
-                    //DatabaseReference myRef1 = database.getReference("user").child(useruid);
                     myRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         ArrayAdapter<NoteItem> lvNotesItemAdapter1 = new ArrayAdapter<>(getActivity().getApplicationContext(),
                                 R.layout.item_black, noteList);
@@ -382,6 +377,10 @@ public class NoteModeFragment extends Fragment {
                                 lvNotesItemAdapter1.add(newNoteItem);
                             }
                             lvNotes.setAdapter(lvNotesItemAdapter1);
+
+                            etUserNoteInput.getText().clear();
+                            etUserSubjectInput.getText().clear();
+
                             llNoteList.setVisibility(View.VISIBLE);  // Display llNoteList UI
                             rlNotepad.setVisibility(View.GONE); // Hide rlNotepad UI
                             rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UIi=0;
@@ -398,14 +397,14 @@ public class NoteModeFragment extends Fragment {
                     lvNotesItemAdapter.add(noteItem);
                     lvNotes.setAdapter(lvNotesItemAdapter);
 
+                    etUserNoteInput.getText().clear();
+                    etUserSubjectInput.getText().clear();
+
                     llNoteList.setVisibility(View.VISIBLE);  // Display llNoteList UI
                     rlNotepad.setVisibility(View.GONE); // Hide rlNotepad UI
                     rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UI
                     LL_showNote.setVisibility(View.GONE);
                 }
-
-                etUserNoteInput.getText().clear();
-                etUserSubjectInput.getText().clear();
             }
             }
         });
@@ -459,24 +458,30 @@ public class NoteModeFragment extends Fragment {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         noteList.clear();
-                        ArrayAdapter<NoteItem> lvNotesItemAdapter1 = new ArrayAdapter<>(getActivity().getApplicationContext(),
-                                R.layout.item_black, noteList);
-
-                        String theselectid = "";
-                        for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()){
-                            HashMap<String, String> newItem = (HashMap<String, String>) childDataSnapshot.getValue();
+                        if(getActivity() != null){
+                            ArrayAdapter<NoteItem> lvNotesItemAdapter1 = new ArrayAdapter<>(getContext(),
+                                    R.layout.item_black, noteList);
+                            String theselectid = "";
+                            for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()){
+                                HashMap<String, String> newItem = (HashMap<String, String>) childDataSnapshot.getValue();
 
                                 NoteItem newNoteItem = new NoteItem(0, newItem.get("Time"), newItem.get("Subject"), newItem.get("Note"));
                                 newNoteItem.setNoteId(newItem.get("NoteId"));
                                 newNoteItem.setNotebookName(newItem.get("NotebookName"));
                                 lvNotesItemAdapter1.add(newNoteItem);
-                        }
+                            }
 
-                        lvNotes.setAdapter(lvNotesItemAdapter1);
-                        llNoteList.setVisibility(View.VISIBLE);  // Display llNoteList UI
-                        rlNotepad.setVisibility(View.GONE); // Hide rlNotepad UI
-                        rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UIi=0;
-                        LL_showNote.setVisibility(View.GONE);
+                            lvNotesItemAdapter1.notifyDataSetChanged();
+                            lvNotes.setAdapter(lvNotesItemAdapter1);
+
+                            etUserNoteInput.getText().clear();
+                            etUserSubjectInput.getText().clear();
+
+                            llNoteList.setVisibility(View.VISIBLE);  // Display llNoteList UI
+                            rlNotepad.setVisibility(View.GONE); // Hide rlNotepad UI
+                            rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UIi=0;
+                            LL_showNote.setVisibility(View.GONE);
+                        }
                     }
 
                     @Override
@@ -490,6 +495,9 @@ public class NoteModeFragment extends Fragment {
                 // Update the ListView
                 ArrayAdapter<NoteItem> lvNotesItemAdapter = new ArrayAdapter<>(getActivity().getApplicationContext(), R.layout.item_black, noteList);
                 lvNotes.setAdapter(lvNotesItemAdapter);
+
+                etUserNoteInput.getText().clear();
+                etUserSubjectInput.getText().clear();
 
                 llNoteList.setVisibility(View.VISIBLE);  // Display llNoteList UI
                 rlNotepad.setVisibility(View.GONE); // Hide rlNotepad UI
@@ -550,6 +558,7 @@ public class NoteModeFragment extends Fragment {
 
                                         }
                                         myRef.child(theselectid).removeValue();
+                                        lvNotesItemAdapter1.notifyDataSetChanged();
 
                                         lvNotes.setAdapter(lvNotesItemAdapter1);
                                         llNoteList.setVisibility(View.VISIBLE);  // Display llNoteList UI
@@ -654,7 +663,6 @@ public class NoteModeFragment extends Fragment {
                 NoteItem seItem=noteList.get(pos);
                 lvNotes.clearChoices();
                 DatabaseReference myChildrenRef1 =myRef.child(seItem.getNoteId());
-                //String seID=seItem.getNoteId().toString();
 
                 myChildrenRef1.child("Selected").setValue("true");
                 myChildrenRef1.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -673,22 +681,16 @@ public class NoteModeFragment extends Fragment {
                     }
                 });
 
-                LL_showNote.setVisibility(View.VISIBLE);
-                rlEditNote.setVisibility(View.GONE);
-                llNoteList.setVisibility(View.GONE);
-                rlNotepad.setVisibility(View.GONE);
-
-
                 tvEditNoteTime.setText(selectedNote.getTime());
                 etEditSubject.setText(selectedNote.getSubject());
                 etEditNote.setText(selectedNote.getNote());
 
-            }else{
-                setSelectedNote(noteList.get(pos));
+                LL_showNote.setVisibility(View.VISIBLE);
                 rlEditNote.setVisibility(View.GONE);
                 llNoteList.setVisibility(View.GONE);
                 rlNotepad.setVisibility(View.GONE);
-                LL_showNote.setVisibility(View.VISIBLE);
+            }else{
+                setSelectedNote(noteList.get(pos));
                 ShowNoteElapsedTime.setText(selectedNote.getTime());
                 ShowNoteSubject.setText(selectedNote.getSubject());
                 ShowNoteUsrNoteInputText.setText(selectedNote.getNote());
@@ -697,11 +699,14 @@ public class NoteModeFragment extends Fragment {
                 tvEditNoteTime.setText(selectedNote.getTime());
                 etEditSubject.setText(selectedNote.getSubject());
                 etEditNote.setText(selectedNote.getNote());
+
+                rlEditNote.setVisibility(View.GONE);
+                llNoteList.setVisibility(View.GONE);
+                rlNotepad.setVisibility(View.GONE);
+                LL_showNote.setVisibility(View.VISIBLE);
             }
             }
         });
-
-
         // Inflate the layout for this fragment
         return view;
     }
