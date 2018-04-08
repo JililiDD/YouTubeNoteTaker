@@ -75,13 +75,10 @@ public class AfterLoginActivity extends AppCompatActivity {
                 // firebaseAuth variable is guaranteed to contain user sign-in or not information
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if(user != null) {
-                    // User logged in
-                    //onSignedInInitialize(user.getDisplayName());
 
                 }
                 else {
                     // User signed out, so put in sign in flow
-                    Log.i(TAG, "SHENOY Putting in user to login again");
                     if(login_once == false) {
                             startActivityForResult(
                                     AuthUI.getInstance()
@@ -95,7 +92,6 @@ public class AfterLoginActivity extends AppCompatActivity {
                             login_once = true;
                     }
                     else if(login_once == true) {
-                        Log.i(TAG, "SHENOY calling onBackPressed function!! ");
                         onBackPressed();
                     }
 
@@ -110,7 +106,6 @@ public class AfterLoginActivity extends AppCompatActivity {
     @Override
     public void onBackPressed()
     {
-        Log.i(TAG, "SHENOY BACK BUTTON PRESSED!! ");
         login_once = false;
         moveTaskToBack(true);
     }
@@ -122,15 +117,11 @@ public class AfterLoginActivity extends AppCompatActivity {
                 Toast.makeText(AfterLoginActivity.this, "Signed In !!",Toast.LENGTH_SHORT).show();
             }
             else if (resultCode == RESULT_CANCELED) {
-                Toast.makeText(AfterLoginActivity.this, "SHENOY GOING BACK !!",Toast.LENGTH_LONG).show();
-                Log.i(TAG, "SHENOY user has signed in");
                 moveTaskToBack(true);
             }
         }
         else {
-            Toast.makeText(AfterLoginActivity.this, "Else part !!",Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(AfterLoginActivity.this, MainActivity.class);
-            //intent.putExtra("USER_TYPE", "GUEST");
             startActivity(intent);
         }
     }
@@ -164,7 +155,6 @@ public class AfterLoginActivity extends AppCompatActivity {
                 AuthUI.getInstance().signOut(this);
                 return true;
             default :
-
                 return super.onOptionsItemSelected(item);
         }
     }
