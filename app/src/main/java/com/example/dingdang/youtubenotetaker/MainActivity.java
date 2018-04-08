@@ -6,15 +6,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import com.google.firebase.auth.FirebaseAuth;
-
 public class MainActivity extends AppCompatActivity {
 
     private Button guestLogin, login;
     private static final String TAG = "MainActivity";
-    //Firebase variable
-    private FirebaseAuth.AuthStateListener mAuthStateListener;
-    private FirebaseAuth mFirebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +22,6 @@ public class MainActivity extends AppCompatActivity {
         guestLogin.setOnClickListener(new View.OnClickListener() { // Navigate to CoreNotebookActivity
             @Override
             public void onClick(View view) {
-//                Intent intent = new Intent(MainActivity.this, CoreNotebookActivity.class);
                 Intent intent = new Intent(MainActivity.this, Main_Search.class);
 
                 intent.putExtra("USER_TYPE", "GUEST");
