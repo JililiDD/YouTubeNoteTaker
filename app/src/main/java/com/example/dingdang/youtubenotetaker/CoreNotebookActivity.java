@@ -43,7 +43,7 @@ import java.util.Map;
 
 // Following code for embedding youtube player is referenced from https://www.youtube.com/watch?v=W4hTJybfU7s
 // Need to extends YouTubeBaseActivity to use youtube API
-public class GuestActivity extends AppCompatActivity implements NoteModeFragment.OnFragmentInteractionListener{
+public class CoreNotebookActivity extends AppCompatActivity implements NoteModeFragment.OnFragmentInteractionListener{
     private YouTubePlayerSupportFragment youTubePlayerFragment;
     private LinearLayout tabView;
     private TabLayout tabs;
@@ -153,7 +153,7 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
     }
 
     private void showpopup() { //b
-        android.app.AlertDialog.Builder popup = new android.app.AlertDialog.Builder(GuestActivity.this);
+        android.app.AlertDialog.Builder popup = new android.app.AlertDialog.Builder(CoreNotebookActivity.this);
         View v=getLayoutInflater().inflate(R.layout.dialoglayout,null);
 
         popup.setView(v);
@@ -207,12 +207,12 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
 
         final List<NoteItem> noteList = NoteModeFragment.noteList;
 
-        // Get userType and youtube video ID from current GuestActivity
-        GuestActivity guestActivity = GuestActivity.this;
+        // Get userType and youtube video ID from current CoreNotebookActivity
+        CoreNotebookActivity coreNotebookActivity = CoreNotebookActivity.this;
         userType = getUserType();
 
         //the youtubeID
-        youtubeId = guestActivity.getYoutubeId(); //YIWEI
+        youtubeId = coreNotebookActivity.getYoutubeId(); //YIWEI
         Log.i("vedio id", youtubeId);
 
         // Hide rlNotepad and rlEditNote UIs by default
@@ -240,7 +240,7 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
             myRefyouTube.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    ArrayAdapter<NoteItem> lvNotesItemAdapter1 = new ArrayAdapter<>(GuestActivity.this.getApplicationContext(),
+                    ArrayAdapter<NoteItem> lvNotesItemAdapter1 = new ArrayAdapter<>(CoreNotebookActivity.this.getApplicationContext(),
                             R.layout.item_black, noteList);
                     noteList.clear();
                     for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
@@ -263,7 +263,7 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
             });
 
         } else{
-            ArrayAdapter<NoteItem> lvNotesItemAdapter = new ArrayAdapter<>(GuestActivity.this.getApplicationContext(),
+            ArrayAdapter<NoteItem> lvNotesItemAdapter = new ArrayAdapter<>(CoreNotebookActivity.this.getApplicationContext(),
                     R.layout.item_black, noteList);
             lvNotes.setAdapter(lvNotesItemAdapter);
         }
@@ -340,7 +340,7 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
 
                 } else {
                     // Referred from: http://blog.csdn.net/fengge34/article/details/46391453
-                    // Pass the note time to GuestActivity as well
+                    // Pass the note time to CoreNotebookActivity as well
                     alt.dismiss();
                     player.seekToMillis((int)getSelectedNote().getCurrentTime());
                     player.play();
@@ -378,7 +378,7 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
                     }
 
                     // Create intent to evoke EmailActivity and pass the message in an Extra
-                    Intent intent = new Intent(GuestActivity.this.getApplicationContext(), EmailActivity.class);
+                    Intent intent = new Intent(CoreNotebookActivity.this.getApplicationContext(), EmailActivity.class);
                     intent.putExtra("MESSAGE", emailContent.toString());
                     startActivity(intent);
                 }
@@ -394,11 +394,11 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
                 rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UI
                 LL_showNote.setVisibility(View.GONE);
 
-                // Take elapsed time (milliseconds) when pause from GuestActivity using a getter method in GuestActivity
-                // Using Bundle to pass data from GuestActivity to NoteModeFragment doesn't work in this case
+                // Take elapsed time (milliseconds) when pause from CoreNotebookActivity using a getter method in CoreNotebookActivity
+                // Using Bundle to pass data from CoreNotebookActivity to NoteModeFragment doesn't work in this case
                 // Referenced from: https://stackoverflow.com/a/22065903
-                GuestActivity guestActivity =  (GuestActivity) GuestActivity.this;
-                elapsedTime = guestActivity.getElapsedTime();
+                CoreNotebookActivity coreNotebookActivity =  (CoreNotebookActivity) CoreNotebookActivity.this;
+                elapsedTime = coreNotebookActivity.getElapsedTime();
 
                 // Convert elapsedTime to hh:mm:ss format
                 int hour = (int) (elapsedTime / (1000 * 3600));
@@ -419,7 +419,7 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
                 }
                 else{
                     // Create an ArrayAdapter<NoteItem> for storing NoteItem objects
-                    ArrayAdapter<NoteItem> lvNotesItemAdapter = new ArrayAdapter<>(GuestActivity.this.getApplicationContext(),
+                    ArrayAdapter<NoteItem> lvNotesItemAdapter = new ArrayAdapter<>(CoreNotebookActivity.this.getApplicationContext(),
                             R.layout.item_black, noteList);
                     NoteItem noteItem = new NoteItem(elapsedTime, tvTimeAtPause.getText().toString(), etUserSubjectInput.getText().toString(), etUserNoteInput.getText().toString());
 
@@ -434,7 +434,7 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
 
                         //DatabaseReference myRef1 = database.getReference("user").child(useruid);
                         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                            ArrayAdapter<NoteItem> lvNotesItemAdapter1 = new ArrayAdapter<>(GuestActivity.this.getApplicationContext(),
+                            ArrayAdapter<NoteItem> lvNotesItemAdapter1 = new ArrayAdapter<>(CoreNotebookActivity.this.getApplicationContext(),
                                     R.layout.item_black, noteList);
 
                             @Override
@@ -528,7 +528,7 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             noteList.clear();
-                            ArrayAdapter<NoteItem> lvNotesItemAdapter1 = new ArrayAdapter<>(GuestActivity.this.getApplicationContext(),
+                            ArrayAdapter<NoteItem> lvNotesItemAdapter1 = new ArrayAdapter<>(CoreNotebookActivity.this.getApplicationContext(),
                                     R.layout.item_black, noteList);
 
                             String theselectid = "";
@@ -558,7 +558,7 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
                     getSelectedNote().setNote(etEditNote.getText().toString());
 
                     // Update the ListView
-                    ArrayAdapter<NoteItem> lvNotesItemAdapter = new ArrayAdapter<>(GuestActivity.this.getApplicationContext(), R.layout.item_black, noteList);
+                    ArrayAdapter<NoteItem> lvNotesItemAdapter = new ArrayAdapter<>(CoreNotebookActivity.this.getApplicationContext(), R.layout.item_black, noteList);
                     lvNotes.setAdapter(lvNotesItemAdapter);
 
                     llNoteList.setVisibility(View.VISIBLE);  // Display llNoteList UI
@@ -588,7 +588,7 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
                     llNoteList.setVisibility(View.GONE);
                     rlNotepad.setVisibility(View.GONE);
                     LL_showNote.setVisibility(View.GONE);
-                    AlertDialog.Builder delnote = new AlertDialog.Builder(GuestActivity.this);
+                    AlertDialog.Builder delnote = new AlertDialog.Builder(CoreNotebookActivity.this);
                     delnote.setMessage("Delete note?");
                     delnote.setCancelable(true);
 
@@ -602,7 +602,7 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
                                         @Override
                                         public void onDataChange(DataSnapshot dataSnapshot) {
                                             noteList.clear();
-                                            ArrayAdapter<NoteItem> lvNotesItemAdapter1 = new ArrayAdapter<>(GuestActivity.this.getApplicationContext(),
+                                            ArrayAdapter<NoteItem> lvNotesItemAdapter1 = new ArrayAdapter<>(CoreNotebookActivity.this.getApplicationContext(),
                                                     R.layout.item_black, noteList);
 
                                             String theselectid = "";
@@ -653,7 +653,7 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
                     alertdel.show();
                 } else {
                     // Delete the selected note item
-                    AlertDialog.Builder delnote = new AlertDialog.Builder(GuestActivity.this);
+                    AlertDialog.Builder delnote = new AlertDialog.Builder(CoreNotebookActivity.this);
                     delnote.setMessage("Delete note?");
                     delnote.setCancelable(true);
                     delnote.setPositiveButton(
@@ -698,7 +698,7 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
                     myRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            ArrayAdapter<NoteItem> lvNotesItemAdapter1 = new ArrayAdapter<>(GuestActivity.this.getApplicationContext(),
+                            ArrayAdapter<NoteItem> lvNotesItemAdapter1 = new ArrayAdapter<>(CoreNotebookActivity.this.getApplicationContext(),
                                     R.layout.item_black, noteList);
                             noteList.clear();
 
@@ -879,7 +879,7 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
 
     @Override
     public void onBackPressed() {
-        Dialog deleteConfirmBox = new android.support.v7.app.AlertDialog.Builder(GuestActivity.this)
+        Dialog deleteConfirmBox = new android.support.v7.app.AlertDialog.Builder(CoreNotebookActivity.this)
                 .setMessage("Leave current notebook?")
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {

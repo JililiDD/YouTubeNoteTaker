@@ -24,10 +24,10 @@ public class MainActivity extends AppCompatActivity {
         guestLogin = (Button) findViewById(R.id.btnGuestLogin);
         login = (Button) findViewById(R.id.btnLogin);
 
-        guestLogin.setOnClickListener(new View.OnClickListener() { // Navigate to GuestActivity
+        guestLogin.setOnClickListener(new View.OnClickListener() { // Navigate to CoreNotebookActivity
             @Override
             public void onClick(View view) {
-//                Intent intent = new Intent(MainActivity.this, GuestActivity.class);
+//                Intent intent = new Intent(MainActivity.this, CoreNotebookActivity.class);
                 Intent intent = new Intent(MainActivity.this, Main_Search.class);
 
                 intent.putExtra("USER_TYPE", "GUEST");

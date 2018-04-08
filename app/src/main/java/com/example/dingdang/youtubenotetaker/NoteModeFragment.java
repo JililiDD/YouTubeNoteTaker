@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -31,7 +30,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.security.PrivateKey;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -143,12 +141,12 @@ public class NoteModeFragment extends Fragment {
 
         database = FirebaseDatabase.getInstance();
 
-        // Get userType and youtube video ID from current GuestActivity
-        GuestActivity guestActivity = (GuestActivity) getActivity();
-        userType = guestActivity.getUserType();
+        // Get userType and youtube video ID from current CoreNotebookActivity
+        CoreNotebookActivity coreNotebookActivity = (CoreNotebookActivity) getActivity();
+        userType = coreNotebookActivity.getUserType();
 
         //the youtubeID
-        youtubeId = guestActivity.getYoutubeId(); //YIWEI
+        youtubeId = coreNotebookActivity.getYoutubeId(); //YIWEI
         Log.i("vedio id",youtubeId);
 
         // Hide rlNotepad and rlEditNote UIs by default
@@ -252,9 +250,9 @@ public class NoteModeFragment extends Fragment {
 
                         }
 
-                        String parseString = "replay " + timestr; // Pass the note time to GuestActivity as well
+                        String parseString = "replay " + timestr; // Pass the note time to CoreNotebookActivity as well
                         // Referred from: http://blog.csdn.net/fengge34/article/details/46391453
-                        mListener.onFragmentInteraction(Uri.parse(parseString)); // Pass to GuestActivity to replay the video at the note time
+                        mListener.onFragmentInteraction(Uri.parse(parseString)); // Pass to CoreNotebookActivity to replay the video at the note time
                     }
 
                     @Override
@@ -263,9 +261,9 @@ public class NoteModeFragment extends Fragment {
                 });
 
             }else{
-                String parseString = "replay " + Long.toString(getSelectedNote().getCurrentTime()); // Pass the note time to GuestActivity as well
+                String parseString = "replay " + Long.toString(getSelectedNote().getCurrentTime()); // Pass the note time to CoreNotebookActivity as well
                 // Referred from: http://blog.csdn.net/fengge34/article/details/46391453
-                mListener.onFragmentInteraction(Uri.parse(parseString)); // Pass to GuestActivity to replay the video at the note time
+                mListener.onFragmentInteraction(Uri.parse(parseString)); // Pass to CoreNotebookActivity to replay the video at the note time
             }
 
             }
@@ -319,13 +317,13 @@ public class NoteModeFragment extends Fragment {
             LL_showNote.setVisibility(View.GONE);
 
             // Referred from: http://blog.csdn.net/fengge34/article/details/46391453
-            mListener.onFragmentInteraction(Uri.parse("pause")); // Pass to GuestActivity to pause the video
+            mListener.onFragmentInteraction(Uri.parse("pause")); // Pass to CoreNotebookActivity to pause the video
 
-            // Take elapsed time (milliseconds) when pause from GuestActivity using a getter method in GuestActivity
-            // Using Bundle to pass data from GuestActivity to NoteModeFragment doesn't work in this case
+            // Take elapsed time (milliseconds) when pause from CoreNotebookActivity using a getter method in CoreNotebookActivity
+            // Using Bundle to pass data from CoreNotebookActivity to NoteModeFragment doesn't work in this case
             // Referenced from: https://stackoverflow.com/a/22065903
-            GuestActivity guestActivity = (GuestActivity) getActivity();
-            elapsedTime = guestActivity.getElapsedTime();
+            CoreNotebookActivity coreNotebookActivity = (CoreNotebookActivity) getActivity();
+            elapsedTime = coreNotebookActivity.getElapsedTime();
 
             // Convert elapsedTime to hh:mm:ss format
             int hour = (int) (elapsedTime/(1000*3600));

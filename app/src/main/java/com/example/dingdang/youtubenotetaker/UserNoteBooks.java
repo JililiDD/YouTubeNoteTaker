@@ -114,7 +114,7 @@ public class UserNoteBooks extends AppCompatActivity {
                 for(counter=0; counter < count_of_notes_per_user; counter++) {
                     if(position == counter) {
                         //Load the video along with notes for selected video by user
-                        Intent intent = new Intent (view.getContext() , GuestActivity.class);
+                        Intent intent = new Intent (view.getContext() , CoreNotebookActivity.class);
                         intent.putExtra("VIDEO_ID", myVideoList1.get(position));
                         intent.putExtra("USER_TYPE", "REGISTERED");
                         intent.putExtra("FROM", "USERNOTEBOOKS");

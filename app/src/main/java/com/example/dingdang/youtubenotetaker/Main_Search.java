@@ -138,7 +138,7 @@ public class Main_Search extends AppCompatActivity {
             public void onItemClick(AdapterView<?> av, View v, final int pos,
                                     long id) {
                 if(isRegisteredUser()) {
-                    Intent intent = new Intent(getApplicationContext(), GuestActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), CoreNotebookActivity.class);
                     intent.putExtra("VIDEO_ID", searchResults.get(pos).getId());
                     final String youtubeID=searchResults.get(pos).getId();
                     user = FirebaseAuth.getInstance().getCurrentUser();
@@ -165,7 +165,7 @@ public class Main_Search extends AppCompatActivity {
                                         .setMessage("You have already made a notebook on this video.\nDo you want to open the notebook?")
                                         .setPositiveButton("Open", new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int whichButton) {
-                                                Intent intent = new Intent(getApplicationContext(), GuestActivity.class);
+                                                Intent intent = new Intent(getApplicationContext(), CoreNotebookActivity.class);
                                                 intent.putExtra("VIDEO_ID", youtubeID);
                                                 intent.putExtra("USER_TYPE", userType);
                                                 startActivity(intent);
@@ -189,7 +189,7 @@ public class Main_Search extends AppCompatActivity {
 
                 }
                 else{
-                    Intent intent = new Intent(getApplicationContext(), GuestActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), CoreNotebookActivity.class);
                     intent.putExtra("VIDEO_ID", searchResults.get(pos).getId());
                     intent.putExtra("USER_TYPE", "GUEST");
                     startActivity(intent);

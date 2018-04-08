@@ -50,7 +50,7 @@ public class AddNotebookNameActivity extends AppCompatActivity {
                         Toast.makeText(AddNotebookNameActivity.this, "Notebook name cannot be empty!",Toast.LENGTH_SHORT).show();
                     } else {
                         myReNoteBook.child(youtubeId).setValue(notebookName);
-                        Intent intent = new Intent(getApplicationContext(), GuestActivity.class);
+                        Intent intent = new Intent(getApplicationContext(), CoreNotebookActivity.class);
                         intent.putExtra("VIDEO_ID", youtubeId);
                         intent.putExtra("USER_TYPE", userType);
                         startActivity(intent);
