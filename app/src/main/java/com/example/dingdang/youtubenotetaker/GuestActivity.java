@@ -58,7 +58,6 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
     private ViewPager pager;
     private PagerAdapter pagerAdapter;
     private static final String TAG = "Uri parse: ";
-    FloatingActionButton floatbtn;
     private String linkExist, previousActivity;
     private android.app.AlertDialog alt;
 
@@ -68,37 +67,23 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
     private YouTubePlayer.OnInitializedListener mOnInitializedListener;
     private YouTubePlayer player;
 
-
-
-    //// code for Orienation handling //b
-
+    private int currentOrientation;
 
     // Components
-    private Button btnEmail, btnTakeNote, btnSave, btnReplay, btnCancel,btnClose,
+    private Button btnEmail, btnTakeNote, btnSave, btnCancel,btnClose,
             btnEditNoteCancel, btnEditNoteSave, btnEditDelete,btnShowNoteCancel,btnShwoEdit,btnShwoReplay;
     private ListView lvNotes;
-    private ArrayAdapter<NoteItem> lvNotesItemAdapter;
     private LinearLayout llNoteList,LL_showNote;
     private RelativeLayout rlNotepad, rlEditNote;
     private EditText etUserNoteInput, etUserSubjectInput, etEditSubject, etEditNote;
     private TextView tvTimeAtPause, tvEditNoteTime,ShowNoteElapsedTime,ShowNoteSubject,ShowNoteUsrNoteInputText;
     private long elapsedTime = 0;
-    //**private List<NoteItem> noteList;
     private NoteItem selectedNote;
     private String userType, youtubeId;
-    //firebase user get
     private FirebaseUser user;
     private String useruid;
     private FirebaseDatabase database;
     private DatabaseReference myRef;
-    private Boolean deleteChecker,listChecker;
-    private int finalcount,finalcountdelete,finalcountlist;
-
-    private String time, subject, note,noteId,notebookName,selected;
-    private long currentTime;
-
-    /// end of Orienation handling //b
-
 
     public NoteItem getSelectedNote() {
         return selectedNote;
@@ -108,25 +93,29 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
         this.selectedNote = selectedNote;
     }
 
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guest2);
+
+        // currentOrientation is suppose to be equal to Configuration.ORIENTATION_PORTRAIT
+        currentOrientation = getResources().getConfiguration().orientation;
 
         userType = getIntent().getStringExtra("USER_TYPE"); // Get user type to provide different functions to guest and member users
         youtubeId = getIntent().getStringExtra("VIDEO_ID"); // Get youtube video id (YIWEI)
         linkExist=getIntent().getStringExtra("LINK_EXIST");
         previousActivity = getIntent().getStringExtra("FROM");
 
-        if( savedInstanceState != null){ //b
-            // initializeYoutubePlayer();
-
-            setElapsedTime(savedInstanceState.getInt("time"));
-        } //b
         //Remove back button on the title bar
         //Code referenced from: https://stackoverflow.com/a/22313897
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
-        initializeYoutubePlayer();
+        if( savedInstanceState != null){ //b
+            initializeYoutubePlayer();
+            player.seekToMillis(savedInstanceState.getInt("ORIENTATIONTIME"));
+        } else {
+            initializeYoutubePlayer();
+        }
 
         tabView = (LinearLayout) findViewById(R.id.tabView);
 
@@ -206,20 +195,6 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
 
     } //b
 
-
-    @Override
-    protected void onResume() { //b
-        super.onResume();
-        //  int currentOrientation = getResources().getConfiguration().orientation; //b
-     /*   if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE){
-            btnClose.setVisibility(View.VISIBLE);
-            Log.v("TAG","Landscape !!!");
-
-        }
-        else {
-            btnClose.setVisibility(View.GONE);
-            Log.v("TAG","Portrait !!!"); } *///b
-    }
 
     private void intializeorientionHandler(View view) { //b
         // view = inflater.inflate(R.layout.fragment_note_mode, container, false);
@@ -946,10 +921,9 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
         }
     }
 
-
     @Override
     protected void onSaveInstanceState(Bundle outState) { //b
-        outState.putInt("time", (int) getElapsedTime());
+        outState.putInt("ORIENTATIONTIME", player.getCurrentTimeMillis());
         super.onSaveInstanceState(outState);
     }//b
 
