@@ -83,7 +83,7 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
     private EditText etUserNoteInput, etUserSubjectInput, etEditSubject, etEditNote;
     private TextView tvTimeAtPause, tvEditNoteTime,ShowNoteElapsedTime,ShowNoteSubject,ShowNoteUsrNoteInputText;
     private long elapsedTime = 0;
-    private List<NoteItem> noteList;
+    //**private List<NoteItem> noteList;
     private NoteItem selectedNote;
     private String userType, youtubeId;
     //firebase user get
@@ -222,8 +222,6 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
     }
 
     private void intializeorientionHandler(View view) { //b
-
-
         // view = inflater.inflate(R.layout.fragment_note_mode, container, false);
         btnClose=(Button)view.findViewById(R.id.btnClose);
         btnEmail = (Button) view.findViewById(R.id.btnEmailNote);
@@ -270,7 +268,7 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
             btnClose.setVisibility(View.GONE);
             Log.v("TAG","Portrait !!!"); } //b
 
-        noteList = new ArrayList<>();
+        final List<NoteItem> noteList = NoteModeFragment.noteList;
 
         // Get userType and youtube video ID from current GuestActivity
         GuestActivity guestActivity = GuestActivity.this;
@@ -295,7 +293,6 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
                 if(player != null){
                     player.play();}
 
-                //  if(alt!=null && !alt.isShowing()){
                 alt.dismiss();}
             //   }
         }); //b
@@ -305,12 +302,6 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
             //get the current userId
             useruid = user.getUid();
             myRef = database.getReference("user").child(useruid);
-            //Toast.makeText(getContext(),"REGISTERED USER",Toast.LENGTH_SHORT).show();
-        } else {
-            //Toast.makeText(getContext(),"GUEST",Toast.LENGTH_SHORT).show();
-        }
-        if (isRegisteredUser()) {
-
             DatabaseReference myRefyouTube = database.getReference("user").child(useruid).child(youtubeId);
             //Log.i("userId",useruid);
             myRefyouTube.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -339,6 +330,10 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
 
             });
 
+        } else{
+            ArrayAdapter<NoteItem> lvNotesItemAdapter = new ArrayAdapter<>(GuestActivity.this.getApplicationContext(),
+                    R.layout.item_black, noteList);
+            lvNotes.setAdapter(lvNotesItemAdapter);
         }
 
         btnShowNoteCancel.setOnClickListener(new View.OnClickListener() {
@@ -348,9 +343,9 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
                 rlNotepad.setVisibility(View.GONE); // Display rlNotepad UI
                 rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UI
                 LL_showNote.setVisibility(View.GONE);
-                myRef = database.getReference("user").child(useruid).child(youtubeId);
 
                 if (isRegisteredUser()) {
+                    myRef = database.getReference("user").child(useruid).child(youtubeId);
                     myRef.addListenerForSingleValueEvent(new ValueEventListener() {
 
                         @Override
@@ -387,13 +382,8 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
             @Override
             public void onClick(View v) {
                 if (isRegisteredUser()) {
-//                    rlEditNote.setVisibility(View.VISIBLE);
-//                    llNoteList.setVisibility(View.GONE);
-//                    rlNotepad.setVisibility(View.GONE);
-//                    LL_showNote.setVisibility(View.GONE);
                     myRef = database.getReference("user").child(useruid).child(youtubeId);
                     myRef.orderByChild("Selected").addListenerForSingleValueEvent(new ValueEventListener() {
-
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             String theselectid = "";
@@ -423,12 +413,8 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
 
 
                 } else {
-
-
-                    String parseString = "replay " + Long.toString(getSelectedNote().getCurrentTime()); // Pass the note time to GuestActivity as well
-//                    // Referred from: http://blog.csdn.net/fengge34/article/details/46391453
-                    //  mListener.onFragmentInteraction(Uri.parse(parseString)); // Pass to GuestActivity to replay the video at the note time
-
+                    // Referred from: http://blog.csdn.net/fengge34/article/details/46391453
+                    // Pass the note time to GuestActivity as well
 
                 }
 
@@ -439,19 +425,11 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
         btnShwoEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isRegisteredUser()) {
 
-
-                    llNoteList.setVisibility(View.GONE);  // Hide llNoteList UI
-                    rlNotepad.setVisibility(View.GONE); // Display rlNotepad UI
-                    rlEditNote.setVisibility(View.VISIBLE); // Hide rlEditNote UI
-                    LL_showNote.setVisibility(View.GONE);
-                } else {
-                    llNoteList.setVisibility(View.GONE);  // Hide llNoteList UI
-                    rlNotepad.setVisibility(View.GONE); // Display rlNotepad UI
-                    rlEditNote.setVisibility(View.VISIBLE); // Hide rlEditNote UI
-                    LL_showNote.setVisibility(View.GONE);
-                }
+                llNoteList.setVisibility(View.GONE);  // Hide llNoteList UI
+                rlNotepad.setVisibility(View.GONE); // Display rlNotepad UI
+                rlEditNote.setVisibility(View.VISIBLE); // Hide rlEditNote UI
+                LL_showNote.setVisibility(View.GONE);
             }
         });
 
@@ -1018,6 +996,7 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
 
                 if(player!=null) {
                     player.pause();
+                    elapsedTime = player.getCurrentTimeMillis();
                 }
 
                 showpopup();

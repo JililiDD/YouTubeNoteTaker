@@ -67,7 +67,9 @@ public class NoteModeFragment extends Fragment {
     private EditText etUserNoteInput, etUserSubjectInput, etEditSubject, etEditNote;
     private TextView tvTimeAtPause, tvEditNoteTime,ShowNoteElapsedTime,ShowNoteSubject,ShowNoteUsrNoteInputText;
     private long elapsedTime = 0;
-    private List<NoteItem> noteList;
+    //private List<NoteItem> noteList;
+    protected static List<NoteItem> noteList = new ArrayList<>();
+
     private NoteItem selectedNote;
     private String userType, youtubeId;
     private FirebaseUser user;
@@ -142,7 +144,7 @@ public class NoteModeFragment extends Fragment {
 
         database = FirebaseDatabase.getInstance();
 
-        noteList = new ArrayList<>();
+        //**noteList = new ArrayList<>();
 
         // Get userType and youtube video ID from current GuestActivity
         GuestActivity guestActivity = (GuestActivity) getActivity();
@@ -185,6 +187,10 @@ public class NoteModeFragment extends Fragment {
                     }
             });
 
+        } else{
+            ArrayAdapter<NoteItem> lvNotesItemAdapter = new ArrayAdapter<>(getActivity().getApplicationContext(),
+                    R.layout.item_black, noteList);
+            lvNotes.setAdapter(lvNotesItemAdapter);
         }
 
         btnShowNoteCancel.setOnClickListener(new View.OnClickListener() {
@@ -252,8 +258,6 @@ public class NoteModeFragment extends Fragment {
                         String parseString = "replay " + timestr; // Pass the note time to GuestActivity as well
                         // Referred from: http://blog.csdn.net/fengge34/article/details/46391453
                         mListener.onFragmentInteraction(Uri.parse(parseString)); // Pass to GuestActivity to replay the video at the note time
-
-
                     }
 
                     @Override
