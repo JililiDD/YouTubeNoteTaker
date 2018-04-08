@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Dingdang on 2/22/2018.
  * A wrap-up class to deal with YouTube Data API
  * Referred from https://code.tutsplus.com/tutorials/create-a-youtube-client-on-android--cms-22858
  */
