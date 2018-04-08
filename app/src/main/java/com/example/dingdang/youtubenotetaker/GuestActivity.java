@@ -334,8 +334,10 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
                                     theselectid = newItem.get("NoteId");
                                     timestr = newItem.get("CurrentTime");
                                 }
-
                             }
+                            alt.dismiss();
+                            player.seekToMillis(Integer.parseInt(timestr));
+                            player.play();
                         }
 
                         @Override
