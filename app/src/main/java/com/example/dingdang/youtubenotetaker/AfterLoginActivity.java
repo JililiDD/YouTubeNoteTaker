@@ -1,19 +1,14 @@
 package com.example.dingdang.youtubenotetaker;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,8 +21,6 @@ public class AfterLoginActivity extends AppCompatActivity {
     Button btnOpenNotebook, btnMyNotebooks;
     private static final int RC_SIGN_IN = 1;
     private boolean login_once = false;
-
-    private static final String TAG = "AfterLoginActivity";
 
     // Firebase variable
     private FirebaseAuth.AuthStateListener mAuthStateListener;
@@ -69,19 +62,18 @@ public class AfterLoginActivity extends AppCompatActivity {
             }
         });
 
+        // Reference : https://github.com/udacity/and-nd-firebase
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 // firebaseAuth variable is guaranteed to contain user sign-in or not information
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if(user != null) {
-                    // User logged in
-                    //onSignedInInitialize(user.getDisplayName());
+                    // User logged in, do not do anything
 
                 }
                 else {
-                    // User signed out, so put in sign in flow
-                    Log.i(TAG, "SHENOY Putting in user to login again");
+                    // User signed out, so put in sign in flow only once if user is pressing back button
                     if(login_once == false) {
                             startActivityForResult(
                                     AuthUI.getInstance()
@@ -95,7 +87,7 @@ public class AfterLoginActivity extends AppCompatActivity {
                             login_once = true;
                     }
                     else if(login_once == true) {
-                        Log.i(TAG, "SHENOY calling onBackPressed function!! ");
+                        // Call function onBackPressed when back button is pressed
                         onBackPressed();
                     }
 
@@ -110,7 +102,6 @@ public class AfterLoginActivity extends AppCompatActivity {
     @Override
     public void onBackPressed()
     {
-        Log.i(TAG, "SHENOY BACK BUTTON PRESSED!! ");
         login_once = false;
         moveTaskToBack(true);
     }
@@ -119,22 +110,21 @@ public class AfterLoginActivity extends AppCompatActivity {
     public void onActivityResult( int requestCode, int resultCode, Intent data) {
         if(requestCode == RC_SIGN_IN) {
             if(resultCode == RESULT_OK) {
-                Toast.makeText(AfterLoginActivity.this, "Signed In !!",Toast.LENGTH_SHORT).show();
+                // User signed in successfully, do not do anything
             }
             else if (resultCode == RESULT_CANCELED) {
-                Toast.makeText(AfterLoginActivity.this, "SHENOY GOING BACK !!",Toast.LENGTH_LONG).show();
-                Log.i(TAG, "SHENOY user has signed in");
+                // User pressed back button, clal function
                 moveTaskToBack(true);
             }
         }
         else {
-            Toast.makeText(AfterLoginActivity.this, "Else part !!",Toast.LENGTH_SHORT).show();
+
             Intent intent = new Intent(AfterLoginActivity.this, MainActivity.class);
-            //intent.putExtra("USER_TYPE", "GUEST");
             startActivity(intent);
         }
     }
 
+    // Reference : https://github.com/udacity/and-nd-firebase
     @Override
     protected void onPause () {
         super.onPause();
@@ -149,6 +139,7 @@ public class AfterLoginActivity extends AppCompatActivity {
         mFirebaseAuth.addAuthStateListener(mAuthStateListener);
     }
 
+    //Reference : https://stackoverflow.com/questions/6439085/android-how-to-create-option-menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -164,7 +155,6 @@ public class AfterLoginActivity extends AppCompatActivity {
                 AuthUI.getInstance().signOut(this);
                 return true;
             default :
-
                 return super.onOptionsItemSelected(item);
         }
     }

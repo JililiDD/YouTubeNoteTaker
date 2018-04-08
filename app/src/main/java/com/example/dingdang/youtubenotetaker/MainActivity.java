@@ -1,23 +1,15 @@
 package com.example.dingdang.youtubenotetaker;
 
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
 
     private Button guestLogin, login;
     private static final String TAG = "MainActivity";
-    //Firebase variable
-    private FirebaseAuth.AuthStateListener mAuthStateListener;
-    private FirebaseAuth mFirebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,10 +19,9 @@ public class MainActivity extends AppCompatActivity {
         guestLogin = (Button) findViewById(R.id.btnGuestLogin);
         login = (Button) findViewById(R.id.btnLogin);
 
-        guestLogin.setOnClickListener(new View.OnClickListener() { // Navigate to GuestActivity
+        guestLogin.setOnClickListener(new View.OnClickListener() { // Navigate to CoreNotebookActivity
             @Override
             public void onClick(View view) {
-//                Intent intent = new Intent(MainActivity.this, GuestActivity.class);
                 Intent intent = new Intent(MainActivity.this, Main_Search.class);
 
                 intent.putExtra("USER_TYPE", "GUEST");

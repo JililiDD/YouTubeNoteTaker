@@ -1,7 +1,6 @@
 package com.example.dingdang.youtubenotetaker;
 
 /**
- * Created by Dingdang on 2/22/2018.
  * Referred from https://code.tutsplus.com/tutorials/create-a-youtube-client-on-android--cms-22858
  */
 
