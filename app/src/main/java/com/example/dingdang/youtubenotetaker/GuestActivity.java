@@ -417,6 +417,7 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
                     // Pass the note time to GuestActivity as well
                     alt.dismiss();
                     player.seekToMillis((int)getSelectedNote().getCurrentTime());
+                    player.play();
                 }
 
             }
