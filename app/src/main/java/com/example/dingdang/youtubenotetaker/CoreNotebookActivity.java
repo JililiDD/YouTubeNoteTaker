@@ -55,8 +55,6 @@ public class CoreNotebookActivity extends AppCompatActivity implements NoteModeF
 
     private EditText searchText;
 
-    private Button btnPlay, btnInitialize;
-    private YouTubePlayer.OnInitializedListener mOnInitializedListener;
     private YouTubePlayer player;
     private int playerRestoredTime;
 
@@ -429,10 +427,8 @@ public class CoreNotebookActivity extends AppCompatActivity implements NoteModeF
                         noteItem.setNoteId(theNoteId);
                         Map<String, NoteItem> theData = noteItem.putInToFireBase();
 
-                        //Map<String, String> userData=tempItem.putInToFireBase();
                         myRef.child(theNoteId).setValue(theData);
 
-                        //DatabaseReference myRef1 = database.getReference("user").child(useruid);
                         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
                             ArrayAdapter<NoteItem> lvNotesItemAdapter1 = new ArrayAdapter<>(CoreNotebookActivity.this.getApplicationContext(),
                                     R.layout.item_black, noteList);
@@ -720,7 +716,6 @@ public class CoreNotebookActivity extends AppCompatActivity implements NoteModeF
                     NoteItem seItem = noteList.get(pos);
                     lvNotes.clearChoices();
                     DatabaseReference myChildrenRef1 = myRef.child(seItem.getNoteId());
-                    //String seID=seItem.getNoteId().toString();
 
                     myChildrenRef1.child("Selected").setValue("true");
                     myChildrenRef1.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -807,13 +802,14 @@ public class CoreNotebookActivity extends AppCompatActivity implements NoteModeF
         });
     }
 
+    // Fetching data sent from fragment
+    // Referred from: http://blog.csdn.net/fengge34/article/details/46391453
     @Override
     public void onFragmentInteraction(Uri uri) {
         String uriStr = uri.toString();
         String[] uriStrList = uriStr.split(" ");
         if(uri != null && uriStrList[0].equals("pause")){
             // Pause the video if TakeNote button is pressed in NoteModeFragment.
-            // Referred from: http://blog.csdn.net/fengge34/article/details/46391453
             initializeYoutubePlayer(); //b
             player.pause();
 
