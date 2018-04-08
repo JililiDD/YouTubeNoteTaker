@@ -66,6 +66,7 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
     private Button btnPlay, btnInitialize;
     private YouTubePlayer.OnInitializedListener mOnInitializedListener;
     private YouTubePlayer player;
+    private int playerRestoredTime;
 
     private int currentOrientation;
 
@@ -111,17 +112,14 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         if( savedInstanceState != null){ //b
-            initializeYoutubePlayer();
-            player.seekToMillis(savedInstanceState.getInt("ORIENTATIONTIME"));
-        } else {
-            initializeYoutubePlayer();
-        }
+            playerRestoredTime = savedInstanceState.getInt("ORIENTATIONTIME");
 
+        }
+        initializeYoutubePlayer();
         tabView = (LinearLayout) findViewById(R.id.tabView);
 
         // Initiate a tab layout and add tabs
         tabs = (TabLayout) findViewById(R.id.guestTabLayout);
-//        tabs.addTab(tabs.newTab().setText("Search"));
         tabs.addTab(tabs.newTab().setText("Note"));
         tabs.setTabGravity(TabLayout.GRAVITY_FILL);
 
@@ -143,21 +141,6 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
             }
         });
 
-
-
-
-       /* int currentOrientation = getResources().getConfiguration().orientation; //b
-        if ((currentOrientation == Configuration.ORIENTATION_LANDSCAPE)){
-
-
-            Log.v("TAG","Landscape !!!");
-
-        }
-        else {
-
-
-            Log.v("TAG","Portrait !!!"); } */
-
         tabs.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -178,32 +161,24 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
     }
 
     private void showpopup() { //b
-
         android.app.AlertDialog.Builder popup = new android.app.AlertDialog.Builder(GuestActivity.this);
         View v=getLayoutInflater().inflate(R.layout.dialoglayout,null);
-        // FrameLayout framelayout1=v.findViewById(R.id.framelayout);
 
         popup.setView(v);
-        // initializeYoutubePlayer();
 
         intializeorientionHandler(v);
         popup.setCancelable(true);
         alt=popup.create();
         alt.show();
-
-
-
     } //b
 
 
     private void intializeorientionHandler(View view) { //b
-        // view = inflater.inflate(R.layout.fragment_note_mode, container, false);
         btnClose=(Button)view.findViewById(R.id.btnClose);
         btnEmail = (Button) view.findViewById(R.id.btnEmailNote);
         btnTakeNote = (Button) view.findViewById(R.id.btnTakeNote);
         btnSave = (Button) view.findViewById(R.id.btnSave);
         btnCancel = (Button) view.findViewById(R.id.btnCancel);
-        //  btnReplay = (Button) view.findViewById(R.id.btnEditNoteReplay);
         btnEditNoteSave = (Button) view.findViewById(R.id.btnEditNoteSave);
         btnEditNoteCancel = (Button) view.findViewById(R.id.btnEditNoteCancel);
         btnEditDelete = (Button) view.findViewById(R.id.btnEditDelete);
@@ -220,41 +195,33 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
         LL_showNote = (LinearLayout) view.findViewById(R.id.LL_showNote);
         btnShwoReplay = (Button) view.findViewById(R.id.btnShwoReplay);
 
-
         btnShowNoteCancel = (Button) view.findViewById(R.id.btnShowNoteCancel);
         btnShwoEdit = (Button) view.findViewById(R.id.btnShwoEdit);
-
 
         //ShowNoteElapsedTime,ShowNoteSubject,ShowNoteUsrNoteInputText
         ShowNoteElapsedTime = (TextView) view.findViewById(R.id.ShowNoteElapsedTime);
         ShowNoteSubject = (TextView) view.findViewById(R.id.ShowNoteSubject);
         ShowNoteUsrNoteInputText = (TextView) view.findViewById(R.id.ShowNoteUsrNoteInputText);
 
-
         database = FirebaseDatabase.getInstance();
 
         int currentOrientation = getResources().getConfiguration().orientation; //b
         if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE){
             btnClose.setVisibility(View.VISIBLE);
-            Log.v("TAG","Landscape !!!");
-
         }
         else {
             btnClose.setVisibility(View.GONE);
-            Log.v("TAG","Portrait !!!"); } //b
+        } //b
 
         final List<NoteItem> noteList = NoteModeFragment.noteList;
 
         // Get userType and youtube video ID from current GuestActivity
         GuestActivity guestActivity = GuestActivity.this;
         userType = getUserType();
-        //linkExist=guestActivity.
-
 
         //the youtubeID
         youtubeId = guestActivity.getYoutubeId(); //YIWEI
         Log.i("vedio id", youtubeId);
-        //Toast.makeText(getContext(),youtubeId,Toast.LENGTH_SHORT).show(); // YIWEI
 
         // Hide rlNotepad and rlEditNote UIs by default
         rlNotepad.setVisibility(View.GONE);
@@ -278,7 +245,6 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
             useruid = user.getUid();
             myRef = database.getReference("user").child(useruid);
             DatabaseReference myRefyouTube = database.getReference("user").child(useruid).child(youtubeId);
-            //Log.i("userId",useruid);
             myRefyouTube.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -292,7 +258,6 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
                         newNoteItem.setNotebookName(newItem.get("NotebookName"));
                         newNoteItem.setSelected("false");
                         lvNotesItemAdapter1.add(newNoteItem);
-                        //Log.i("VEDIO","---------------");
                         lvNotes.clearChoices();
                         lvNotes.setAdapter(lvNotesItemAdapter1);
                     }
@@ -314,9 +279,9 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
         btnShowNoteCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                llNoteList.setVisibility(View.VISIBLE);  // Hide llNoteList UI
-                rlNotepad.setVisibility(View.GONE); // Display rlNotepad UI
-                rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UI
+                llNoteList.setVisibility(View.VISIBLE);
+                rlNotepad.setVisibility(View.GONE);
+                rlEditNote.setVisibility(View.GONE);
                 LL_showNote.setVisibility(View.GONE);
 
                 if (isRegisteredUser()) {
@@ -371,14 +336,6 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
                                 }
 
                             }
-                            // String timestr=myRef.child(youtubeId).child(theselectid).child("CurrentTime").toString();
-                            Log.i("time", timestr);
-                            String parseString = "replay " + timestr; // Pass the note time to GuestActivity as well
-                            // Referred from: http://blog.csdn.net/fengge34/article/details/46391453
-
-                            //  mListener.onFragmentInteraction(Uri.parse(parseString)); // Pass to GuestActivity to replay the video at the note time
-
-
                         }
 
                         @Override
@@ -402,7 +359,6 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
         btnShwoEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 llNoteList.setVisibility(View.GONE);  // Hide llNoteList UI
                 rlNotepad.setVisibility(View.GONE); // Display rlNotepad UI
                 rlEditNote.setVisibility(View.VISIBLE); // Hide rlEditNote UI
@@ -416,7 +372,6 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
             //https://www.youtube.com/watch?v=_
             @Override
             public void onClick(View view) {
-
                 if (noteList.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "No notes taken", Toast.LENGTH_SHORT).show();
                 } else {
@@ -440,14 +395,10 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
         btnTakeNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 llNoteList.setVisibility(View.GONE);  // Hide llNoteList UI
                 rlNotepad.setVisibility(View.VISIBLE); // Display rlNotepad UI
                 rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UI
                 LL_showNote.setVisibility(View.GONE);
-
-                // Referred from: http://blog.csdn.net/fengge34/article/details/46391453
-                // mListener.onFragmentInteraction(Uri.parse("pause")); // Pass to GuestActivity to pause the video
 
                 // Take elapsed time (milliseconds) when pause from GuestActivity using a getter method in GuestActivity
                 // Using Bundle to pass data from GuestActivity to NoteModeFragment doesn't work in this case
@@ -475,7 +426,6 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
                 NoteItem noteItem = new NoteItem(elapsedTime, tvTimeAtPause.getText().toString(), etUserSubjectInput.getText().toString(), etUserNoteInput.getText().toString());
 
                 if (isRegisteredUser()) {
-
                     myRef = database.getReference("user").child(useruid).child(youtubeId);
                     String theNoteId = myRef.push().getKey();
                     noteItem.setNoteId(theNoteId);
@@ -517,10 +467,6 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
 
 
                 } else {
-
-
-
-
                     lvNotesItemAdapter.add(noteItem);
                     lvNotes.setAdapter(lvNotesItemAdapter);
 
@@ -528,9 +474,7 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
                     rlNotepad.setVisibility(View.GONE); // Hide rlNotepad UI
                     rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UI
                     LL_showNote.setVisibility(View.GONE);
-
                 }
-
                 etUserNoteInput.getText().clear();
                 etUserSubjectInput.getText().clear();
             }
@@ -596,8 +540,6 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
                                 newNoteItem.setNoteId(newItem.get("NoteId"));
                                 newNoteItem.setNotebookName(newItem.get("NotebookName"));
                                 lvNotesItemAdapter1.add(newNoteItem);
-
-
                             }
 
                             lvNotes.setAdapter(lvNotesItemAdapter1);
@@ -605,8 +547,6 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
                             rlNotepad.setVisibility(View.GONE); // Hide rlNotepad UI
                             rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UIi=0;
                             LL_showNote.setVisibility(View.GONE);
-
-
                         }
 
                         @Override
@@ -614,8 +554,6 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
 
                         }
                     });
-
-
                 } else {
                     getSelectedNote().setSubject(etEditSubject.getText().toString());
                     getSelectedNote().setNote(etEditNote.getText().toString());
@@ -629,8 +567,6 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
                     rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UI
                     LL_showNote.setVisibility(View.GONE);
                 }
-
-
             }
         });
 
@@ -715,8 +651,6 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
 
                     AlertDialog alertdel = delnote.create();
                     alertdel.show();
-
-
                 } else {
                     // Delete the selected note item
                     AlertDialog.Builder delnote = new AlertDialog.Builder(GuestActivity.this);
@@ -751,9 +685,6 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
 
                     AlertDialog alertdel = delnote.create();
                     alertdel.show();
-                    // Update the ListView
-
-
                 }
 
             }
@@ -799,12 +730,10 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
                             ShowNoteElapsedTime.setText(dataSnapshot.child("Time").getValue().toString());
                             ShowNoteSubject.setText(dataSnapshot.child("Subject").getValue().toString());
                             ShowNoteUsrNoteInputText.setText(dataSnapshot.child("Note").getValue().toString());
-
                         }
 
                         @Override
                         public void onCancelled(DatabaseError databaseError) {
-
                         }
                     });
 
@@ -817,8 +746,6 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
                     tvEditNoteTime.setText(selectedNote.getTime());
                     etEditSubject.setText(selectedNote.getSubject());
                     etEditNote.setText(selectedNote.getNote());
-
-
                 } else {
                     setSelectedNote(noteList.get(pos));
                     rlEditNote.setVisibility(View.GONE);
@@ -829,9 +756,6 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
                     ShowNoteSubject.setText(selectedNote.getSubject());
                     ShowNoteUsrNoteInputText.setText(selectedNote.getNote());
 
-                    //Get selected NoteItem object
-                    //setSelectedNote(noteList.get(pos));
-
                     //Set the text fields to the NoteItem object's corresponding values in edit UI
                     tvEditNoteTime.setText(selectedNote.getTime());
                     etEditSubject.setText(selectedNote.getSubject());
@@ -839,10 +763,6 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
                 }
             }
         });
-
-
-
-
     } //b
 
     /**
@@ -850,7 +770,6 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
      * Referred from http://www.androhub.com/implement-youtube-player-fragment-android-app/
      */
     private void initializeYoutubePlayer() {
-
         youTubePlayerFragment = (YouTubePlayerSupportFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.youtubeplayerFragment);
         youTubePlayerFragment.setRetainInstance(true);
@@ -864,29 +783,19 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
             public void onInitializationSuccess(YouTubePlayer.Provider provider, final YouTubePlayer youTubePlayer,
                                                 boolean wasRestored) {
                 if (!wasRestored) {
-                    //youTubePlayer.loadVideo("W4hTJybfU7s"); //load and autoplay the video
-
                     // When youtube is initialized successfully, set player to youTubePlayer
                     // Then, player can be used for playing, pausing videos, etc.
                     player = youTubePlayer;
-                    //Toast.makeText(GuestActivity.this, "toast1", Toast.LENGTH_SHORT).show();
-                    //  player.seekToMillis((int) getElapsedTime());
-
 
                     if(getIntent() == null){
                         player.cueVideo("W4hTJybfU7s"); //load but doesn't autoplay the video
                     }
                     else{
-                        //Toast.makeText(GuestActivity.this, "toast2", Toast.LENGTH_SHORT).show();
                         //youtube ID
                         player.loadVideo(getIntent().getStringExtra("VIDEO_ID")); //b
-
-                        //player.seekToMillis(200000); //b
-                        //player.play(); //b
-                        // player.seekRelativeMillis(20);
                     }
                 }else{
-                    // player.seekToMillis(200000);//b
+                    player = youTubePlayer;
                 }
 
             }
@@ -921,12 +830,6 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
         }
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) { //b
-        outState.putInt("ORIENTATIONTIME", player.getCurrentTimeMillis());
-        super.onSaveInstanceState(outState);
-    }//b
-
 
 
     public boolean isRegisteredUser(){
@@ -937,20 +840,8 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
         return this.elapsedTime;
     }
 
-    public void setElapsedTime(long elapsedTime) { //b
-        this.elapsedTime = elapsedTime;
-    } //b
-
     public String getUserType(){
         return this.userType;
-    }
-
-    public String getLinkExistType(){
-        return this.linkExist;
-    }
-
-    public void SetLinkExistType(String s){
-        this.linkExist=s;
     }
 
 
@@ -974,14 +865,10 @@ public class GuestActivity extends AppCompatActivity implements NoteModeFragment
                     player.pause();
                     elapsedTime = player.getCurrentTimeMillis();
                 }
-
                 showpopup();
-
-
                 return true;
             default:
                 break;
-            //return super.onOptionsItemSelected(item);
         }
         return true;
     } //b
