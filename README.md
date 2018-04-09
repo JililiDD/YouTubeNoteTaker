@@ -38,33 +38,32 @@ public void onFragmentInteraction(Uri uri) {
 <p>We override onBackPressed() function for the notebook activity to give an alert of closing current notebook to user and also navigate user to different UIs after the user closes the notebook. For instance, a registered user is navigated to an after-login UI, while a guest user is navigated to the main page once the notebook is closed. </p>
 
 ```
-
+@Override
+public void onBackPressed() {
+   Dialog deleteConfirmBox = new android.support.v7.app.AlertDialog.Builder(GuestActivity.this)
+           .setMessage("Leave current notebook?")
+           .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+               public void onClick(DialogInterface dialog, int whichButton) {
+                   if(isRegisteredUser() && previousActivity != null) {
+                       Intent intent = new Intent(getApplicationContext(), UserNoteBooks.class);
+                       intent.putExtra("USER_TYPE", "REGISTERED");
+                       startActivity(intent);
+                   } else if(isRegisteredUser() && previousActivity == null){
+                       Intent intent = new Intent(getApplicationContext(), AfterLoginActivity.class);
+                       intent.putExtra("USER_TYPE", "REGISTERED");
+                       startActivity(intent);
+                   } else if (!isRegisteredUser()){
+                       Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                       startActivity(intent);
+                   }
+                   dialog.dismiss();
+               }
+           })
+           .setNegativeButton("No", null)
+           .create();
+   deleteConfirmBox.show();
+}
 ```
-<p>@Override</br>
-public void onBackPressed() {</br>
-   Dialog deleteConfirmBox = new android.support.v7.app.AlertDialog.Builder(GuestActivity.this) </br>
-           .setMessage("Leave current notebook?")</br>
-           .setPositiveButton("Yes", new DialogInterface.OnClickListener() {</br>
-               public void onClick(DialogInterface dialog, int whichButton) {</br>
-                   if(isRegisteredUser() && previousActivity != null) {</br>
-                       Intent intent = new Intent(getApplicationContext(), UserNoteBooks.class);</br>
-                       intent.putExtra("USER_TYPE", "REGISTERED");</br>
-                       startActivity(intent);</br>
-                   } else if(isRegisteredUser() && previousActivity == null){</br>
-                       Intent intent = new Intent(getApplicationContext(), AfterLoginActivity.class);</br>
-                       intent.putExtra("USER_TYPE", "REGISTERED");</br>
-                       startActivity(intent);</br>
-                   } else if (!isRegisteredUser()){</br>
-                       Intent intent = new Intent(getApplicationContext(), MainActivity.class);</br>
-                       startActivity(intent);</br>
-                   }</br>
-                   dialog.dismiss();</br>
-               }</br>
-           })</br>
-           .setNegativeButton("No", null)</br>
-           .create();</br>
-   deleteConfirmBox.show();</br>
-}</p>
 
 ## Feature Section
 1.	Search YouTube videos: </br>
