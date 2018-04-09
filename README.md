@@ -32,6 +32,7 @@ public void onFragmentInteraction(Uri uri) {
        player.seekToMillis(msNoteTime);
    }
 }
+// Source: CSDN [1]
 ```
 
 **Problem 2: We needed to override the method when user press the back button on the phone to navigate user to different UIs based on user’s status**
@@ -63,6 +64,8 @@ public void onBackPressed() {
            .create();
    deleteConfirmBox.show();
 }
+
+// Source: Stack Overflow [4]
 ```
 
 ## Feature Section
@@ -84,7 +87,6 @@ public void onBackPressed() {
       Registered user can review his/her notebooks saved in Firebase database at any time
 9. To delete notebooks: </br>
       Registered user can delete his/her saved notebooks 
-
 
 ## Final Project Status
 The minimum, expected and bonus functionalities of the project are completed. Our initial goals are achieve. From this point, the main task we could do to make it better is to improve the UI to make it a finished-product looking application. In addition, a user test can be carried out to find user's satisfaction on our prototype. For the user test, we can learn if there are any more features we could add in or which feature(s) we could improve to approach user's expectation. 
@@ -110,7 +112,7 @@ In addition to the basic and expected functionalities, the bonus functionalities
 2. Implemented the application for Landscape mode (Completed)
 
 ## Sources
-[1]. “Android onFragmentInteraction(Uri uri) 方法.” [Online]. Available: http://blog.csdn.net/fengge34/article/details/46391453. [Accessed: 06-Apr-2018].
+[1]. “Android onFragmentInteraction(Uri uri) 方法.” CSDN. [Online]. Available: http://blog.csdn.net/fengge34/article/details/46391453. [Accessed: 06-Apr-2018].
 
 [2]. YouTube. [Online]. Available: https://www.youtube.com/watch?v=x9VkNlB0Z6Y. [Accessed: 06-Apr-2018].
 
