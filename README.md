@@ -4,7 +4,7 @@
      <p>YouNote doesn’t have any constraints related to the environments in which it can be used. User can use this application almost everywhere that is in library or classrooms for learning and in public transits for entertainment. YouNote can be executed and supports all android devices such as phones, tablets and Chromebooks. So, the user has the flexibility to use this application on any preferred devices based on their purpose.</p>
 
 ## Libraries
-**Picasso-2.4.0:** an Android library for image downloading and caching. It is used to load YouTube video image thumbnail for our YouTube search function. Library source: https://github.com/square/picasso
+**Picasso-2.4.0:** an Android library for image downloading and caching. It is used to load YouTube video image thumbnail for our YouTube search function. Source [here](https://github.com/square/picasso) 
 
 ## Code Examples
 **Problem 1: How could an activity take data from a fragment inside of it**
