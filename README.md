@@ -82,12 +82,12 @@ public void onBackPressed() {
       Registered user can save notebooks in Firebase database
 8.	Open notebooks: </br>
       Registered user can review his/her notebooks saved in Firebase database at any time
-9. To delete note: </br>
-      Long press on the note item that needs to be deleted from the displayed note list
+9. To delete notebooks: </br>
+      Registered user can delete his/her saved notebooks 
 
 
 ## Final Project Status
-The minimum, expected and bonus functionalities of the project are completed. However, there are few minor changes to implement before publishing the product.
+The minimum, expected and bonus functionalities of the project are completed. Our initial goals are achieve. From this point, the main task we could do to make it better is to improve the UI to make it a finished-product looking application. In addition, a user test can be carried out to find user's satisfaction on our prototype. For the user test, we can learn if there are any more features we could add in or which feature(s) we could improve to approach user's expectation. 
 
 #### Minimum Functionality
 This application is designed for unregistered and registered users. 
