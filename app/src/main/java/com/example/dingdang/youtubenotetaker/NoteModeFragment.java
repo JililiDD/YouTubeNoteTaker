@@ -59,13 +59,11 @@ public class NoteModeFragment extends Fragment {
     // Components
     private Button btnEmail, btnTakeNote, btnSave, btnCancel, btnEditNoteCancel, btnEditNoteSave, btnEditDelete,btnShowNoteCancel,btnShwoEdit,btnShwoReplay;
     private ListView lvNotes;
-    private ArrayAdapter<NoteItem> lvNotesItemAdapter;
     private LinearLayout llNoteList;
     private RelativeLayout rlNotepad, rlEditNote, LL_showNote;
     private EditText etUserNoteInput, etUserSubjectInput, etEditSubject, etEditNote;
     private TextView tvTimeAtPause, tvEditNoteTime,ShowNoteElapsedTime,ShowNoteSubject,ShowNoteUsrNoteInputText;
     private long elapsedTime = 0;
-    //private List<NoteItem> noteList;
     protected static List<NoteItem> noteList = new ArrayList<>();
 
     private NoteItem selectedNote;
@@ -147,7 +145,6 @@ public class NoteModeFragment extends Fragment {
 
         //the youtubeID
         youtubeId = coreNotebookActivity.getYoutubeId(); //YIWEI
-        Log.i("vedio id",youtubeId);
 
         // Hide rlNotepad and rlEditNote UIs by default
         rlNotepad.setVisibility(View.GONE);
@@ -283,7 +280,6 @@ public class NoteModeFragment extends Fragment {
 
         /** ListView UI buttons*/
         btnEmail.setOnClickListener(new View.OnClickListener() {
-            //https://www.youtube.com/watch?v=_
             @Override
             public void onClick(View view) {
 
@@ -720,9 +716,6 @@ public class NoteModeFragment extends Fragment {
     public boolean isRegisteredUser(){
         return userType.equals("REGISTERED");
     }
-    public String getYoutubeId() {
-        return youtubeId;
-    } // YIWEIF
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {

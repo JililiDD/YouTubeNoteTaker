@@ -43,7 +43,7 @@ import java.util.Map;
 
 // Following code for embedding youtube player is referenced from https://www.youtube.com/watch?v=W4hTJybfU7s
 // Need to extends YouTubeBaseActivity to use youtube API
-public class CoreNotebookActivity extends AppCompatActivity implements NoteModeFragment.OnFragmentInteractionListener{
+public class CoreNotebookActivity extends AppCompatActivity implements NoteModeFragment.OnFragmentInteractionListener {
     private YouTubePlayerSupportFragment youTubePlayerFragment;
     private LinearLayout tabView;
     private TabLayout tabs;
@@ -61,13 +61,13 @@ public class CoreNotebookActivity extends AppCompatActivity implements NoteModeF
     private int currentOrientation;
 
     // Components
-    private Button btnEmail, btnTakeNote, btnSave, btnCancel,btnClose,
-            btnEditNoteCancel, btnEditNoteSave, btnEditDelete,btnShowNoteCancel,btnShwoEdit,btnShwoReplay;
+    private Button btnEmail, btnTakeNote, btnSave, btnCancel, btnClose,
+            btnEditNoteCancel, btnEditNoteSave, btnEditDelete, btnShowNoteCancel, btnShwoEdit, btnShwoReplay;
     private ListView lvNotes;
-    private LinearLayout llNoteList,LL_showNote;
+    private LinearLayout llNoteList, LL_showNote;
     private RelativeLayout rlNotepad, rlEditNote;
     private EditText etUserNoteInput, etUserSubjectInput, etEditSubject, etEditNote;
-    private TextView tvTimeAtPause, tvEditNoteTime,ShowNoteElapsedTime,ShowNoteSubject,ShowNoteUsrNoteInputText;
+    private TextView tvTimeAtPause, tvEditNoteTime, ShowNoteElapsedTime, ShowNoteSubject, ShowNoteUsrNoteInputText;
     private long elapsedTime = 0;
     private NoteItem selectedNote;
     private String userType, youtubeId;
@@ -94,14 +94,14 @@ public class CoreNotebookActivity extends AppCompatActivity implements NoteModeF
 
         userType = getIntent().getStringExtra("USER_TYPE"); // Get user type to provide different functions to guest and member users
         youtubeId = getIntent().getStringExtra("VIDEO_ID"); // Get youtube video id (YIWEI)
-        linkExist=getIntent().getStringExtra("LINK_EXIST");
+        linkExist = getIntent().getStringExtra("LINK_EXIST");
         previousActivity = getIntent().getStringExtra("FROM");
 
         //Remove back button on the title bar
         //Code referenced from: https://stackoverflow.com/a/22313897
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
-        if( savedInstanceState != null){ //b
+        if (savedInstanceState != null) { //b
             playerRestoredTime = savedInstanceState.getInt("ORIENTATIONTIME");
 
         }
@@ -119,15 +119,24 @@ public class CoreNotebookActivity extends AppCompatActivity implements NoteModeF
         pager.setOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
 
 
-
-        searchText = (EditText)findViewById(R.id.search_input);
+        searchText = (EditText) findViewById(R.id.search_input);
         searchText.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), Main_Search.class);
-                intent.putExtra("USER_TYPE", userType);
-                intent.putExtra("FROM", "NOTEMODE");
-                startActivity(intent);
+                Dialog deleteConfirmBox = new android.support.v7.app.AlertDialog.Builder(CoreNotebookActivity.this)
+                        .setMessage("Searching a new video will leave current notebook.\n\nSearch a new video?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                Intent intent = new Intent(getApplicationContext(), Main_Search.class);
+                                intent.putExtra("USER_TYPE", userType);
+                                intent.putExtra("FROM", "NOTEMODE");
+                                startActivity(intent);
+                                dialog.dismiss();
+                            }
+                        })
+                        .setNegativeButton("No", null)
+                        .create();
+                deleteConfirmBox.show();
             }
         });
 
@@ -152,19 +161,19 @@ public class CoreNotebookActivity extends AppCompatActivity implements NoteModeF
 
     private void showpopup() { //b
         android.app.AlertDialog.Builder popup = new android.app.AlertDialog.Builder(CoreNotebookActivity.this);
-        View v=getLayoutInflater().inflate(R.layout.dialoglayout,null);
+        View v = getLayoutInflater().inflate(R.layout.dialoglayout, null);
 
         popup.setView(v);
 
         intializeorientionHandler(v);
         popup.setCancelable(true);
-        alt=popup.create();
+        alt = popup.create();
         alt.show();
     } //b
 
 
     private void intializeorientionHandler(View view) { //b
-        btnClose=(Button)view.findViewById(R.id.btnClose);
+        btnClose = (Button) view.findViewById(R.id.btnClose);
         btnEmail = (Button) view.findViewById(R.id.btnEmailNote);
         btnTakeNote = (Button) view.findViewById(R.id.btnTakeNote);
         btnSave = (Button) view.findViewById(R.id.btnSave);
@@ -196,10 +205,9 @@ public class CoreNotebookActivity extends AppCompatActivity implements NoteModeF
         database = FirebaseDatabase.getInstance();
 
         int currentOrientation = getResources().getConfiguration().orientation; //b
-        if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE){
+        if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
             btnClose.setVisibility(View.VISIBLE);
-        }
-        else {
+        } else {
             btnClose.setVisibility(View.GONE);
         } //b
 
@@ -222,10 +230,12 @@ public class CoreNotebookActivity extends AppCompatActivity implements NoteModeF
         btnClose.setOnClickListener(new OnClickListener() { //b
             @Override
             public void onClick(View v) {
-                if(player != null){
-                    player.play();}
+                if (player != null) {
+                    player.play();
+                }
 
-                alt.dismiss();}
+                alt.dismiss();
+            }
             //   }
         }); //b
 
@@ -260,7 +270,7 @@ public class CoreNotebookActivity extends AppCompatActivity implements NoteModeF
 
             });
 
-        } else{
+        } else {
             ArrayAdapter<NoteItem> lvNotesItemAdapter = new ArrayAdapter<>(CoreNotebookActivity.this.getApplicationContext(),
                     R.layout.item_black, noteList);
             lvNotes.setAdapter(lvNotesItemAdapter);
@@ -340,7 +350,7 @@ public class CoreNotebookActivity extends AppCompatActivity implements NoteModeF
                     // Referred from: http://blog.csdn.net/fengge34/article/details/46391453
                     // Pass the note time to CoreNotebookActivity as well
                     alt.dismiss();
-                    player.seekToMillis((int)getSelectedNote().getCurrentTime());
+                    player.seekToMillis((int) getSelectedNote().getCurrentTime());
                     player.play();
                 }
 
@@ -395,7 +405,7 @@ public class CoreNotebookActivity extends AppCompatActivity implements NoteModeF
                 // Take elapsed time (milliseconds) when pause from CoreNotebookActivity using a getter method in CoreNotebookActivity
                 // Using Bundle to pass data from CoreNotebookActivity to NoteModeFragment doesn't work in this case
                 // Referenced from: https://stackoverflow.com/a/22065903
-                CoreNotebookActivity coreNotebookActivity =  (CoreNotebookActivity) CoreNotebookActivity.this;
+                CoreNotebookActivity coreNotebookActivity = (CoreNotebookActivity) CoreNotebookActivity.this;
                 elapsedTime = coreNotebookActivity.getElapsedTime();
 
                 // Convert elapsedTime to hh:mm:ss format
@@ -412,10 +422,9 @@ public class CoreNotebookActivity extends AppCompatActivity implements NoteModeF
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(etUserSubjectInput.getText().toString().equals("")){
-                    Toast.makeText(getApplicationContext(),"Note subject cannot be empty",Toast.LENGTH_SHORT).show();
-                }
-                else{
+                if (etUserSubjectInput.getText().toString().equals("")) {
+                    Toast.makeText(getApplicationContext(), "Note subject cannot be empty", Toast.LENGTH_SHORT).show();
+                } else {
                     // Create an ArrayAdapter<NoteItem> for storing NoteItem objects
                     ArrayAdapter<NoteItem> lvNotesItemAdapter = new ArrayAdapter<>(CoreNotebookActivity.this.getApplicationContext(),
                             R.layout.item_black, noteList);
@@ -657,7 +666,7 @@ public class CoreNotebookActivity extends AppCompatActivity implements NoteModeF
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     NoteItem selectedNoteItem = getSelectedNote();
-                                    String removeItemNoteId =selectedNoteItem.getNoteId();
+                                    String removeItemNoteId = selectedNoteItem.getNoteId();
                                     noteList.remove(selectedNoteItem);
                                     ArrayAdapter<NoteItem> lvNotesItemAdapter = new ArrayAdapter<>(getApplicationContext(), R.layout.item_black, noteList);
                                     lvNotes.setAdapter(lvNotesItemAdapter);
@@ -667,7 +676,7 @@ public class CoreNotebookActivity extends AppCompatActivity implements NoteModeF
                                     rlEditNote.setVisibility(View.GONE); // Hide rlEditNote UI
                                     LL_showNote.setVisibility(View.GONE);
                                     dialog.cancel();
-                                    Toast.makeText(getApplicationContext(),"Note deleted",Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(), "Note deleted", Toast.LENGTH_SHORT).show();
                                 }
                             });
 
@@ -782,14 +791,13 @@ public class CoreNotebookActivity extends AppCompatActivity implements NoteModeF
                     // Then, player can be used for playing, pausing videos, etc.
                     player = youTubePlayer;
 
-                    if(getIntent() == null){
+                    if (getIntent() == null) {
                         player.cueVideo("W4hTJybfU7s"); //load but doesn't autoplay the video
-                    }
-                    else{
+                    } else {
                         //youtube ID
                         player.loadVideo(getIntent().getStringExtra("VIDEO_ID")); //b
                     }
-                }else{
+                } else {
                     player = youTubePlayer;
                 }
 
@@ -808,15 +816,14 @@ public class CoreNotebookActivity extends AppCompatActivity implements NoteModeF
     public void onFragmentInteraction(Uri uri) {
         String uriStr = uri.toString();
         String[] uriStrList = uriStr.split(" ");
-        if(uri != null && uriStrList[0].equals("pause")){
+        if (uri != null && uriStrList[0].equals("pause")) {
             // Pause the video if TakeNote button is pressed in NoteModeFragment.
             initializeYoutubePlayer(); //b
             player.pause();
 
             // Take the elapsedTime
             elapsedTime = player.getCurrentTimeMillis();
-        }
-        else if(uri != null && uriStrList[0].equals("replay")){
+        } else if (uri != null && uriStrList[0].equals("replay")) {
             // Convert the passed time (in uriStrList[1]) from string to int
             String noteTime = uriStrList[1];
             int msNoteTime = Integer.valueOf(noteTime);
@@ -827,16 +834,15 @@ public class CoreNotebookActivity extends AppCompatActivity implements NoteModeF
     }
 
 
-
-    public boolean isRegisteredUser(){
+    public boolean isRegisteredUser() {
         return userType.equals("REGISTERED");
     }
 
-    public long getElapsedTime(){
+    public long getElapsedTime() {
         return this.elapsedTime;
     }
 
-    public String getUserType(){
+    public String getUserType() {
         return this.userType;
     }
 
@@ -857,7 +863,7 @@ public class CoreNotebookActivity extends AppCompatActivity implements NoteModeF
         switch (item.getItemId()) {
             case R.id.btnFloat:
 
-                if(player!=null) {
+                if (player != null) {
                     player.pause();
                     elapsedTime = player.getCurrentTimeMillis();
                 }
@@ -879,15 +885,15 @@ public class CoreNotebookActivity extends AppCompatActivity implements NoteModeF
                 .setMessage("Leave current notebook?")
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        if(isRegisteredUser() && previousActivity != null) {
+                        if (isRegisteredUser() && previousActivity != null) {
                             Intent intent = new Intent(getApplicationContext(), UserNoteBooks.class);
                             intent.putExtra("USER_TYPE", "REGISTERED");
                             startActivity(intent);
-                        } else if(isRegisteredUser() && previousActivity == null){
+                        } else if (isRegisteredUser() && previousActivity == null) {
                             Intent intent = new Intent(getApplicationContext(), AfterLoginActivity.class);
                             intent.putExtra("USER_TYPE", "REGISTERED");
                             startActivity(intent);
-                        } else if (!isRegisteredUser()){
+                        } else if (!isRegisteredUser()) {
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                             startActivity(intent);
                         }
