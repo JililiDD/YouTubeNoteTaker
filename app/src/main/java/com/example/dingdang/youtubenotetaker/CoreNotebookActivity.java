@@ -159,7 +159,8 @@ public class CoreNotebookActivity extends AppCompatActivity implements NoteModeF
 
     }
 
-    private void showpopup() { //b
+    // Display a popup dialog in landscape mode when user click the take note button
+    private void showpopup() {
         android.app.AlertDialog.Builder popup = new android.app.AlertDialog.Builder(CoreNotebookActivity.this);
         View v = getLayoutInflater().inflate(R.layout.dialoglayout, null);
 
@@ -169,7 +170,7 @@ public class CoreNotebookActivity extends AppCompatActivity implements NoteModeF
         popup.setCancelable(true);
         alt = popup.create();
         alt.show();
-    } //b
+    }
 
 
     private void intializeorientionHandler(View view) { //b
@@ -209,7 +210,7 @@ public class CoreNotebookActivity extends AppCompatActivity implements NoteModeF
             btnClose.setVisibility(View.VISIBLE);
         } else {
             btnClose.setVisibility(View.GONE);
-        } //b
+        }
 
         final List<NoteItem> noteList = NoteModeFragment.noteList;
 
@@ -846,9 +847,9 @@ public class CoreNotebookActivity extends AppCompatActivity implements NoteModeF
         return this.userType;
     }
 
-
+    // Show take-note button on the title bar in the landscape mode
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) { //b
+    public boolean onCreateOptionsMenu(Menu menu) {
 
         int currentOrientation = getResources().getConfiguration().orientation;
         if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -856,8 +857,10 @@ public class CoreNotebookActivity extends AppCompatActivity implements NoteModeF
         }
 
         return super.onCreateOptionsMenu(menu);
-    } //b
+    }
 
+    // When the take-note button on the title bar in landscape mode is clicked
+    // Display the popup dialog
     @Override
     public boolean onOptionsItemSelected(MenuItem item) { //b
         switch (item.getItemId()) {
@@ -873,7 +876,7 @@ public class CoreNotebookActivity extends AppCompatActivity implements NoteModeF
                 break;
         }
         return true;
-    } //b
+    }
 
     public String getYoutubeId() {
         return youtubeId;

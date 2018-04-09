@@ -67,10 +67,6 @@ public class FirebaseLoginActivity extends AppCompatActivity {
                 }
             }
         };
-
-
-
-
     }
 
     @Override

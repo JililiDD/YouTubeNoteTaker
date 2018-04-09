@@ -30,18 +30,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- // * {@link VideoSearchFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- // * Use the {@link VideoSearchFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-
-/**
-    This WHOLE search activity was referred from
+    This WHOLE search activity was built on top of the tutorial:
     https://code.tutsplus.com/tutorials/create-a-youtube-client-on-android--cms-22858
  */
 public class Main_Search extends AppCompatActivity {
@@ -81,19 +71,12 @@ public class Main_Search extends AppCompatActivity {
             public void onClick(View view) {
                 searchOnYoutube(searchInput.getText().toString());
             }
-
-//            @Override
-//            public void onClick(TextView v, int actionId, KeyEvent event) {
-//                if(actionId == EditorInfo.IME_ACTION_DONE){
-//                    searchOnYoutube(v.getText().toString());
-//                    return false;
-//                }
-//                return true;
-//            }
         });
 
     }
 
+    // Following youtube search functionality was referred from:
+    // https://code.tutsplus.com/tutorials/create-a-youtube-client-on-an-android--cms-22858
     private void searchOnYoutube(final String keywords){
         new Thread(){
             public void run(){
@@ -131,6 +114,8 @@ public class Main_Search extends AppCompatActivity {
         videosFound.setAdapter(adapter);
     }
 
+    // Following youtube search functionality was referred from:
+    // https://code.tutsplus.com/tutorials/create-a-youtube-client-on-an-android--cms-22858
     private void addClickListener(){
         NoteModeFragment.noteList.clear();
         videosFound.setOnItemClickListener(new AdapterView.OnItemClickListener() {
