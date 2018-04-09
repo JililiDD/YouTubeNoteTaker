@@ -139,3 +139,5 @@ In addition to the basic and expected functionalities, the bonus functionalities
 [13]. “Android, How to create option Menu,” Stack Overflow. [Online]. Available: https://stackoverflow.com/questions/6439085/android-how-to-create-option-menu. [Accessed: 08-Apr-2018].
 
 [14]. “udacity/and-nd-firebase,” GitHub, 03-Aug-2016. [Online]. Available: https://github.com/udacity/and-nd-firebase. [Accessed: 08-Apr-2018].
+
+[15]. “square/picasso,” GitHub. [Online]. Available: https://github.com/square/picasso. [Accessed: 09-Apr-2018].
