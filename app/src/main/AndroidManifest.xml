@@ -19,7 +19,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".GuestActivity"
+            android:name=".CoreNotebookActivity"
             android:parentActivityName=".MainActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity android:name=".EmailActivity" />
@@ -30,7 +30,7 @@
             android:parentActivityName=".MainActivity"/>
         <activity android:name=".UserNoteBooks" />
         <activity android:name=".AddNotebookNameActivity"
-            android:parentActivityName=".GuestActivity"/>
+            android:parentActivityName=".CoreNotebookActivity"/>
 
         <activity android:name=".Main_Search"></activity>
     </application>
