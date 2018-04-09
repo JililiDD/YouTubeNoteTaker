@@ -6,36 +6,40 @@
 ## Libraries
 **Picasso-2.4.0:** an Android library for image downloading and caching. It is used to load YouTube video image thumbnail for our YouTube search function. Library source: https://github.com/square/picasso
 
-## Installation Notes
-No special instructions
-
 ## Code Examples
 **Problem 1: How could an activity take data from a fragment inside of it**
 <p>We needed to implement a “play back” function to allow user to play the video back to the eslaped time when the note was taken. To do this, we needed the note fragment to send data (eslaped time in this case) to notebook activity which uses the data (elapsed time) to play the video back to a specific time. </p>
 
-<p>public void onFragmentInteraction(Uri uri) { </br>
-   String uriStr = uri.toString();</br>
-   String[] uriStrList = uriStr.split(" ");</br>
-   if(uri != null && uriStrList[0].equals("pause")){</br>
+```
+public void onFragmentInteraction(Uri uri) {
+   String uriStr = uri.toString();
+   String[] uriStrList = uriStr.split(" ");
+   if(uri != null && uriStrList[0].equals("pause")){
        // Pause the video if TakeNote button is pressed in NoteModeFragment.
-       // Referred from: http://blog.csdn.net/fengge34/article/details/46391453</br>
-       initializeYoutubePlayer(); //b</br>
-       player.pause();</br>
-       // Take the elapsedTime</br>
-       elapsedTime = player.getCurrentTimeMillis();</br>
-   }</br>
-   else if(uri != null && uriStrList[0].equals("replay")){</br>
-       // Convert the passed time (in uriStrList[1]) from string to int</br>
-       String noteTime = uriStrList[1];</br>
-       int msNoteTime = Integer.valueOf(noteTime);</br>
-       //play the video back to the note time</br>
-       player.seekToMillis(msNoteTime);</br>
-   }</br>
-}</p>
+       // Referred from: http://blog.csdn.net/fengge34/article/details/46391453
+       initializeYoutubePlayer(); //b
+       player.pause();
+
+       // Take the elapsedTime
+       elapsedTime = player.getCurrentTimeMillis();
+   }
+   else if(uri != null && uriStrList[0].equals("replay")){
+       // Convert the passed time (in uriStrList[1]) from string to int
+       String noteTime = uriStrList[1];
+       int msNoteTime = Integer.valueOf(noteTime);
+
+       //play the video back to the note time
+       player.seekToMillis(msNoteTime);
+   }
+}
+```
 
 **Problem 2: We needed to override the method when user press the back button on the phone to navigate user to different UIs based on user’s status**
 <p>We override onBackPressed() function for the notebook activity to give an alert of closing current notebook to user and also navigate user to different UIs after the user closes the notebook. For instance, a registered user is navigated to an after-login UI, while a guest user is navigated to the main page once the notebook is closed. </p>
 
+```
+
+```
 <p>@Override</br>
 public void onBackPressed() {</br>
    Dialog deleteConfirmBox = new android.support.v7.app.AlertDialog.Builder(GuestActivity.this) </br>
